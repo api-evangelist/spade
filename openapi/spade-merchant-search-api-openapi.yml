@@ -1,0 +1,151 @@
+openapi: 3.1.0
+info:
+  title: Spade Card Enrichment Merchant Search API
+  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.
+  version: 2.7.3
+servers:
+- url: https://east.sandbox.spade.com
+  description: East coast sandbox environment
+- url: https://east.api.spade.com
+  description: East coast production environment
+- url: https://west.sandbox.spade.com
+  description: West coast sandbox environment
+- url: https://west.api.spade.com
+  description: West coast production environment
+- url: https://sandbox.v2.spadeapi.com
+  description: East coast sandbox environment (deprecated)
+- url: https://v2.spadeapi.com
+  description: East coast production environment (deprecated)
+- url: https://sandbox.west.v2.spadeapi.com
+  description: West coast sandbox environment (deprecated)
+- url: https://west.v2.spadeapi.com
+  description: West coast production environment (deprecated)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Merchant Search
+  description: Search for Spade merchants
+paths:
+  /corporations:
+    get:
+      tags:
+      - Merchant Search
+      summary: Search for merchants
+      description: '<Info>This endpoint is in beta. To request access, contact [sales@spade.com](mailto:sales@spade.com).</Info>
+
+
+        Search for merchants in Spade''s merchant database by name.
+
+
+        Designed for powering autocomplete experiences, this endpoint returns up to five matching merchants with their name, logo, and website.
+
+
+        To learn more, read the [Merchant Search Guide](https://docs.spade.com/reference/merchant-search-guide).'
+      operationId: corporationSearch
+      parameters:
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: The name of the merchant you want to find
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorporationSearchResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    CorporationSearchResult:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The merchant's name
+          examples:
+          - Starbucks
+        logo:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: URL of the merchant's logo, or null if unavailable
+          examples:
+          - https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png
+        website:
+          type:
+          - string
+          - 'null'
+          description: The merchant's website, or null if unavailable
+          examples:
+          - starbucks.com
+    CorporationSearchResponse:
+      type: object
+      properties:
+        corporations:
+          type: array
+          description: An array of merchants matching the search query, ordered by relevance. Contains up to five results.
+          items:
+            $ref: '#/components/schemas/CorporationSearchResult'
+  responses:
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+    TooManyRequests:
+      description: Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header

@@ -1,0 +1,668 @@
+openapi: 3.1.0
+info:
+  title: Spade Card Enrichment Category Personalization API
+  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.
+  version: 2.7.3
+servers:
+- url: https://east.sandbox.spade.com
+  description: East coast sandbox environment
+- url: https://east.api.spade.com
+  description: East coast production environment
+- url: https://west.sandbox.spade.com
+  description: West coast sandbox environment
+- url: https://west.api.spade.com
+  description: West coast production environment
+- url: https://sandbox.v2.spadeapi.com
+  description: East coast sandbox environment (deprecated)
+- url: https://v2.spadeapi.com
+  description: East coast production environment (deprecated)
+- url: https://sandbox.west.v2.spadeapi.com
+  description: West coast sandbox environment (deprecated)
+- url: https://west.v2.spadeapi.com
+  description: West coast production environment (deprecated)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Category Personalization
+  description: Create custom categories and personalize enrichments
+paths:
+  /categories:
+    post:
+      tags:
+      - Category Personalization
+      summary: Create a custom integration-level category
+      description: 'Create a custom integration-level category.
+
+
+        This category will be available to all users of your integration.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: categoriesPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommonPostCategoriesRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomCategory'
+                type: object
+                description: The newly created category.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete all custom integration-level categories
+      description: 'Delete all custom integration-level categories.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: categoriesDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Personalization
+      summary: Get all default and custom integration-level categories
+      description: 'Fetch categories from Spade''s database.
+
+
+        This endpoint returns a list containing Spade''s default categories, plus any custom integration-level categories you''ve created.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: categoriesGet
+      parameters:
+      - in: query
+        name: include
+        schema:
+          type: string
+          examples:
+          - default
+          - custom
+          - default,custom
+        description: An optional comma-separated string specifying which category types to include. Valid values include 'default', 'custom', 'default,custom'.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: An array of categories. Spade categories are returned first, followed by custom categories.
+                items:
+                  $ref: '#/components/schemas/MerchantCategory'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/categories:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      description: The `userId` of the relevant user.
+      required: true
+    post:
+      tags:
+      - Category Personalization
+      summary: Create a custom user-level category
+      description: 'Create a custom user-level category.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCategoriesPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommonPostCategoriesRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomCategory'
+                type: object
+                description: The newly created category.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete all custom user-level categories
+      description: 'Delete all custom user-level categories.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCategoriesDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Personalization
+      summary: Get categories
+      description: 'Fetch custom user-level categories from Spade''s database.
+
+
+        This endpoint returns a list containing all custom categories that the user with the given `userId` has created.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCategoriesGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: An array of categories. Spade categories are returned first, followed by custom categories.
+                items:
+                  $ref: '#/components/schemas/CustomCategory'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/counterparty-category-personalizations:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      description: The `userId` of the relevant user.
+      required: true
+    put:
+      tags:
+      - Category Personalization
+      summary: Create a user-level counterparty category personalization
+      description: 'Create a user-level counterparty category personalization.
+
+
+        This personalization will apply to all enrichments that take place at the given `counterpartyId` for the user with the given `userId`.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCounterpartyCategoryPersonalizationsPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+        required: true
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+                - type: object
+                  description: The newly created counterparty category personalization.
+                  properties:
+                    userId:
+                      type: string
+                      description: The ID of the newly created counterparty category personalization.
+                      examples:
+                      - user1234
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+                - type: object
+                  description: The newly created counterparty category personalization.
+                  properties:
+                    userId:
+                      type: string
+                      description: The ID of the newly created counterparty category personalization.
+                      examples:
+                      - user1234
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete all user-level counterparty category personalizations
+      description: 'Delete all user-level counterparty category personalizations.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCounterpartyCategoryPersonalizationsDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Personalization
+      summary: Get all user-level counterparty category personalizations
+      description: 'Fetch user-level counterparty category personalizations from Spade''s database.
+
+
+        This endpoint returns a list containing all user-level counterparty category personalizations for the user with the given `userId`.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCounterpartyCategoryPersonalizationsGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: An array of counterparty category personalizations.
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+                  - type: object
+                    description: The newly created counterparty category personalization.
+                    properties:
+                      userId:
+                        type: string
+                        description: The ID of the newly created counterparty category personalization.
+                        examples:
+                        - user1234
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /counterparty-category-personalizations:
+    put:
+      tags:
+      - Category Personalization
+      summary: Create an integration-level counterparty category personalization
+      description: 'Create an integration-level counterparty category personalization.
+
+
+        This personalization will apply to all enrichments that take place at the given `counterpartyId` for your integration.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: counterpartyCategoryPersonalizationsPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+        required: true
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete all integration-level counterparty category personalizations
+      description: 'Delete all integration-level counterparty category personalizations.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: counterpartyCategoryPersonalizationsDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Personalization
+      summary: Get all integration-level counterparty category personalizations
+      description: 'Fetch counterparty category personalizations from Spade''s database.
+
+
+        This endpoint returns a list containing all integration-level counterparty category personalizations for your integration.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: counterpartyCategoryPersonalizationsGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: An array of counterparty category personalizations.
+                items:
+                  $ref: '#/components/schemas/CounterpartyCategoryPersonalization'
+        '403':
+          description: Unauthorized
+        '500':
+          description: Unexpected Error
+  /counterparty-category-personalizations/{counterpartyId}:
+    parameters:
+    - in: path
+      name: counterpartyId
+      schema:
+        type: string
+      description: The `counterpartyId` of the relevant counterparty category personalization.
+      required: true
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete a counterparty category personalization
+      description: 'Delete a counterparty category personalization.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: counterpartyCategoryPersonalizationsDetailDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /categories/{id}:
+    parameters:
+    - in: path
+      name: id
+      schema:
+        type: string
+      description: The `id` of the relevant category.
+      required: true
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete a custom integration-level category
+      description: 'Delete a custom integration-level category.
+
+
+        To learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide).'
+      operationId: categoriesDetailDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/categories/{id}:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      description: The `userId` of the relevant user.
+      required: true
+    - in: path
+      name: id
+      schema:
+        type: string
+      description: The `id` of the relevant category.
+      required: true
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete a custom user-level category
+      description: 'Delete a custom user-level category.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCategoriesDetailDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/counterparty-category-personalizations/{counterpartyId}:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      description: The `userId` of the relevant user.
+      required: true
+    - in: path
+      name: counterpartyId
+      schema:
+        type: string
+      description: The `counterpartyId` of the relevant counterparty category personalization.
+      required: true
+    delete:
+      tags:
+      - Category Personalization
+      summary: Delete a user-level counterparty category personalization
+      description: 'Delete a user-level counterparty category personalization.
+
+
+        To learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide).'
+      operationId: userCounterpartyCategoryPersonalizationsDetailDelete
+      responses:
+        '204':
+          description: Successful operation
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    CounterpartyCategoryPersonalization:
+      type: object
+      description: Schema for creating a counterparty category personalization.
+      required:
+      - counterpartyId
+      - categoryId
+      properties:
+        counterpartyId:
+          type: string
+          description: The ID of the counterparty.
+          examples:
+          - d730906b-f1a8-49f1-9939-f27390170a6d
+        categoryId:
+          type: string
+          description: The ID of the category. Can be a Spade category ID (e.g. "011-000-000-000") or a custom category ID (e.g. "e4cf5379-583f-44ed-b625-366044e666e6").
+          examples:
+          - 011-000-000-000
+    CustomCategory:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          examples:
+          - 4d5419f1-bcde-40f5-9168-7f8989b9c55f
+          description: A unique identifier for this category.
+        name:
+          type:
+          - string
+          examples:
+          - Kitchen Remodel
+          description: The category's name
+        icon:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: The category's icon, potentially inherited from the parent category.
+        fullCategoryHierarchy:
+          description: Array with increasingly specific category information.
+          type: array
+          items:
+            $ref: '#/components/schemas/IndustryCategoryLevel'
+          examples:
+          - - id: 011-000-000-000
+              name: Retail
+              icon: https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+            - id: 4d5419f1-bcde-40f5-9168-7f8989b9c55f
+              name: Kitchen Remodel
+              icon: https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+    CommonPostCategoriesRequest:
+      type: object
+      description: Schema for creating a custom category.
+      required:
+      - name
+      - parentId
+      properties:
+        name:
+          type: string
+          description: The name of the category (must be unique per integration / user).
+          examples:
+          - Kitchen Remodel
+        parentId:
+          type: string
+          description: The ID of the new category's parent. Can be a Spade category ID (e.g. "011-000-000-000") or a custom category ID (e.g. "e4cf5379-583f-44ed-b625-366044e666e6").
+          examples:
+          - 011-000-000-000
+    MerchantCategory:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          examples:
+          - 011-010-000-000
+          description: 'A unique identifier for this category. This identifier will show up in enrichments as `counterparty[i].industry[-1].id`, where `i` is the index of this merchant in the counterparty list. Note that each counterparty''s `industry` is a list containing its full category hierarchy (including parent categories); thus, this category will be the last one in the `industry` list.
+
+            '
+        name:
+          type:
+          - string
+          examples:
+          - Online Marketplace
+          description: The category's name
+        icon:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
+          description: The category's icon
+        fullCategoryHierarchy:
+          description: Array with increasingly specific category information.
+          type: array
+          items:
+            $ref: '#/components/schemas/IndustryCategoryLevel'
+          examples:
+          - - id: 011-000-000-000
+              name: Retail
+              icon: https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+            - id: 011-010-000-000
+              name: Online Marketplace
+              icon: https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
+    IndustryCategoryLevel:
+      description: A node in a tree representing a hierarchical category system
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 15
+          examples:
+          - 011-000-000-000
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Retail
+        icon:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: Category icon.
+  responses:
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header

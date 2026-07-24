@@ -1,0 +1,980 @@
+openapi: 3.1.0
+info:
+  title: Spade Card Enrichment Category Action Triggers API
+  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.
+  version: 2.7.3
+servers:
+- url: https://east.sandbox.spade.com
+  description: East coast sandbox environment
+- url: https://east.api.spade.com
+  description: East coast production environment
+- url: https://west.sandbox.spade.com
+  description: West coast sandbox environment
+- url: https://west.api.spade.com
+  description: West coast production environment
+- url: https://sandbox.v2.spadeapi.com
+  description: East coast sandbox environment (deprecated)
+- url: https://v2.spadeapi.com
+  description: East coast production environment (deprecated)
+- url: https://sandbox.west.v2.spadeapi.com
+  description: West coast sandbox environment (deprecated)
+- url: https://west.v2.spadeapi.com
+  description: West coast production environment (deprecated)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Category Action Triggers
+  description: Register category action triggers and receive triggered actions in enrichment responses
+paths:
+  /category-action-triggers:
+    delete:
+      tags:
+      - Category Action Triggers
+      summary: Clear account-level category triggers
+      description: 'Clear all category action triggers at the account scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: categoryActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Action Triggers
+      summary: Get account-level category trigger status
+      description: 'Get the status and version of the latest category action trigger registration at the account scope.
+
+
+        Account-level triggers apply to all transactions for all users in your account.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: categoryActionTriggersGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No action triggers exist for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - No action triggers exist for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - Category Action Triggers
+      summary: Incremental category trigger operations at account scope
+      description: 'Perform incremental operations on category action triggers at the account scope.
+
+
+        Supports two operations:
+
+        - **add**: Register new category triggers or update existing ones. Only the submitted triggers are affected—existing registrations are preserved. If a trigger ID already exists, its registration is replaced (upsert). All registrations are processed synchronously.
+
+        - **remove**: Remove category triggers by trigger ID. Removed triggers are excluded from enrichment lookups. Trigger IDs that are not currently active are silently ignored (idempotent).
+
+
+        Successful `add` operations return `201`; successful `remove` operations return `200`.
+
+
+        **Limit:** The total number of active triggers at a scope cannot exceed 300. An `add` operation that would push the total past this limit will receive a `400` error.
+
+
+        **Important:** Only one operation can be in progress per scope at a time. Concurrent requests return 409.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: categoryActionTriggersPatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerPatchRequest'
+            examples:
+              add:
+                summary: Add category triggers
+                value:
+                  operation: add
+                  categoryTriggers:
+                  - id: groceries-reward
+                    categoryId: 005-001-000-000
+                    action:
+                      type: REWARD
+                      rewardPercent: 2
+                      offerId: groceries-2x
+              remove:
+                summary: Remove category triggers
+                value:
+                  operation: remove
+                  triggerIds:
+                  - block-gambling
+        required: true
+      responses:
+        '200':
+          description: Remove operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerPatchResponse'
+        '201':
+          description: Add operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Category Action Triggers
+      summary: Register category triggers at account scope
+      description: 'Register category action triggers at the account scope.
+
+
+        Account-level triggers apply to all transactions for all users in your account.
+
+
+        **Field requirements:**
+
+        - `id`, `categoryId`, and `action` are required for each trigger
+
+        - `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)
+
+
+        **Limit:** A maximum of 300 `categoryTriggers` can be submitted per request. All registrations are processed synchronously.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: categoryActionTriggersPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerRegistrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Registration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/cards/{cardId}/category-action-triggers:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the user
+      required: true
+    - in: path
+      name: cardId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the card
+      required: true
+    delete:
+      tags:
+      - Category Action Triggers
+      summary: Clear card-level category triggers
+      description: 'Clear all category action triggers at the card scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: cardCategoryActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Action Triggers
+      summary: Get card-level category trigger status
+      description: 'Get the status and version of the latest category action trigger registration at the card scope.
+
+
+        Card-level triggers apply only to transactions for the specified card.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: cardCategoryActionTriggersGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No action triggers exist for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - No action triggers exist for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - Category Action Triggers
+      summary: Incremental category trigger operations at card scope
+      description: 'Perform incremental operations on category action triggers at the card scope.
+
+
+        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
+      operationId: cardCategoryActionTriggersPatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerPatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Remove operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerPatchResponse'
+        '201':
+          description: Add operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Category Action Triggers
+      summary: Register category triggers at card scope
+      description: 'Register category action triggers at the card scope.
+
+
+        Card-level triggers apply only to transactions for the specified card.
+
+
+        **Field requirements:**
+
+        - `id`, `categoryId`, and `action` are required for each trigger
+
+        - `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)
+
+
+        **Limit:** A maximum of 300 `categoryTriggers` can be submitted per request. All registrations are processed synchronously.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: cardCategoryActionTriggersPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerRegistrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Registration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /programs/{programId}/category-action-triggers:
+    parameters:
+    - in: path
+      name: programId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the program
+      required: true
+    delete:
+      tags:
+      - Category Action Triggers
+      summary: Clear program-level category triggers
+      description: 'Clear all category action triggers at the program scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: programCategoryActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Action Triggers
+      summary: Get program-level category trigger status
+      description: 'Get the status and version of the latest category action trigger registration at the program scope.
+
+
+        Program-level triggers apply to all enrichment requests where the `programId` field matches this program.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: programCategoryActionTriggersGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No action triggers exist for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - No action triggers exist for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - Category Action Triggers
+      summary: Incremental category trigger operations at program scope
+      description: 'Perform incremental operations on category action triggers at the program scope.
+
+
+        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
+      operationId: programCategoryActionTriggersPatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerPatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Remove operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerPatchResponse'
+        '201':
+          description: Add operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Category Action Triggers
+      summary: Register category triggers at program scope
+      description: 'Register category action triggers at the program scope.
+
+
+        Program-level triggers apply to all enrichment requests where the `programId` field matches this program.
+
+
+        **Field requirements:**
+
+        - `id`, `categoryId`, and `action` are required for each trigger
+
+        - `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)
+
+
+        **Limit:** A maximum of 300 `categoryTriggers` can be submitted per request. All registrations are processed synchronously.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: programCategoryActionTriggersPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerRegistrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Registration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/category-action-triggers:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the user
+      required: true
+    delete:
+      tags:
+      - Category Action Triggers
+      summary: Clear user-level category triggers
+      description: 'Clear all category action triggers at the user scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: userCategoryActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Category Action Triggers
+      summary: Get user-level category trigger status
+      description: 'Get the status and version of the latest category action trigger registration at the user scope.
+
+
+        User-level triggers apply to all transactions for all cards belonging to the specified user.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: userCategoryActionTriggersGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No action triggers exist for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - No action triggers exist for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - Category Action Triggers
+      summary: Incremental category trigger operations at user scope
+      description: 'Perform incremental operations on category action triggers at the user scope.
+
+
+        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
+      operationId: userCategoryActionTriggersPatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerPatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Remove operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerPatchResponse'
+        '201':
+          description: Add operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Category Action Triggers
+      summary: Register category triggers at user scope
+      description: 'Register category action triggers at the user scope.
+
+
+        User-level triggers apply to all transactions for all cards belonging to the specified user.
+
+
+        **Field requirements:**
+
+        - `id`, `categoryId`, and `action` are required for each trigger
+
+        - `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)
+
+
+        **Limit:** A maximum of 300 `categoryTriggers` can be submitted per request. All registrations are processed synchronously.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide).'
+      operationId: userCategoryActionTriggersPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryActionTriggerRegistrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Registration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
+    CategoryActionTriggerRegistrationRequest:
+      type: object
+      description: Request body for registering category action triggers.
+      required:
+      - categoryTriggers
+      properties:
+        categoryTriggers:
+          type: array
+          description: 'List of category triggers to register for action matching. Each trigger must have a unique `id`.
+
+
+            **Field requirements:**
+
+            - `id`, `categoryId`, and `action` are always required
+
+
+            **Limit:** A maximum of 300 triggers across all scopes. All registrations are processed synchronously.
+
+            '
+          minItems: 1
+          maxItems: 300
+          items:
+            $ref: '#/components/schemas/CategoryTriggerItem'
+    CategoryActionTriggerPatchRequest:
+      type: object
+      description: 'Request body for incremental category action trigger operations.
+
+
+        - For `add`: `categoryTriggers` is required. `triggerIds` is optional and ignored if provided.
+
+        - For `remove`: `triggerIds` is required and must be a non-empty list.'
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - add
+          - remove
+          description: 'The operation to perform:
+
+            - `add`: Register new category triggers or update existing ones
+
+            - `remove`: Remove category triggers (excluded from enrichment lookups)'
+          examples:
+          - add
+        categoryTriggers:
+          type: array
+          description: 'List of category triggers to add. Required for the `add` operation.
+
+
+            If a trigger ID already exists, the old registration is replaced (upsert behavior).
+
+
+            **Field requirements:**
+
+            - `id`, `categoryId`, and `action` are always required'
+          minItems: 1
+          maxItems: 300
+          items:
+            $ref: '#/components/schemas/CategoryTriggerItem'
+        triggerIds:
+          type:
+          - array
+          - 'null'
+          description: 'List of trigger IDs to remove. Required and must be non-empty for the `remove` operation.
+
+
+            Trigger IDs that are not currently active are silently ignored (idempotent).
+
+
+            For `add` operations, this field is optional and ignored if provided — you may pass `null`, `[]`, or omit it entirely.'
+          items:
+            type: string
+            maxLength: 512
+          examples:
+          - - travel-reward-1
+            - block-gambling
+    CategoryTriggerItem:
+      type: object
+      description: A category trigger to register for action matching.
+      required:
+      - id
+      - categoryId
+      - action
+      properties:
+        id:
+          type: string
+          description: Your identifier for this trigger, unique within the scope you are registering against. This ID will be returned in the `actions` field of enrichment responses when this trigger matches a transaction.
+          maxLength: 512
+          examples:
+          - travel-reward-1
+        categoryId:
+          type: string
+          description: The Spade category ID to match against. Category IDs use the format `xxx-xxx-xxx-xxx` where each `x` is a digit — use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs.
+          maxLength: 15
+          pattern: ^\d{3}-\d{3}-\d{3}-\d{3}$
+          examples:
+          - 020-001-000-000
+        action:
+          type: object
+          description: 'A custom JSON object that will be returned in the enrichment response when this trigger matches. Use this to store any data relevant to your use case (e.g., reward amounts, offer IDs, campaign metadata).
+
+
+            The optional `type` field has reserved values with special behavior:
+
+            - `BLOCK`: Adds `authRecommendation: "BLOCK"` to the action in the enrichment response. Use this to flag transactions that should be declined.
+
+            - `ALLOW_ONLY`: Adds `authRecommendation: "ALLOW"` when the transaction matches a registered category. If the transaction does **not** match any `ALLOW_ONLY` trigger, the action is returned with `authRecommendation: "BLOCK"` (inverse semantics). Use this to create allowlists where only registered categories are permitted.
+
+            - `REWARD`: No special behavior. Passed through as-is.
+
+            - Any other value: Treated as a custom type and passed through as-is.
+
+            '
+          properties:
+            type:
+              type: string
+              description: 'Optional action type. Reserved values `BLOCK` and `ALLOW_ONLY` have special authorization semantics (see above). All other values are passed through without modification.
+
+                '
+              examples:
+              - REWARD
+              - BLOCK
+              - ALLOW_ONLY
+          additionalProperties: true
+          examples:
+          - type: REWARD
+            rewardPercent: 3
+            offerId: travel-3x-promo
+          - type: BLOCK
+            reason: Gambling not permitted
+          - type: ALLOW_ONLY
+    CategoryActionTriggerStatusResponse:
+      type: object
+      description: Response containing the status of a category action trigger registration.
+      properties:
+        status:
+          type: string
+          description: 'The current status of the action trigger registration. Category trigger registrations are processed synchronously, so the status is always one of:
+
+            - `succeeded`: Registration complete, triggers are now active
+
+            - `failed`: Registration failed, check your request and retry
+
+            '
+          enum:
+          - succeeded
+          - failed
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
+          examples:
+          - 1
+        categoryTriggers:
+          type: array
+          description: The list of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The trigger ID as provided during registration.
+                examples:
+                - travel-reward-1
+              categoryId:
+                type: string
+                description: The category ID associated with this trigger, as provided during registration.
+                examples:
+                - 020-001-000-000
+              action:
+                type: object
+                description: The action data associated with this trigger, as provided during registration.
+                additionalProperties: true
+                examples:
+                - type: REWARD
+                  rewardPercent: 3
+        totalCount:
+          type: integer
+          description: The total number of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          examples:
+          - 10
+  responses:
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header

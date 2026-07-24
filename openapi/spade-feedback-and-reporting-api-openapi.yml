@@ -1,0 +1,1285 @@
+openapi: 3.1.0
+info:
+  title: Spade Card Enrichment Feedback and Reporting API
+  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.
+  version: 2.7.3
+servers:
+- url: https://east.sandbox.spade.com
+  description: East coast sandbox environment
+- url: https://east.api.spade.com
+  description: East coast production environment
+- url: https://west.sandbox.spade.com
+  description: West coast sandbox environment
+- url: https://west.api.spade.com
+  description: West coast production environment
+- url: https://sandbox.v2.spadeapi.com
+  description: East coast sandbox environment (deprecated)
+- url: https://v2.spadeapi.com
+  description: East coast production environment (deprecated)
+- url: https://sandbox.west.v2.spadeapi.com
+  description: West coast sandbox environment (deprecated)
+- url: https://west.v2.spadeapi.com
+  description: West coast production environment (deprecated)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Feedback and Reporting
+  description: Provide feedback on card events or report enrichment errors
+paths:
+  /transactions/report:
+    post:
+      tags:
+      - Feedback and Reporting
+      summary: Report a card enrichment as incorrect
+      description: 'Endpoint to report a card enrichment as incorrect. An `enrichmentId` and an `errorDescription` are required fields to report an enrichment. Optional request fields such as `incorrectLocation`, `incorrectLocationDescription`, `incorrectCategory`, `incorrectCategoryDescription`, `incorrectChannel`, `incorrectChannelDescription`, `incorrectCounterparty`,  and `incorrectCounterpartyDescription`, can be set to indicate what needs to be addressed in  the enrichment. Once a report has been addressed, you will receive a corrected enrichment via a callback url you set with Spade. See the callback section to learn more on how we send back a corrected enrichment.
+
+        '
+      operationId: cardReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportApiRequest'
+        required: true
+      responses:
+        '200':
+          description: Enrichment reported successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      callbacks:
+        CorrectedEnrichment:
+          https://example.com/your/callback/endpoint:
+            post:
+              description: 'In order to receive a corrected enrichment, you need to set a callback url with Spade. This url must be in HTTPS protocol and return a 2XX response upon success. To verify a payload is from Spade, you can verify that the token from `X-Webhook-Token` (in the request header) matches the token you receive from Spade.
+
+                '
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/CardEnrichmentResponse'
+              responses:
+                '200':
+                  description: Your server returns this code if it accepts the callback
+                '400':
+                  $ref: '#/components/responses/BadRequest'
+                '403':
+                  $ref: '#/components/responses/Unauthorized'
+                '500':
+                  $ref: '#/components/responses/InternalServerError'
+              method: post
+              type: path
+            path: https://example.com/your/callback/endpoint
+  /enrichments/{enrichmentId}/fraud:
+    parameters:
+    - in: path
+      name: enrichmentId
+      schema:
+        type: string
+      description: The `enrichmentId` of enrichment associated with the transaction.
+      required: true
+    post:
+      tags:
+      - Feedback and Reporting
+      summary: Report fraud on a transaction
+      description: 'An endpoint for reporting suspected fraud on a transaction which was not related to a chargeback, decline, or refund. If you''ve already indicated suspected fraud in a chargeback, decline, or refund, it''s not necessary to send a request to this endpoint. The `isFraud`, `fraudType`, and `fraudNotes` fields are used to provide information about fraud or suspected fraud on this transaction. Note that this transaction must previously have been enriched to report other fraud information.
+
+        '
+      operationId: enrichmentOtherFraud
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CommonFraud'
+      responses:
+        '200':
+          description: Other fraud information reported successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentFeedbackResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /enrichments/{enrichmentId}/decline:
+    parameters:
+    - in: path
+      name: enrichmentId
+      schema:
+        type: string
+      description: The `enrichmentId` of enrichment associated with the transaction where a card decline occurred.
+      required: true
+    post:
+      tags:
+      - Feedback and Reporting
+      summary: Report that a card decline occurred
+      description: 'An endpoint for reporting that a card decline has occurred on a transaction. The `declineCode`, `declineDescription`, and `declineNotes` properties can be used to provide information about the decline. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this decline. Note that this transaction must previously have been enriched to report the decline.
+
+        '
+      operationId: enrichmentDecline
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                properties:
+                  declineCode:
+                    type: string
+                    description: 'A two digit alphanumeric code indicating why a card transaction was declined. For reference, see the [Visa Action Code](https://developer.visa.com/request_response_codes) or the [Mastercard Network Response Codes](https://developer.mastercard.com/mastercard-merchant-presented-qr/documentation/server-apis/response-error-codes/#network-response-codes).
+
+                      '
+                    maxLength: 128
+                    examples:
+                    - '51'
+                  declineDescription:
+                    type: string
+                    description: A plain text description associated with a decline code.
+                    maxLength: 512
+                    examples:
+                    - Insufficient funds
+                  declineNotes:
+                    type: string
+                    description: Any additional details related to a card decline not covered by the `declineCode` or `declineDescription`.
+                    maxLength: 512
+                    examples:
+                    - Unknown reason for decline.
+                  occurredAt:
+                    type: string
+                    format: date-time
+                    description: The time the decline occurred. Formatted as an ISO 8601 date time.
+                    examples:
+                    - '2022-06-15 18:27:51Z'
+              - $ref: '#/components/schemas/CommonFraud'
+      responses:
+        '200':
+          description: Decline reported successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentFeedbackResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /enrichments/{enrichmentId}/chargeback:
+    parameters:
+    - in: path
+      name: enrichmentId
+      schema:
+        type: string
+      description: The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred.
+      required: true
+    post:
+      tags:
+      - Feedback and Reporting
+      summary: Report that a chargeback occurred
+      description: 'An endpoint for reporting that a chargeback process has occurred on a transaction. The `state` and `chargebackNotes` properties can be used to provide information about the chargeback. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this chargeback. Note that this transaction must previously have been enriched to report the chargeback.
+
+        '
+      operationId: enrichmentChargeback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                - state
+                properties:
+                  state:
+                    type: string
+                    description: 'The state of the chargeback process. You can update a chargeback''s `state` by submitting another request with a new `state`, for example, a new request could update the `state` from `chargeback_pending` to `chargeback_won`.
+
+                      '
+                    enum:
+                    - chargeback_won
+                    - chargeback_lost
+                    - chargeback_pending
+                    examples:
+                    - chargeback_won
+                  chargebackNotes:
+                    type: string
+                    description: Any additional details related to the chargeback not covered by the state.
+                    maxLength: 512
+                    examples:
+                    - Transaction was initiated in error.
+                  occurredAt:
+                    type: string
+                    format: date-time
+                    description: 'The time when the chargeback''s state change. This could be the time when the chargeback was initiated and its state became `chargeback_pending` or the time when the chargeback was resolved its state moved to `chargeback_won` or `chargeback_lost`. Formatted as an ISO 8601 date time.
+
+                      '
+                    examples:
+                    - '2022-06-15 18:27:51Z'
+              - $ref: '#/components/schemas/CommonFraud'
+      responses:
+        '200':
+          description: Chargeback reported successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentFeedbackResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /enrichments/{enrichmentId}/refund:
+    parameters:
+    - in: path
+      name: enrichmentId
+      schema:
+        type: string
+      description: The `enrichmentId` of enrichment associated with the transaction where a refund occurred.
+      required: true
+    post:
+      tags:
+      - Feedback and Reporting
+      summary: Report that a refund occurred
+      description: 'An endpoint for reporting that a refund has occurred on a transaction associated with an enrichment. The `refundNotes` property can be used to provide information about the refund. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this refund. Note that this transaction must previously have been enriched to report the refund.
+
+        '
+      operationId: enrichmentRefund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                properties:
+                  refundNotes:
+                    type: string
+                    description: Any additional details related to a refund
+                    maxLength: 512
+                    examples:
+                    - Frequently refunded item.
+                  occurredAt:
+                    type: string
+                    format: date-time
+                    description: The time the refund occurred. Formatted as an ISO 8601 date time.
+                    examples:
+                    - '2022-06-15 18:27:51Z'
+              - $ref: '#/components/schemas/CommonFraud'
+      responses:
+        '200':
+          description: Refund reported successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentFeedbackResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    ThirdParty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples:
+          - ac48cef2-0d7f-4159-865e-e92b152262bc
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Paypal
+        type:
+          type: string
+          enum:
+          - bnpl
+          - delivery_service
+          - marketplace
+          - payment_processor
+          - platform
+          examples:
+          - payment_processor
+        logo:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
+          description: Third party logo.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.paypal.com/
+          description: Third party website.
+    Counterparty:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: A unique identifier for this counterparty, regardless of specific location.
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - Amazon
+          description: Counterparty name.
+        legalName:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          examples:
+          - Amazon Inc.
+          description: Counterparty legal name. This is a premium Spade field available depending on your product package.
+        industry:
+          description: Array with increasingly specific category information.
+          type: array
+          items:
+            $ref: '#/components/schemas/IndustryCategoryLevel'
+        matchScore:
+          description: 'The matchScore predicts how well a transaction matches a Counterparty in our records. If no Counterparty was found, the matchScore is set to null. Otherwise, scores range between 50.00 and 100.00. We filter out results below this range to make sure that only high quality matches are returned. Generally, the higher the matchScore is the better the match between a transaction and a Counterparty. When multiple Counterparties match a transaction, matches are returned in decreasing order of matchScore. This is a premium Spade field available depending on your product package.
+
+            '
+          type:
+          - number
+          - 'null'
+          examples:
+          - 93.5
+        location:
+          type: array
+          description: 'An array of locations matched to the transaction (and associated with this counterparty). Can currently contain only one location. This is a premium Spade field available depending on your product package.
+
+            '
+          items:
+            $ref: '#/components/schemas/ResponseLocation'
+        logo:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/de33f8973bc934c5b368a5b27155db02/light.png
+          description: Counterparty logo. This is a premium Spade field available depending on your product package.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          maxLength: 24
+          examples:
+          - '+18664862360'
+          description: Counterparty phone number. This is a premium Spade field available depending on your product package.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.amazon.com
+          description: Counterparty website. This is a premium Spade field available depending on your product package.
+        possibleCounterpartyAlternate:
+          type:
+          - object
+          - 'null'
+          properties:
+            id:
+              type: string
+              format: uuid
+              examples:
+              - 49fd51a1-5a19-3e5d-8d28-eb056ecf8939
+              description: 'The ID of the alternate counterparty.
+
+                '
+            similarity:
+              type: number
+              examples:
+              - 80
+              description: 'The similarity score indicates how closely this alternate counterparty matches the main counterparty. The score is a value between 0.0 and 100.0, where 100.0 is an exact match.
+
+                '
+          description: 'The possible alternate counterparty object represents a counterparty that may be matched to this transaction in other enrichment requests.
+
+            Premium Spade Field available depending on your product package.
+
+            '
+    ReportApiResponse:
+      type: object
+      description: Response for reporting an enriched transaction.
+      properties:
+        details:
+          type: string
+          examples:
+          - Enrichment Successfully Reported.
+    EnrichmentFeedbackResponse:
+      type: object
+      description: Response for reporting any kind of enrichment feedback.
+      properties:
+        details:
+          type: string
+          examples:
+          - Chargeback successfully reported.
+    MobileAppInfo:
+      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
+
+
+        This is a premium Spade field available depending on your product package.
+
+        '
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: A unique identifier for this mobile app.
+        name:
+          type:
+          - string
+          maxLength: 512
+          examples:
+          - Roblox
+          description: The name of the mobile app.
+        url:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://play.google.com/store/apps/details?id=com.roblox.client
+          description: The URL of the mobile app in the app store.
+        logo:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
+          description: The URL of the mobile app's logo.
+        developerName:
+          type:
+          - string
+          maxLength: 256
+          examples:
+          - Roblox Corporation
+          description: The name of the developer of the mobile app.
+        developerId:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: The ID of the developer of the mobile app.
+        category:
+          type:
+          - string
+          enum:
+          - Auto and Transportation
+          - Creative and Design
+          - Education and Parenting
+          - Entertainment and Media
+          - Finance and Business
+          - Games
+          - Health and Lifestyle
+          - Shopping and Marketplaces
+          - Social and Communication
+          - Travel and Events
+          - Utility and Tools
+          examples:
+          - Auto and Transportation
+          description: The category of the mobile app.
+        hasGamblingOrRewards:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has gambling or cash rewards.
+        hasSimulatedGambling:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has simulated gambling.
+        ageRating:
+          type:
+          - string
+          enum:
+          - Children
+          - Teen
+          - Adult
+          - Unknown
+          examples:
+          - Teen
+          description: The age rating of the mobile app.
+    ReportApiRequest:
+      type: object
+      description: Schema for reporting an enriched transaction.
+      required:
+      - errorDescription
+      - enrichmentId
+      properties:
+        enrichmentId:
+          type: string
+          format: uuid
+          description: Enrichment id represented as a string UUID.
+        errorDescription:
+          type: string
+          description: Description of incorrect details in enrichment.
+          maxLength: 1024
+          examples:
+          - Enrichment has an incorrect location. Wrong postal code.
+        incorrectLocation:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong location.
+          examples:
+          - true
+        incorrectLocationDescription:
+          type: string
+          description: Description of incorrect location details in enrichment.
+          maxLength: 1024
+          examples:
+          - The location's city is incorrect.
+        incorrectCategory:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong Category.
+          examples:
+          - false
+        incorrectCategoryDescription:
+          type: string
+          description: Description of incorrect category details in enrichment.
+          maxLength: 1024
+          examples:
+          - The category returned is incorrect.
+        incorrectChannel:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong Channel.
+          examples:
+          - false
+        incorrectChannelDescription:
+          type: string
+          description: Description of incorrect channel details in enrichment.
+          maxLength: 1024
+          examples:
+          - The spending channel should have been physical.
+        incorrectCounterparty:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong Counterparty.
+          examples:
+          - false
+        incorrectCounterpartyDescription:
+          type: string
+          description: Description of incorrect counterparty details in enrichment.
+          maxLength: 1024
+          examples:
+          - The counterparty is incorrect.
+    IndustryCategoryLevel:
+      description: A node in a tree representing a hierarchical category system
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 15
+          examples:
+          - 011-000-000-000
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Retail
+        icon:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: Category icon.
+    ResponseLocation:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          examples:
+          - fdf79470-3deb-4638-956a-6859e473b9d8
+          description: A unique identifier for this location.
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave Suite 100
+          description: Street number, name, and any secondary address information.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave
+          description: Street number and name.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          maxLength: 32
+          examples:
+          - Suite 100
+          description: Secondary address information.
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - New York
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - NY
+          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
+        country:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          examples:
+          - USA
+          description: Three letter country code.
+        postalCode:
+          type:
+          - string
+          - 'null'
+          maxLength: 12
+          examples:
+          - '10001'
+          description: Location postal code or zip code.
+        latitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 45
+          description: Location latitude.
+        longitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 120
+          description: Location longitude.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          maxLength: 24
+          examples:
+          - '+18664862360'
+          description: Location phone number. This is a premium Spade field available depending on your product package.
+        matchScore:
+          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
+
+            This is a premium Spade field available depending on your product package.
+
+            '
+          type:
+          - number
+          - 'null'
+          examples:
+          - 93.5
+    TriggeredActionResponse:
+      type: object
+      description: A triggered action returned in the enrichment response.
+      properties:
+        id:
+          type: string
+          maxLength: 512
+          description: Your unique identifier for the matched trigger (as provided during registration).
+          examples:
+          - trigger-12345
+        type:
+          type: string
+          description: The type of trigger that matched — `merchant_trigger` for merchant-based triggers, `category_trigger` for category-based triggers.
+          enum:
+          - merchant_trigger
+          - category_trigger
+          example: merchant_trigger
+          examples:
+          - merchant_trigger
+        action:
+          type: object
+          description: 'The custom action data you provided during registration for this trigger.
+
+
+            For `BLOCK` and `ALLOW_ONLY` action types, an `authRecommendation` field is automatically added:
+
+            - `BLOCK` triggers: `authRecommendation` is set to `"BLOCK"`.
+
+            - `ALLOW_ONLY` triggers that match: `authRecommendation` is set to `"ALLOW"`.
+
+            - `ALLOW_ONLY` triggers that do not match (inverse semantics): `authRecommendation` is set to `"BLOCK"`.
+
+            '
+          additionalProperties: true
+          properties:
+            authRecommendation:
+              type: string
+              description: Authorization recommendation injected for `BLOCK` and `ALLOW_ONLY` action types. Not present for other action types.
+              enum:
+              - ALLOW
+              - BLOCK
+          examples:
+          - type: REWARD
+            rewardPercent: 5
+            offerId: offer-abc123
+          - type: BLOCK
+            reason: Gambling merchant
+            authRecommendation: BLOCK
+          - type: ALLOW_ONLY
+            category: approved-vendors
+            authRecommendation: ALLOW
+        scope:
+          type: string
+          description: The scope at which this trigger was registered (account, program, user, or card).
+          enum:
+          - account
+          - program
+          - user
+          - card
+          example: account
+          examples:
+          - account
+        source:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates whether the action was triggered by the matched counterparty or third party.
+
+
+            This field will be set to `null` when an `ALLOW_ONLY` action trigger was set up whose condition the current transaction did not meet. The `authRecommendation` in this case will be `BLOCK`.
+
+            '
+          enum:
+          - counterparty
+          - third_party
+          - null
+          example: counterparty
+          examples:
+          - counterparty
+        categoryId:
+          type: string
+          description: The Spade category ID that matched this trigger. Only present when `type` is `category_trigger`.
+          examples:
+          - b4b0d249-b402-49ac-b744-5027d4574fc5
+        categoryName:
+          type: string
+          description: The name of the Spade category that matched this trigger. Only present when `type` is `category_trigger`.
+          examples:
+          - Travel
+    CardEnrichmentResponse:
+      allOf:
+      - type: object
+        properties:
+          transactionInfo:
+            properties:
+              transferInfo:
+                examples:
+                - null
+              isAccountVerification:
+                examples:
+                - null
+              isPeerToPeer:
+                examples:
+                - null
+              isDigitalWallet:
+                examples:
+                - null
+      - $ref: '#/components/schemas/EnrichmentResponse'
+    CommonFraud:
+      type: object
+      properties:
+        isFraud:
+          type: boolean
+          description: A boolean indicating if this transaction was suspected to involve fraud.
+          examples:
+          - false
+        fraudType:
+          type: string
+          description: 'The type of fraud suspected to have occurred. This field can only be provided if `isFraud` is true.
+
+            '
+          enum:
+          - card_not_present
+          - card_testing
+          - chargeback_fraud
+          - counterfeit_card
+          - merchant_fraud
+          - other
+          - phishing
+          - stolen_card
+          - unknown
+          - none
+        fraudNotes:
+          type: string
+          description: 'Any additional details related to fraud suspected to have occurred on the associated transaction. This field can only be provided if `isFraud` is true.
+
+            '
+          maxLength: 512
+          examples:
+          - Merchant is believed to commonly be used for card testing.
+    CustomAttributesResponseField:
+      type: object
+      description: A dictionary containing the custom attributes that were included in the enrichment request (if any).
+      additionalProperties:
+        type: string
+      examples:
+      - custom_attribute_1: value_1
+        custom_attribute_2: value_2
+    EnrichmentResponse:
+      type: object
+      properties:
+        enrichmentId:
+          type: string
+          format: uuid
+          description: Our ID representing the enrichment, not to be confused with your provided `transactionId`.
+        transactionInfo:
+          type: object
+          properties:
+            type:
+              type: string
+              description: The main type of the transaction. For card transactions, the type is always "spending".
+              enum:
+              - account_verification
+              - atm
+              - debt
+              - fee
+              - income
+              - other_money_movement
+              - reimbursement
+              - spending
+              examples:
+              - spending
+            subType:
+              type:
+              - string
+              - 'null'
+              description: The more specific type of the transaction, if applicable. For card transactions, the `subType` is always `null`.
+              enum:
+              - alimony_or_child_support
+              - atm
+              - bnpl
+              - business
+              - cash_advance
+              - deposit
+              - disbursements
+              - earned_income
+              - government_benefits
+              - insurance
+              - investment
+              - nsf
+              - other
+              - overdraft
+              - payment
+              - payout
+              - rental
+              - retirement
+              - tax_refund
+              - transfer
+              - withdrawal
+              examples:
+              - null
+            display:
+              type:
+              - object
+              - 'null'
+              description: 'An object containing display information for the transaction. The fields in this object are pulled from other parts of the enrichment and surfaced here for convenience.
+
+                '
+              properties:
+                name:
+                  type:
+                  - string
+                  maxLength: 64
+                  description: The best name for display.
+                  examples:
+                  - Amazon
+                categoryName:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 64
+                  description: The best category name for display.
+                  examples:
+                  - Online Marketplace
+                graphic:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 128
+                  description: 'The best graphic for display. Depending on the data available, this will be either a) the counterparty logo, b) the third party logo, or c) the category icon.
+
+                    '
+                  format: url
+                  examples:
+                  - https://static.v2.spadeapi.com/logos/de33f8973bc934c5b368a5b27155db02/light.png
+                  - https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
+                graphicSource:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 16
+                  enum:
+                  - counterparty
+                  - third_party
+                  - category
+                  description: 'The field from which the `graphic` was sourced. This will be either `counterparty`, `third_party`, or `category`.
+
+                    '
+                  examples:
+                  - counterparty
+            thirdParties:
+              type: array
+              description: An array of third parties involved in the transaction, when applicable. Entities such as Toast, Square, Uber Eats, Doordash, etc. will appear here.
+              items:
+                $ref: '#/components/schemas/ThirdParty'
+            spendingInfo:
+              type:
+              - object
+              - 'null'
+              description: Additional information about transactions whose `type` is "spending". This field is `null` for other types of transactions.
+              properties:
+                channel:
+                  type: object
+                  properties:
+                    value:
+                      type:
+                      - string
+                      - 'null'
+                      enum:
+                      - digital
+                      - physical
+                      - null
+                      description: Spending channel value of digital or physical, null if we are unable to determine.
+            transferInfo:
+              type:
+              - object
+              - 'null'
+              description: Additional information about transfers. This field is `null` for card transactions.
+              properties:
+                direction:
+                  type:
+                  - string
+                  maxLength: 12
+                  enum:
+                  - outgoing
+                  - incoming
+                  description: The transfer direction.
+                  examples:
+                  - outgoing
+                transferMethod:
+                  type:
+                  - string
+                  maxLength: 12
+                  enum:
+                  - ach
+                  - cash
+                  - check
+                  - intrabank
+                  - rtp
+                  - unknown
+                  - wire
+                  description: The transfer method.
+                  examples:
+                  - ach
+                transferType:
+                  type:
+                  - string
+                  maxLength: 12
+                  enum:
+                  - external
+                  - internal
+                  - unknown
+                  description: The transfer type. "external" indicates that money is being sent to an external counterparty. "internal" indicates that money is being moved between accounts owned by the same entity.
+                  examples:
+                  - external
+                isAdjustmentOrRefund:
+                  type:
+                  - boolean
+                  description: Whether the transfer is an adjustment or refund.
+                  examples:
+                  - false
+            atmInfo:
+              type:
+              - object
+              - 'null'
+              description: Additional information about ATM transactions. This field is `null` for other types of transactions.
+              examples:
+              - null
+              properties:
+                sponsorName:
+                  type:
+                  - string
+                  maxLength: 64
+                  description: The name of the sponsor of the ATM involved in the transaction.
+                  examples:
+                  - Fiserv
+                ownerName:
+                  type:
+                  - string
+                  maxLength: 64
+                  description: The name of the owner of the ATM involved in the transaction.
+                  examples:
+                  - Wells Fargo
+            isAccountVerification:
+              type:
+              - boolean
+              - 'null'
+              description: Whether the transfer is an account verification. Currently only available for transfers.
+              examples:
+              - false
+            isPeerToPeer:
+              type:
+              - boolean
+              - 'null'
+              description: Whether the transaction is a peer-to-peer transaction. Currently only available for transfers.
+              examples:
+              - false
+            isDigitalWallet:
+              type:
+              - boolean
+              - 'null'
+              description: Whether the transaction involves a digital wallet. Currently only available for transfers.
+              examples:
+              - false
+            transactionId:
+              type: string
+              maxLength: 512
+              description: Your ID representing this transaction. This ID exactly matches the transactionId you provided in your enrichment request.
+              examples:
+              - transaction_id_123456789
+            recurrenceInfo:
+              type:
+              - object
+              - 'null'
+              description: A recurring transaction is a repeated payment pattern to a counterparty, based on periodicty and amount. Premium Spade Signal available depending on your product package.
+              properties:
+                intervalType:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 12
+                  enum:
+                  - weekly
+                  - biweekly
+                  - semi_monthly
+                  - monthly
+                  - quarterly
+                  - annually
+                  description: Recurrence cadence.
+                intervalDays:
+                  type:
+                  - integer
+                  - 'null'
+                  description: Number of days between recurrences.
+                  examples:
+                  - 30
+                nextPaymentExpected:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 10
+                  format: date
+                  description: Next expected payment date.
+                  examples:
+                  - '2024-08-07'
+                recentRecurrences:
+                  type:
+                  - array
+                  - 'null'
+                  description: Array of recent recurrence objects, null if no recurrence exists.
+                  items:
+                    type: array
+                    properties:
+                      amount:
+                        type: number
+                        description: Amount of the recurrence.
+                        examples:
+                        - 130
+                      enrichmentId:
+                        type: string
+                        description: Our ID representing the enrichment, not to be confused with your provided `transactionId`.
+                        examples:
+                        - c1d4064b-9364-43d3-8ee3-500898cda1aa
+                      occurredAt:
+                        type: string
+                        format: date-time
+                        description: Date and time the transaction occurred. Formatted as an ISO 8601 date time.
+                        examples:
+                        - '2024-06-06T14:25:11+00:00'
+                      transactionId:
+                        type: string
+                        description: Customer-provided identifier for the transaction.
+                        examples:
+                        - d6c4dc4e-e0da-4782-b581-95916523d87a
+            riskInsights:
+              type:
+              - object
+              - 'null'
+              description: Risk insights provide visibility into the potential risk of a transaction and the merchants involved. Premium Spade Signal available depending on your product package.
+              properties:
+                irregularWebPresenceDetected:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Has engaged in deceptive online practices or has irregular website structure or content.
+                  examples:
+                  - false
+                negativeOnlineSentiment:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Negative online consumer feedback associated with the counterparty.
+                  examples:
+                  - false
+                highRiskEntity:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: The counterparty is known to engage in fraudulent practices.
+                  examples:
+                  - false
+                riskyIndustry:
+                  type:
+                  - boolean
+                  - 'null'
+                  description: Industry is correlated with increased disputes (based on Spade industries).
+                  examples:
+                  - false
+                cardAcceptanceHistory:
+                  type:
+                  - string
+                  - 'null'
+                  enum:
+                  - extensive
+                  - established
+                  - stable
+                  - limited
+                  - very_limited
+                  - 'null'
+                  description: Counterparties with lower levels of card acceptance history have a higher likelihood of chargebacks or fraudulent activity.
+                  examples:
+                  - extensive
+        counterparty:
+          type: array
+          description: An array of counterparties matched to the transaction, ordered by descending match score.
+          items:
+            $ref: '#/components/schemas/Counterparty'
+        mobileAppInfo:
+          $ref: '#/components/schemas/MobileAppInfo'
+        customAttributes:
+          $ref: '#/components/schemas/CustomAttributesResponseField'
+        actions:
+          type:
+          - array
+          - 'null'
+          description: 'An array of triggered actions, or `null` if no triggers matched.
+
+            This field is only present if your integration has the actions feature enabled.
+
+
+            When a transaction matches one or more registered triggers, this array contains the action details
+
+            including your custom `action` data. Multiple matches are possible when triggers are registered
+
+            at different scopes (account, program, user, card).
+
+            '
+          items:
+            $ref: '#/components/schemas/TriggeredActionResponse'
+          examples:
+          - - id: trigger-12345
+              type: merchant_trigger
+              action:
+                type: REWARD
+                rewardPercent: 5
+              scope: account
+              source: counterparty
+  responses:
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header
