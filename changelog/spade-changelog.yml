@@ -1,0 +1,49 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.spade.com/changelog/changelog
+scheme: dated-monthly
+current_version: 2.7.3
+note: >-
+  Spade publishes a dated, month-grained changelog. The OpenAPI carries an `info.version` (2.7.3 at
+  capture). Entries below are the recent window; the live changelog is the source of truth.
+entries:
+  - date: '2026-06'
+    title: Larger Action Trigger Registrations
+    type: addition
+    highlights: >-
+      Account and program-scope action triggers now support up to 300,000 active triggers per scope,
+      with sequential PATCH operations for batches exceeding 100,000.
+  - date: '2026-05'
+    title: Microbatch Enrichment
+    type: addition
+    highlights: >-
+      Batch enrichment endpoints accept `?synchronous=true` for inline results on small datasets
+      (50-100 records depending on endpoint type).
+  - date: '2026-05'
+    title: Triggered Action source Field
+    type: addition
+    highlights: >-
+      Triggered actions now include a `source` field indicating whether matched by counterparty or
+      third_party (null when conditions are unmet).
+  - date: '2026-04'
+    title: Incremental Updates for Merchant Action Triggers
+    type: addition
+    highlights: New PATCH endpoint enables granular add/remove without full re-submission.
+  - date: '2026-03'
+    title: Program-Scoped Merchant Action Triggers
+    type: addition
+    highlights: Merchant action triggers gain program scope alongside account, user, and card scopes.
+  - date: '2026-02'
+    title: Merchant Action Triggers
+    type: addition
+    highlights: >-
+      Register custom actions (rewards, block/allow rules) matched against merchant databases and
+      returned in enrichment responses.
+  - date: '2026-01'
+    title: 'New Category: Mortgage'
+    type: addition
+    highlights: New Tier 3 category 001-008-001-000 under Banking and Finance.
+  - date: '2025-10'
+    title: 'New Category: AI Services'
+    type: addition
+    highlights: New Tier 3 category 013-009-013-000 under Technology -> Software.

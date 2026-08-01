@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/spade-openapi-original.yml
+skills:
+  - file: spade-enrich-card-transaction.md
+    name: Enrich a card transaction with Spade
+    api: openapi/spade-openapi-original.yml
+    operations: [cardEnrich, cardEnrichParse, cardReport]
+  - file: spade-batch-enrich.md
+    name: Batch-enrich transactions with Spade
+    api: openapi/spade-openapi-original.yml
+    operations: [batchesTransactionsCardsEnrich, batchesCardEnrichGetStatus, batchesCardEnrichGetResults]
+  - file: spade-merchant-search.md
+    name: Search Spade's merchant database
+    api: openapi/spade-openapi-original.yml
+    operations: [corporationSearch]

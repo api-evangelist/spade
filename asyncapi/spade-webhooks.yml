@@ -1,0 +1,32 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.spade.com/api-reference/introduction
+spec_type: Webhooks
+note: >-
+  Spade does not publish an AsyncAPI document. Its event surface is delivered as HTTP callbacks
+  defined inline in the OpenAPI (components callbacks). When a caller supplies a `callbackUrl` in a
+  request body, Spade POSTs to that URL when the work completes. Each callback includes a
+  verification token so the receiver can confirm the request originated from Spade.
+delivery: callback-url
+verification: >-
+  Callbacks carry a token in the request body that can be used to verify the callback is from Spade.
+webhooks:
+  - name: batchStatusCallback
+    method: POST
+    trigger: A batch enrichment job (card, transfer, or universal) finishes processing
+    set_via: callbackUrl field in the /batches request body
+    payload_schema: BatchCallbackApiRequest
+    trigger_operations:
+      - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrich
+      - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrichParse
+      - openapi/spade-openapi-original.yml#batchesTransferEnrich
+      - openapi/spade-openapi-original.yml#batchesUniversalEnrich
+  - name: CorrectedEnrichment
+    method: POST
+    trigger: Spade re-processes a reported enrichment and produces a corrected result
+    set_via: callbackUrl supplied when reporting an enrichment as incorrect
+    trigger_operations:
+      - openapi/spade-openapi-original.yml#cardReport
+docs:
+  - https://docs.spade.com/reference/error-reporting-guide
+  - https://docs.spade.com/reference/batch-enrichment-guide

@@ -1,0 +1,19 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/spade-openapi-original.yml
+docs: https://docs.spade.com/reference/integrate-with-spades-api
+notes: >-
+  Secret-key auth via the X-Api-Key header, chosen for low-latency applications. Sandbox and
+  production environments use different API keys; keys are issued by a Spade representative.
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: X-Api-Key
+  sources:
+  - openapi/spade-openapi-original.yml

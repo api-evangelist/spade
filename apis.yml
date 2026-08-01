@@ -1,22 +1,190 @@
 aid: spade
 name: Spade
-description: Spade is a company surfaced as a portfolio company of a16z and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Spade is a real-time transaction enrichment and merchant intelligence platform for financial
+  services. Its API transforms raw, messy card, transfer, and universal transaction records into
+  clean, structured, verified merchant, location, and category data with sub-50ms latency. Fintechs,
+  banks, and card issuers use Spade for authorization decisions, rewards attribution,
+  recurring-payment detection, risk and fraud signals, spend analytics, and category
+  personalization, plus merchant search and account/program/user/card-scoped action triggers. Spade
+  operates east and west US sandbox and production environments and is SOC 2 Type II certified.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://spadewp.wpenginepowered.com/wp-content/uploads/2025/07/OpenGraph.webp
 url: https://raw.githubusercontent.com/api-evangelist/spade/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - a16z
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: enriched-from-live-api
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Financial Services
+- Transaction Enrichment
+- Merchant Intelligence
+- Payments
+- Data Enrichment
+- Fraud and Risk
+- Fintech
+apis:
+- aid: spade:spade-card-enrichment-api
+  name: Spade Card Enrichment API
+  description: Enrich card transactions
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Card Enrichment
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-card-enrichment-api-openapi.yml
+- aid: spade:spade-category-action-triggers-api
+  name: Spade Category Action Triggers API
+  description: Register category action triggers and receive triggered actions in enrichment responses
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Category Action Triggers
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-category-action-triggers-api-openapi.yml
+- aid: spade:spade-category-personalization-api
+  name: Spade Category Personalization API
+  description: Create custom categories and personalize enrichments
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Category Personalization
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-category-personalization-api-openapi.yml
+- aid: spade:spade-feedback-and-reporting-api
+  name: Spade Feedback and Reporting API
+  description: Provide feedback on card events or report enrichment errors
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Feedback and Reporting
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-feedback-and-reporting-api-openapi.yml
+- aid: spade:spade-merchant-action-triggers-api
+  name: Spade Merchant Action Triggers API
+  description: Register merchant action triggers and receive triggered actions in enrichment responses
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Merchant Action Triggers
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-merchant-action-triggers-api-openapi.yml
+- aid: spade:spade-merchant-search-api
+  name: Spade Merchant Search API
+  description: Search for Spade merchants
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Merchant Search
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-merchant-search-api-openapi.yml
+- aid: spade:spade-transfer-enrichment-api
+  name: Spade Transfer Enrichment API
+  description: Enrich transfers
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Transfer Enrichment
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-transfer-enrichment-api-openapi.yml
+- aid: spade:spade-universal-enrichment-api
+  name: Spade Universal Enrichment API
+  description: The Universal Enrichment API from Spade — 3 operation(s) for universal enrichment.
+  humanURL: https://docs.spade.com/api-reference/introduction
+  baseURL: https://east.api.spade.com
+  tags:
+  - Universal Enrichment
+  properties:
+  - type: OpenAPI
+    url: openapi/spade-universal-enrichment-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: DeveloperPortal
+  url: https://docs.spade.com
+- type: Documentation
+  url: https://docs.spade.com
+- type: APIReference
+  url: https://docs.spade.com/api-reference/introduction
+- type: GettingStarted
+  url: https://docs.spade.com/reference/integrate-with-spades-api
+- type: Support
+  url: https://www.spade.com/contact
+- type: Pricing
+  url: https://www.spade.com/pricing
+- type: TermsOfService
+  url: https://www.spade.com/terms
+- type: PrivacyPolicy
+  url: https://www.spade.com/privacy
+- type: SLA
+  url: https://www.spade.com/sla
+- type: ChangeLog
+  url: https://docs.spade.com/changelog/changelog
+- type: ChangeLog
+  url: changelog/spade-changelog.yml
+- type: Authentication
+  url: authentication/spade-authentication.yml
+- type: Conventions
+  url: conventions/spade-conventions.yml
+- type: Sandbox
+  url: sandbox/spade-sandbox.yml
+- type: ErrorCatalog
+  url: errors/spade-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/spade-lifecycle.yml
+- type: DataModel
+  url: data-model/spade-data-model.yml
+- type: LLMsTxt
+  url: llms/spade-llms.txt
+- type: MCPServer
+  url: mcp/spade-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/spade-webhooks.yml
+- type: AgenticAccess
+  url: agentic-access/spade-agentic-access.yml
+- type: Conformance
+  url: conformance/spade-conformance.yml
+- type: Compliance
+  url: https://www.spade.com/security
+- type: TrustCenter
+  url: security/spade-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/spade-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.spade.com/security
+- type: DomainSecurity
+  url: security/spade-domain-security.yml
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

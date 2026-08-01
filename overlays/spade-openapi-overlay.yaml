@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Spade API
+  version: 1.0.0
+extends: openapi/spade-openapi-original.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-21'
+      x-apievangelist-provider: spade
+      x-apievangelist-auth: X-Api-Key header (per-environment keys)
+      x-apievangelist-categories:
+        - Financial Services
+        - Transaction Enrichment
+        - Merchant Intelligence
+  - target: $.info
+    update:
+      x-apievangelist-artifacts:
+        authentication: authentication/spade-authentication.yml
+        conventions: conventions/spade-conventions.yml
+        errors: errors/spade-problem-types.yml
+        webhooks: asyncapi/spade-webhooks.yml
+        lifecycle: lifecycle/spade-lifecycle.yml
+        data_model: data-model/spade-data-model.yml
+        sandbox: sandbox/spade-sandbox.yml
+  - target: $.info
+    update:
+      x-apievangelist-notes: >-
+        Spec reconstructed by the API Evangelist enrichment pipeline from the provider's per-operation
+        OpenAPI blocks published on docs.spade.com (Mintlify), which do not expose a single downloadable
+        spec.yml. 37 paths / 73 operations / 50 schemas, ApiKeyAuth (X-Api-Key).

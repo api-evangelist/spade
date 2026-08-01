@@ -1,0 +1,28 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.spade.com/changelog/changelog
+versioning:
+  scheme: major-path
+  current: v2
+  openapi_info_version: 2.7.3
+  docs: https://docs.spade.com/reference/integrate-with-spades-api
+changelog: https://docs.spade.com/changelog/changelog
+sla:
+  url: https://www.spade.com/sla
+  note: Spade publishes a Service Level Agreement page.
+status_page: null
+status_page_note: No public status page was found (status.spade.com did not resolve at capture).
+deprecation:
+  policy_url: null
+  note: >-
+    No standalone deprecation-policy page found. Deprecation is expressed in-spec: two legacy card
+    enrichment operations are marked deprecated and alias to the current endpoints, and several
+    legacy spadeapi.com server hosts are labelled deprecated in favor of the *.spade.com hosts.
+deprecated_operations:
+  - openapi/spade-openapi-original.yml#cardEnrichDeprecated
+  - openapi/spade-openapi-original.yml#cardEnrichParseDeprecated
+deprecated_hosts:
+  - https://sandbox.v2.spadeapi.com
+  - https://v2.spadeapi.com
+  - https://sandbox.west.v2.spadeapi.com
+  - https://west.v2.spadeapi.com

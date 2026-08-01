@@ -1,0 +1,71 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/spade-openapi-original.yml
+format: http-status
+note: Spade returns plain HTTP status codes with a text description; responses are not application/problem+json
+  (RFC 9457). Codes derived from every documented 4xx/5xx response.
+envelope:
+  content_type: application/json
+  rfc9457: false
+problems:
+- status: 400
+  title: Bad request
+  description: Bad request
+  occurrences: 39
+  example_operations:
+  - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrichParse
+  - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrich
+  - openapi/spade-openapi-original.yml#cardEnrichParse
+  - openapi/spade-openapi-original.yml#cardEnrich
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetResults
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetStatus
+- status: 403
+  title: Forbidden
+  description: Forbidden
+  occurrences: 67
+  example_operations:
+  - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrichParse
+  - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrich
+  - openapi/spade-openapi-original.yml#cardEnrichParse
+  - openapi/spade-openapi-original.yml#cardEnrich
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetResults
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetStatus
+- status: 404
+  title: Not found
+  description: No action triggers exist for this scope
+  occurrences: 13
+  example_operations:
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetResults
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetStatus
+  - openapi/spade-openapi-original.yml#categoryActionTriggersGet
+  - openapi/spade-openapi-original.yml#cardCategoryActionTriggersGet
+  - openapi/spade-openapi-original.yml#programCategoryActionTriggersGet
+  - openapi/spade-openapi-original.yml#userCategoryActionTriggersGet
+- status: 409
+  title: Conflict
+  description: A registration is already in progress for this scope
+  occurrences: 20
+  example_operations:
+  - openapi/spade-openapi-original.yml#categoryActionTriggersDelete
+  - openapi/spade-openapi-original.yml#categoryActionTriggersPatch
+  - openapi/spade-openapi-original.yml#categoryActionTriggersPut
+  - openapi/spade-openapi-original.yml#cardCategoryActionTriggersDelete
+  - openapi/spade-openapi-original.yml#cardCategoryActionTriggersPatch
+  - openapi/spade-openapi-original.yml#cardCategoryActionTriggersPut
+- status: 429
+  title: Too many requests
+  description: Too many requests
+  occurrences: 1
+  example_operations:
+  - openapi/spade-openapi-original.yml#corporationSearch
+- status: 500
+  title: Internal server error
+  description: Internal server error
+  occurrences: 67
+  example_operations:
+  - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrichParse
+  - openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrich
+  - openapi/spade-openapi-original.yml#cardEnrichParse
+  - openapi/spade-openapi-original.yml#cardEnrich
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetResults
+  - openapi/spade-openapi-original.yml#batchesCardEnrichGetStatus

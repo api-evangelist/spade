@@ -1,0 +1,17 @@
+generated: '2026-07-21'
+method: searched
+probe: true
+url: https://www.spade.com/security
+certifications:
+  - SOC 2 Type II
+standards:
+  - OWASP Top 10
+  - GDPR-aligned data handling
+note: >-
+  Spade publishes its security/compliance posture on its security page rather than a dedicated
+  trust portal (no trust.spade.com). SOC 2 Type II certification is stated; detailed compliance
+  documentation is available on request via security@spade.com. Infrastructure runs on AWS with
+  encryption, penetration testing, and continuous vulnerability scanning.
+evidence:
+  - source: https://www.spade.com/security
+    keywords: [soc 2 type ii, owasp top 10, gdpr, encryption, penetration testing]

@@ -1,0 +1,41 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.spade.com/reference/integrate-with-spades-api
+note: Cross-cutting request/response semantics for Spade, searched from docs and derived from OpenAPI.
+authentication:
+  style: api-key
+  location: header
+  header: X-Api-Key
+  rationale: Secret-key header auth chosen as the fastest approach for low-latency applications.
+  environments_have_separate_keys: true
+regions:
+  strategy: Call the geographically nearest server (east/west) to minimize enrichment latency.
+batch_processing:
+  async_pattern: >-
+    Batch enrichment returns a `batchId`; poll `/batches/{batchId}` for status and
+    `/batches/{batchId}/results` for results, or supply a `callbackUrl` for completion notification.
+  synchronous_option: >-
+    Pass `?synchronous=true` on batch endpoints for inline results on small datasets. The per-request
+    cap is `synchronousMax`, discoverable at runtime via the endpoint metadata (OPTIONS) operations.
+idempotency:
+  key_header: false
+  note: >-
+    Spade does not document an Idempotency-Key header for retry-safe writes. Trigger and registration
+    operations are described as naturally idempotent (PUT registrations replace state; trigger IDs that
+    are not active are silently ignored). A 409 is returned when a registration is already in progress
+    for a scope.
+error_semantics:
+  content_type: application/json
+  rfc9457: false
+  see: errors/spade-problem-types.yml
+webhooks:
+  see: asyncapi/spade-webhooks.yml
+  note: Completion callbacks include a verification token to confirm origin from Spade.
+versioning:
+  scheme: major-path
+  current_major: v2
+  openapi_info_version: 2.7.3
+  changelog: https://docs.spade.com/changelog/changelog
+scopes_model:
+  hierarchy: [account, program, user, card]
+  note: Triggers and category personalization can be registered at any of four nested scopes.

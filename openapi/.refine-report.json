@@ -1,0 +1,28 @@
+{
+  "provider": "spade",
+  "sources": [
+    "spade-card-enrichment-api-openapi.yml",
+    "spade-category-action-triggers-api-openapi.yml",
+    "spade-category-personalization-api-openapi.yml",
+    "spade-feedback-and-reporting-api-openapi.yml",
+    "spade-merchant-action-triggers-api-openapi.yml",
+    "spade-merchant-search-api-openapi.yml",
+    "spade-transfer-enrichment-api-openapi.yml",
+    "spade-universal-enrichment-api-openapi.yml"
+  ],
+  "outputs": [
+    "spade-card-enrichment-api-openapi.yml",
+    "spade-category-action-triggers-api-openapi.yml",
+    "spade-category-personalization-api-openapi.yml",
+    "spade-feedback-and-reporting-api-openapi.yml",
+    "spade-merchant-action-triggers-api-openapi.yml",
+    "spade-merchant-search-api-openapi.yml",
+    "spade-transfer-enrichment-api-openapi.yml",
+    "spade-universal-enrichment-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

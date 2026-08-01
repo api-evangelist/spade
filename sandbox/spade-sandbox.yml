@@ -1,0 +1,30 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.spade.com/reference/integrate-with-spades-api
+note: >-
+  Spade runs distinct sandbox and production environments in two US regions (east/west). Sandbox and
+  production do NOT share API keys, recurrence state, or custom user-generated categories. Access is
+  key-based (X-Api-Key header); keys are issued by a Spade representative rather than self-serve. No
+  public test-card / magic-value fixtures are published in the docs.
+environments:
+  - name: East coast sandbox
+    base_url: https://east.sandbox.spade.com
+    tier: sandbox
+  - name: West coast sandbox
+    base_url: https://west.sandbox.spade.com
+    tier: sandbox
+  - name: East coast production
+    base_url: https://east.api.spade.com
+    tier: production
+  - name: West coast production
+    base_url: https://west.api.spade.com
+    tier: production
+key_separation: >-
+  Each environment requires different API keys. Call the server closest to your server location to
+  minimize latency.
+test_values_published: false
+deprecated_hosts:
+  - https://sandbox.v2.spadeapi.com
+  - https://v2.spadeapi.com
+  - https://sandbox.west.v2.spadeapi.com
+  - https://west.v2.spadeapi.com

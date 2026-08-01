@@ -1,0 +1,357 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/spade-openapi-original.yml
+note: Candidate MCP tool surface derived one-per-operation from Spade's OpenAPI. No official hosted Spade
+  MCP server was found as of the generated date.
+server:
+  name: spade
+  transport: http
+  url: null
+tool_count: 69
+tools:
+- name: batchesTransactionsCardsEnrichParse
+  description: Enrich a batch of card transactions with DE43 data
+  method: POST
+  path: /batches/transactions/cards/enrich/parse
+  source_operation: openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrichParse
+- name: batchesTransactionsCardsEnrich
+  description: Enrich a batch of card transactions
+  method: POST
+  path: /batches/transactions/cards/enrich
+  source_operation: openapi/spade-openapi-original.yml#batchesTransactionsCardsEnrich
+- name: cardEnrichDeprecated
+  description: Enrich a card transaction
+  method: POST
+  path: /transactions/enrich
+  source_operation: openapi/spade-openapi-original.yml#cardEnrichDeprecated
+- name: cardEnrichParseDeprecated
+  description: Enrich a card transaction with an unparsed de43
+  method: POST
+  path: /transactions/enrich/parse
+  source_operation: openapi/spade-openapi-original.yml#cardEnrichParseDeprecated
+- name: cardEnrichParse
+  description: Enrich a card transaction with an unparsed de43
+  method: POST
+  path: /transactions/cards/enrich/parse
+  source_operation: openapi/spade-openapi-original.yml#cardEnrichParse
+- name: cardEnrich
+  description: Enrich a card transaction
+  method: POST
+  path: /transactions/cards/enrich
+  source_operation: openapi/spade-openapi-original.yml#cardEnrich
+- name: batchesCardEnrichGetResults
+  description: Get the results of a batch card enrichment job
+  method: GET
+  path: /batches/{cardEnrichmentBatchId}/results
+  source_operation: openapi/spade-openapi-original.yml#batchesCardEnrichGetResults
+- name: batchesCardEnrichGetStatus
+  description: Get the status of a batch card enrichment job
+  method: GET
+  path: /batches/{cardEnrichmentBatchId}
+  source_operation: openapi/spade-openapi-original.yml#batchesCardEnrichGetStatus
+- name: categoryActionTriggersDelete
+  description: Clear account-level category triggers
+  method: DELETE
+  path: /category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#categoryActionTriggersDelete
+- name: categoryActionTriggersGet
+  description: Get account-level category trigger status
+  method: GET
+  path: /category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#categoryActionTriggersGet
+- name: categoryActionTriggersPatch
+  description: Incremental category trigger operations at account scope
+  method: PATCH
+  path: /category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#categoryActionTriggersPatch
+- name: categoryActionTriggersPut
+  description: Register category triggers at account scope
+  method: PUT
+  path: /category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#categoryActionTriggersPut
+- name: cardCategoryActionTriggersDelete
+  description: Clear card-level category triggers
+  method: DELETE
+  path: /users/{userId}/cards/{cardId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardCategoryActionTriggersDelete
+- name: cardCategoryActionTriggersGet
+  description: Get card-level category trigger status
+  method: GET
+  path: /users/{userId}/cards/{cardId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardCategoryActionTriggersGet
+- name: cardCategoryActionTriggersPatch
+  description: Incremental category trigger operations at card scope
+  method: PATCH
+  path: /users/{userId}/cards/{cardId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardCategoryActionTriggersPatch
+- name: cardCategoryActionTriggersPut
+  description: Register category triggers at card scope
+  method: PUT
+  path: /users/{userId}/cards/{cardId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardCategoryActionTriggersPut
+- name: programCategoryActionTriggersDelete
+  description: Clear program-level category triggers
+  method: DELETE
+  path: /programs/{programId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programCategoryActionTriggersDelete
+- name: programCategoryActionTriggersGet
+  description: Get program-level category trigger status
+  method: GET
+  path: /programs/{programId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programCategoryActionTriggersGet
+- name: programCategoryActionTriggersPatch
+  description: Incremental category trigger operations at program scope
+  method: PATCH
+  path: /programs/{programId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programCategoryActionTriggersPatch
+- name: programCategoryActionTriggersPut
+  description: Register category triggers at program scope
+  method: PUT
+  path: /programs/{programId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programCategoryActionTriggersPut
+- name: userCategoryActionTriggersDelete
+  description: Clear user-level category triggers
+  method: DELETE
+  path: /users/{userId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userCategoryActionTriggersDelete
+- name: userCategoryActionTriggersGet
+  description: Get user-level category trigger status
+  method: GET
+  path: /users/{userId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userCategoryActionTriggersGet
+- name: userCategoryActionTriggersPatch
+  description: Incremental category trigger operations at user scope
+  method: PATCH
+  path: /users/{userId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userCategoryActionTriggersPatch
+- name: userCategoryActionTriggersPut
+  description: Register category triggers at user scope
+  method: PUT
+  path: /users/{userId}/category-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userCategoryActionTriggersPut
+- name: categoriesPost
+  description: Create a custom integration-level category
+  method: POST
+  path: /categories
+  source_operation: openapi/spade-openapi-original.yml#categoriesPost
+- name: categoriesDelete
+  description: Delete all custom integration-level categories
+  method: DELETE
+  path: /categories
+  source_operation: openapi/spade-openapi-original.yml#categoriesDelete
+- name: categoriesGet
+  description: Get all default and custom integration-level categories
+  method: GET
+  path: /categories
+  source_operation: openapi/spade-openapi-original.yml#categoriesGet
+- name: userCategoriesPost
+  description: Create a custom user-level category
+  method: POST
+  path: /users/{userId}/categories
+  source_operation: openapi/spade-openapi-original.yml#userCategoriesPost
+- name: userCategoriesDelete
+  description: Delete all custom user-level categories
+  method: DELETE
+  path: /users/{userId}/categories
+  source_operation: openapi/spade-openapi-original.yml#userCategoriesDelete
+- name: userCategoriesGet
+  description: Get categories
+  method: GET
+  path: /users/{userId}/categories
+  source_operation: openapi/spade-openapi-original.yml#userCategoriesGet
+- name: userCounterpartyCategoryPersonalizationsPut
+  description: Create a user-level counterparty category personalization
+  method: PUT
+  path: /users/{userId}/counterparty-category-personalizations
+  source_operation: openapi/spade-openapi-original.yml#userCounterpartyCategoryPersonalizationsPut
+- name: userCounterpartyCategoryPersonalizationsDelete
+  description: Delete all user-level counterparty category personalizations
+  method: DELETE
+  path: /users/{userId}/counterparty-category-personalizations
+  source_operation: openapi/spade-openapi-original.yml#userCounterpartyCategoryPersonalizationsDelete
+- name: userCounterpartyCategoryPersonalizationsGet
+  description: Get all user-level counterparty category personalizations
+  method: GET
+  path: /users/{userId}/counterparty-category-personalizations
+  source_operation: openapi/spade-openapi-original.yml#userCounterpartyCategoryPersonalizationsGet
+- name: counterpartyCategoryPersonalizationsPut
+  description: Create an integration-level counterparty category personalization
+  method: PUT
+  path: /counterparty-category-personalizations
+  source_operation: openapi/spade-openapi-original.yml#counterpartyCategoryPersonalizationsPut
+- name: counterpartyCategoryPersonalizationsDelete
+  description: Delete all integration-level counterparty category personalizations
+  method: DELETE
+  path: /counterparty-category-personalizations
+  source_operation: openapi/spade-openapi-original.yml#counterpartyCategoryPersonalizationsDelete
+- name: counterpartyCategoryPersonalizationsGet
+  description: Get all integration-level counterparty category personalizations
+  method: GET
+  path: /counterparty-category-personalizations
+  source_operation: openapi/spade-openapi-original.yml#counterpartyCategoryPersonalizationsGet
+- name: counterpartyCategoryPersonalizationsDetailDelete
+  description: Delete a counterparty category personalization
+  method: DELETE
+  path: /counterparty-category-personalizations/{counterpartyId}
+  source_operation: openapi/spade-openapi-original.yml#counterpartyCategoryPersonalizationsDetailDelete
+- name: categoriesDetailDelete
+  description: Delete a custom integration-level category
+  method: DELETE
+  path: /categories/{id}
+  source_operation: openapi/spade-openapi-original.yml#categoriesDetailDelete
+- name: userCategoriesDetailDelete
+  description: Delete a custom user-level category
+  method: DELETE
+  path: /users/{userId}/categories/{id}
+  source_operation: openapi/spade-openapi-original.yml#userCategoriesDetailDelete
+- name: userCounterpartyCategoryPersonalizationsDetailDelete
+  description: Delete a user-level counterparty category personalization
+  method: DELETE
+  path: /users/{userId}/counterparty-category-personalizations/{counterpartyId}
+  source_operation: openapi/spade-openapi-original.yml#userCounterpartyCategoryPersonalizationsDetailDelete
+- name: cardReport
+  description: Report a card enrichment as incorrect
+  method: POST
+  path: /transactions/report
+  source_operation: openapi/spade-openapi-original.yml#cardReport
+- name: enrichmentOtherFraud
+  description: Report fraud on a transaction
+  method: POST
+  path: /enrichments/{enrichmentId}/fraud
+  source_operation: openapi/spade-openapi-original.yml#enrichmentOtherFraud
+- name: enrichmentDecline
+  description: Report that a card decline occurred
+  method: POST
+  path: /enrichments/{enrichmentId}/decline
+  source_operation: openapi/spade-openapi-original.yml#enrichmentDecline
+- name: enrichmentChargeback
+  description: Report that a chargeback occurred
+  method: POST
+  path: /enrichments/{enrichmentId}/chargeback
+  source_operation: openapi/spade-openapi-original.yml#enrichmentChargeback
+- name: enrichmentRefund
+  description: Report that a refund occurred
+  method: POST
+  path: /enrichments/{enrichmentId}/refund
+  source_operation: openapi/spade-openapi-original.yml#enrichmentRefund
+- name: merchantActionTriggersDelete
+  description: Clear account-level triggers
+  method: DELETE
+  path: /merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#merchantActionTriggersDelete
+- name: merchantActionTriggersGet
+  description: Get account-level trigger status
+  method: GET
+  path: /merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#merchantActionTriggersGet
+- name: merchantActionTriggersPatch
+  description: Incremental trigger operations at account scope
+  method: PATCH
+  path: /merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#merchantActionTriggersPatch
+- name: merchantActionTriggersPut
+  description: Register merchant triggers at account scope
+  method: PUT
+  path: /merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#merchantActionTriggersPut
+- name: cardMerchantActionTriggersDelete
+  description: Clear card-level triggers
+  method: DELETE
+  path: /users/{userId}/cards/{cardId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardMerchantActionTriggersDelete
+- name: cardMerchantActionTriggersGet
+  description: Get card-level trigger status
+  method: GET
+  path: /users/{userId}/cards/{cardId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardMerchantActionTriggersGet
+- name: cardMerchantActionTriggersPatch
+  description: Incremental trigger operations at card scope
+  method: PATCH
+  path: /users/{userId}/cards/{cardId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardMerchantActionTriggersPatch
+- name: cardMerchantActionTriggersPut
+  description: Register merchant triggers at card scope
+  method: PUT
+  path: /users/{userId}/cards/{cardId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#cardMerchantActionTriggersPut
+- name: programMerchantActionTriggersDelete
+  description: Clear program-level triggers
+  method: DELETE
+  path: /programs/{programId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programMerchantActionTriggersDelete
+- name: programMerchantActionTriggersGet
+  description: Get program-level trigger status
+  method: GET
+  path: /programs/{programId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programMerchantActionTriggersGet
+- name: programMerchantActionTriggersPatch
+  description: Incremental trigger operations at program scope
+  method: PATCH
+  path: /programs/{programId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programMerchantActionTriggersPatch
+- name: programMerchantActionTriggersPut
+  description: Register merchant triggers at program scope
+  method: PUT
+  path: /programs/{programId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#programMerchantActionTriggersPut
+- name: userMerchantActionTriggersDelete
+  description: Clear user-level triggers
+  method: DELETE
+  path: /users/{userId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userMerchantActionTriggersDelete
+- name: userMerchantActionTriggersGet
+  description: Get user-level trigger status
+  method: GET
+  path: /users/{userId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userMerchantActionTriggersGet
+- name: userMerchantActionTriggersPatch
+  description: Incremental trigger operations at user scope
+  method: PATCH
+  path: /users/{userId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userMerchantActionTriggersPatch
+- name: userMerchantActionTriggersPut
+  description: Register merchant triggers at user scope
+  method: PUT
+  path: /users/{userId}/merchant-action-triggers
+  source_operation: openapi/spade-openapi-original.yml#userMerchantActionTriggersPut
+- name: corporationSearch
+  description: Search for merchants
+  method: GET
+  path: /corporations
+  source_operation: openapi/spade-openapi-original.yml#corporationSearch
+- name: batchesTransferEnrich
+  description: Enrich a batch of transfers
+  method: POST
+  path: /batches/transactions/transfers/enrich
+  source_operation: openapi/spade-openapi-original.yml#batchesTransferEnrich
+- name: transferEnrich
+  description: Enrich a transfer transaction
+  method: POST
+  path: /transactions/transfers/enrich
+  source_operation: openapi/spade-openapi-original.yml#transferEnrich
+- name: batchesTransactionsTransfersEnrichGetResults
+  description: Get the results of a batch transfer enrichment job
+  method: GET
+  path: /batches/{transferEnrichmentBatchId}/results
+  source_operation: openapi/spade-openapi-original.yml#batchesTransactionsTransfersEnrichGetResults
+- name: batchesTransactionsTransfersEnrichGetStatus
+  description: Get the status of a batch transfer enrichment job
+  method: GET
+  path: /batches/{transferEnrichmentBatchId}
+  source_operation: openapi/spade-openapi-original.yml#batchesTransactionsTransfersEnrichGetStatus
+- name: batchesUniversalEnrich
+  description: Enrich a batch of universal transactions
+  method: POST
+  path: /batches/transactions/universal/enrich
+  source_operation: openapi/spade-openapi-original.yml#batchesUniversalEnrich
+- name: universalEnrich
+  description: Enrich a universal transaction
+  method: POST
+  path: /transactions/universal/enrich
+  source_operation: openapi/spade-openapi-original.yml#universalEnrich
+- name: batchesUniversalEnrichGetResults
+  description: Get the results of a batch universal enrichment job
+  method: GET
+  path: /batches/{universalEnrichmentBatchId}/results
+  source_operation: openapi/spade-openapi-original.yml#batchesUniversalEnrichGetResults

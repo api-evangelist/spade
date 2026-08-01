@@ -1,0 +1,30 @@
+generated: '2026-07-21'
+method: searched
+source: https://www.spade.com/security
+note: >-
+  Compliance posture searched from Spade's security page; cross-cutting standards derived from the
+  OpenAPI. Spade is a transaction-enrichment data platform (not a card acquirer / OAuth authorization
+  server), so payments-authorization and OAuth/OIDC standards do not apply.
+standards:
+  - id: soc2-type2
+    conforms: true
+    evidence: "Security page states Spade is SOC 2 Type II certified for confidentiality and integrity of customer data."
+  - id: owasp-top-10
+    conforms: true
+    evidence: "Security page cites OWASP Top 10 development standards."
+  - id: gdpr
+    conforms: true
+    evidence: "Security page describes GDPR-aligned data handling practices."
+  - id: oauth2
+    conforms: false
+    evidence: "API uses X-Api-Key header authentication; no oauth2 security schemes."
+  - id: oidc
+    conforms: false
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: "Error responses are application/json with status codes, not application/problem+json."
+  - id: fapi
+    conforms: false
+  - id: pci-dss
+    conforms: false
+    evidence: "Not claimed on the security page (Spade enriches transaction metadata; not a card data processor claim)."
