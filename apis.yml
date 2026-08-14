@@ -9,17 +9,24 @@ description: >-
   personalization, plus merchant search and account/program/user/card-scoped action triggers. Spade
   operates east and west US sandbox and production environments and is SOC 2 Type II certified.
 accessModel:
-  pricing: unknown
-  onboarding: self-serve
+  pricing: contact-sales
+  onboarding: sales-gated
   trial: false
   try_now: false
   public: false
-  label: Self-serve signup
-  confidence: medium
+  label: Contact sales
+  confidence: high
   source:
-  - authentication
-  generated: '2026-07-22'
-  method: derived
+  - https://www.spade.com/pricing
+  - https://docs.spade.com/reference/integrate-with-spades-api
+  note: >-
+    CORRECTED 2026-08-14 (was onboarding: self-serve, derived). There is no self-serve signup:
+    sandbox and production API keys are issued by a Spade representative, the pricing page publishes
+    no prices (three named tiers all rendering a "$00.00" placeholder with lorem-ipsum descriptions)
+    and every "Start now" control links to `/#`. app.spade.com and dashboard.spade.com do not
+    resolve. See plans/spade-plans-pricing.yml.
+  generated: '2026-08-14'
+  method: searched
 image: https://spadewp.wpenginepowered.com/wp-content/uploads/2025/07/OpenGraph.webp
 url: https://raw.githubusercontent.com/api-evangelist/spade/refs/heads/main/apis.yml
 x-type: company
@@ -30,7 +37,7 @@ x-tier: profiled
 x-tier-reason: enriched-from-live-api
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-08-14'
 tags:
 - Company
 - Financial Services
@@ -185,8 +192,24 @@ common:
   url: https://www.spade.com/security
 - type: DomainSecurity
   url: security/spade-domain-security.yml
+- type: StatusPage
+  url: https://status.spadeapi.com
+- type: Blog
+  url: https://blog.spade.com
+- type: Postman
+  url: https://app.getpostman.com/run-collection/45578594-3ac97973-91ba-4d95-ad07-c058a347bddc
+- type: WellKnown
+  url: well-known/spade-well-known.yml
+- type: APICatalog
+  url: well-known/spade-api-catalog.json
+- type: AgentCard
+  url: a2a/spade-a2a.yml
+- type: RateLimits
+  url: rate-limits/spade-rate-limits.yml
+- type: Plans
+  url: plans/spade-plans-pricing.yml
 x-enrichment:
-  date: '2026-07-21'
+  date: '2026-08-14'
   status: enriched
-  artifacts_added: 21
+  artifacts_added: 9
   pass: local-v1
