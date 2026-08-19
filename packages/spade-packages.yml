@@ -1,0 +1,51 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  npm registry search + registry.npmjs.org direct lookups, pypi.org, GitHub org/repo search, and a
+  full-text scan of Spade's complete published documentation corpus (https://docs.spade.com/llms-full.txt,
+  284 KB, the whole developer reference in one file)
+package_count: 0
+official_package_count: 0
+packages: []
+searched:
+  - registry: npm
+    queries:
+      - '@spade/*'
+      - spade-api
+      - spadeapi
+      - '@spadeapi/node'
+      - free-text search "spade transaction enrichment"
+    result: >-
+      No first-party package. Every "spade" hit on npm belongs to unrelated projects. The
+      `spade` name on PyPI is the Smart Python Agent Development Environment (javipalanca/spade),
+      a multi-agent framework with no connection to spade.com.
+  - registry: pypi
+    queries: [spade-api, spade]
+    result: 'spade-api: 404. `spade` is the unrelated SPADE multi-agent framework.'
+  - registry: github
+    queries: ['orgs/spade', 'spade transaction enrichment']
+    result: >-
+      https://api.github.com/orgs/spade returns 404 — Spade publishes no GitHub organization under
+      that name and no first-party SDK repository was found. apis.yml therefore carries no
+      GitHubOrganization pointer.
+  - source: https://docs.spade.com/llms-full.txt
+    result: >-
+      Zero occurrences of "SDK", "client library", "npm install" or "pip install" across the entire
+      published documentation. Every integration example in the docs is a raw `curl` request or a
+      Python `requests` call built by hand against the HTTP endpoints.
+note: >-
+  Spade ships NO first-party client libraries in any language. This is a deliberate posture
+  consistent with the product: sub-50ms enrichment called from an authorization path, documented as
+  direct HTTP with an `X-Api-Key` header, with explicit guidance on connection reuse, parallel
+  connections and HTTP/1.1 limits — advice that assumes the caller owns the transport. The
+  substitute Spade does publish is a forkable public Postman collection
+  (https://app.getpostman.com/run-collection/45578594-3ac97973-91ba-4d95-ad07-c058a347bddc), wired
+  into apis.yml as type Postman, plus the OpenAPI itself.
+  No `SDKs` or `Packages` pointer is emitted in apis.yml: this file records a measured absence, and
+  a pointer would assert a surface the provider does not serve.
+gaps_for_provider:
+  - >-
+    No official SDK in any language. A thin typed client for JavaScript/TypeScript and Python would
+    close the largest remaining experience gap, especially for the batch/microbatch polling flow and
+    the 300k-trigger sequential PATCH pattern, both of which currently require hand-written
+    orchestration.

@@ -1,9 +1,34 @@
-generated: '2026-07-21'
+generated: '2026-08-14'
 method: derived
 status: candidate
 source: openapi/spade-openapi-original.yml
-note: Candidate MCP tool surface derived one-per-operation from Spade's OpenAPI. No official hosted Spade
-  MCP server was found as of the generated date.
+note: >-
+  Candidate MCP tool surface derived one-per-operation from Spade's OpenAPI. Re-confirmed
+  2026-08-14: Spade ships NO MCP server of any kind. No hosted/remote endpoint, no stdio package,
+  no listing in the official MCP registry, zero occurrences of "MCP" or "Model Context Protocol"
+  across Spade's entire published documentation corpus (docs.spade.com/llms-full.txt, 284 KB), and
+  no first-party GitHub organization to host one. What Spade DOES publish for agents is an A2A
+  agent card and a packaged Agent Skill (see a2a/ and skills/spade-skill.md) — a docs-layer agent
+  surface, not a callable tool surface.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: searched
+  note: >-
+    mode `none` because nobody ships a server — the tools below are OUR derivation from the
+    OpenAPI, not a surface an agent can reach today. No endpoint URL is guessed. If Spade were to
+    ship one, auth would be the same `X-Api-Key` header the REST API uses (see
+    authentication/spade-authentication.yml); environment selection (east/west, sandbox/production)
+    would have to be part of the server configuration because the four hosts take different keys.
+tool_crosswalk: null
+tool_crosswalk_note: >-
+  No mcp/spade-tool-crosswalk.yml is emitted and no ToolCrosswalk pointer is wired. A crosswalk
+  binds a REAL MCP tool set (or GraphQL schema) to backing OpenAPI operationIds; with no MCP server
+  and no GraphQL surface, every row would be a 1:1 restatement of the derivation below and would
+  falsely assert that a tool surface exists.
 server:
   name: spade
   transport: http
@@ -355,3 +380,9 @@ tools:
   method: GET
   path: /batches/{universalEnrichmentBatchId}/results
   source_operation: openapi/spade-openapi-original.yml#batchesUniversalEnrichGetResults
+deployment:
+  mode: none
+  verified: derived
+  tools: 69
+  checked: '2026-08-12'
+  source: catalog MCP census

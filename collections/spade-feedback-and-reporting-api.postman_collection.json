@@ -1,0 +1,1514 @@
+{
+  "item": [
+    {
+      "id": "d46d6b7a-1849-40a7-8c10-028de2021903",
+      "name": "Feedback and Reporting",
+      "description": {
+        "content": "Provide feedback on card events or report enrichment errors",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7c087ba4-0cfa-48e2-99ac-84680cf9d237",
+          "name": "Report a card enrichment as incorrect",
+          "request": {
+            "name": "Report a card enrichment as incorrect",
+            "description": {
+              "content": "Endpoint to report a card enrichment as incorrect. An `enrichmentId` and an `errorDescription` are required fields to report an enrichment. Optional request fields such as `incorrectLocation`, `incorrectLocationDescription`, `incorrectCategory`, `incorrectCategoryDescription`, `incorrectChannel`, `incorrectChannelDescription`, `incorrectCounterparty`,  and `incorrectCounterpartyDescription`, can be set to indicate what needs to be addressed in  the enrichment. Once a report has been addressed, you will receive a corrected enrichment via a callback url you set with Spade. See the callback section to learn more on how we send back a corrected enrichment.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"errorDescription\": \"<string>\",\n  \"enrichmentId\": \"<uuid>\",\n  \"incorrectLocation\": \"<boolean>\",\n  \"incorrectLocationDescription\": \"<string>\",\n  \"incorrectCategory\": \"<boolean>\",\n  \"incorrectCategoryDescription\": \"<string>\",\n  \"incorrectChannel\": \"<boolean>\",\n  \"incorrectChannelDescription\": \"<string>\",\n  \"incorrectCounterparty\": \"<boolean>\",\n  \"incorrectCounterpartyDescription\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "36a7298e-a547-459a-944c-659df59dceb2",
+              "name": "Enrichment reported successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errorDescription\": \"Enrichment has an incorrect location. Wrong postal code.\",\n  \"enrichmentId\": \"<uuid>\",\n  \"incorrectLocation\": true,\n  \"incorrectLocationDescription\": \"The location's city is incorrect.\",\n  \"incorrectCategory\": false,\n  \"incorrectCategoryDescription\": \"The category returned is incorrect.\",\n  \"incorrectChannel\": false,\n  \"incorrectChannelDescription\": \"The spending channel should have been physical.\",\n  \"incorrectCounterparty\": false,\n  \"incorrectCounterpartyDescription\": \"The counterparty is incorrect.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Enrichment Successfully Reported.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "45770221-7344-4e30-906c-2c0ade099778",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errorDescription\": \"Enrichment has an incorrect location. Wrong postal code.\",\n  \"enrichmentId\": \"<uuid>\",\n  \"incorrectLocation\": true,\n  \"incorrectLocationDescription\": \"The location's city is incorrect.\",\n  \"incorrectCategory\": false,\n  \"incorrectCategoryDescription\": \"The category returned is incorrect.\",\n  \"incorrectChannel\": false,\n  \"incorrectChannelDescription\": \"The spending channel should have been physical.\",\n  \"incorrectCounterparty\": false,\n  \"incorrectCounterpartyDescription\": \"The counterparty is incorrect.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "74af8a7a-e870-41e9-abb2-b9e1c8bb4f94",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errorDescription\": \"Enrichment has an incorrect location. Wrong postal code.\",\n  \"enrichmentId\": \"<uuid>\",\n  \"incorrectLocation\": true,\n  \"incorrectLocationDescription\": \"The location's city is incorrect.\",\n  \"incorrectCategory\": false,\n  \"incorrectCategoryDescription\": \"The category returned is incorrect.\",\n  \"incorrectChannel\": false,\n  \"incorrectChannelDescription\": \"The spending channel should have been physical.\",\n  \"incorrectCounterparty\": false,\n  \"incorrectCounterpartyDescription\": \"The counterparty is incorrect.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3a7b45ca-ea74-4048-be18-425b8c8cb00f",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errorDescription\": \"Enrichment has an incorrect location. Wrong postal code.\",\n  \"enrichmentId\": \"<uuid>\",\n  \"incorrectLocation\": true,\n  \"incorrectLocationDescription\": \"The location's city is incorrect.\",\n  \"incorrectCategory\": false,\n  \"incorrectCategoryDescription\": \"The category returned is incorrect.\",\n  \"incorrectChannel\": false,\n  \"incorrectChannelDescription\": \"The spending channel should have been physical.\",\n  \"incorrectCounterparty\": false,\n  \"incorrectCounterpartyDescription\": \"The counterparty is incorrect.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d54083e9-55f4-40f3-9579-f58da4842efd",
+          "name": "Report fraud on a transaction",
+          "request": {
+            "name": "Report fraud on a transaction",
+            "description": {
+              "content": "An endpoint for reporting suspected fraud on a transaction which was not related to a chargeback, decline, or refund. If you've already indicated suspected fraud in a chargeback, decline, or refund, it's not necessary to send a request to this endpoint. The `isFraud`, `fraudType`, and `fraudNotes` fields are used to provide information about fraud or suspected fraud on this transaction. Note that this transaction must previously have been enriched to report other fraud information.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "enrichments",
+                ":enrichmentId",
+                "fraud"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "enrichmentId",
+                  "description": "(Required) The `enrichmentId` of enrichment associated with the transaction."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isFraud\": \"<boolean>\",\n  \"fraudType\": \"<string>\",\n  \"fraudNotes\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3885f0ff-6957-4a65-9d34-cf96be586b02",
+              "name": "Other fraud information reported successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "fraud"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Chargeback successfully reported.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b02b1980-7dac-4e66-a2ad-8cf7988d86bb",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "fraud"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a17e2c08-cd3f-4bef-9b0d-c1092cb3af0f",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "fraud"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3f9b3b7f-fcd6-42a8-8d1b-2c9e0c82fb9f",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "fraud"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "67f8d35b-7fe6-4a83-87fb-9f00cad6752c",
+          "name": "Report that a card decline occurred",
+          "request": {
+            "name": "Report that a card decline occurred",
+            "description": {
+              "content": "An endpoint for reporting that a card decline has occurred on a transaction. The `declineCode`, `declineDescription`, and `declineNotes` properties can be used to provide information about the decline. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this decline. Note that this transaction must previously have been enriched to report the decline.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "enrichments",
+                ":enrichmentId",
+                "decline"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "enrichmentId",
+                  "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a card decline occurred."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"declineCode\": \"<string>\",\n  \"declineDescription\": \"<string>\",\n  \"declineNotes\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"isFraud\": \"<boolean>\",\n  \"fraudType\": \"<string>\",\n  \"fraudNotes\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c7616c20-0484-44e0-9ffb-c1d4d7cb7bf7",
+              "name": "Decline reported successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "decline"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a card decline occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"declineCode\": \"51\",\n  \"declineDescription\": \"Insufficient funds\",\n  \"declineNotes\": \"Unknown reason for decline.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Chargeback successfully reported.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e54286f1-1ca9-4cca-a2fe-b4cf30580f86",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "decline"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a card decline occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"declineCode\": \"51\",\n  \"declineDescription\": \"Insufficient funds\",\n  \"declineNotes\": \"Unknown reason for decline.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "24e468f8-5a32-40dc-814d-da66decba571",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "decline"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a card decline occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"declineCode\": \"51\",\n  \"declineDescription\": \"Insufficient funds\",\n  \"declineNotes\": \"Unknown reason for decline.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee5b54de-c82c-4961-9265-6c4057e11317",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "decline"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a card decline occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"declineCode\": \"51\",\n  \"declineDescription\": \"Insufficient funds\",\n  \"declineNotes\": \"Unknown reason for decline.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a0151387-1b01-4c7f-9fcf-33a9f3c90141",
+          "name": "Report that a chargeback occurred",
+          "request": {
+            "name": "Report that a chargeback occurred",
+            "description": {
+              "content": "An endpoint for reporting that a chargeback process has occurred on a transaction. The `state` and `chargebackNotes` properties can be used to provide information about the chargeback. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this chargeback. Note that this transaction must previously have been enriched to report the chargeback.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "enrichments",
+                ":enrichmentId",
+                "chargeback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "enrichmentId",
+                  "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": \"<string>\",\n  \"chargebackNotes\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"isFraud\": \"<boolean>\",\n  \"fraudType\": \"<string>\",\n  \"fraudNotes\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c6831a81-993b-49b5-b353-f9a8216222c3",
+              "name": "Chargeback reported successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "chargeback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"chargeback_won\",\n  \"chargebackNotes\": \"Transaction was initiated in error.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Chargeback successfully reported.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1a865f80-9f99-4fcb-9041-969562ae14ef",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "chargeback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"chargeback_won\",\n  \"chargebackNotes\": \"Transaction was initiated in error.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e3ad97df-51e5-42a0-905b-b392f0eddcf3",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "chargeback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"chargeback_won\",\n  \"chargebackNotes\": \"Transaction was initiated in error.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "36b342e7-4c7c-4a66-8041-0df2e0a9c58b",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "chargeback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"chargeback_won\",\n  \"chargebackNotes\": \"Transaction was initiated in error.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"unknown\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7c6414f1-ee25-4151-a6b7-2053af797ebc",
+          "name": "Report that a refund occurred",
+          "request": {
+            "name": "Report that a refund occurred",
+            "description": {
+              "content": "An endpoint for reporting that a refund has occurred on a transaction associated with an enrichment. The `refundNotes` property can be used to provide information about the refund. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this refund. Note that this transaction must previously have been enriched to report the refund.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "enrichments",
+                ":enrichmentId",
+                "refund"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "enrichmentId",
+                  "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a refund occurred."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refundNotes\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"isFraud\": \"<boolean>\",\n  \"fraudType\": \"<string>\",\n  \"fraudNotes\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d43a27fb-7605-4bdc-af9c-e62f756f920c",
+              "name": "Refund reported successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a refund occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refundNotes\": \"Frequently refunded item.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Chargeback successfully reported.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e545d46f-5090-442e-b0d8-54890f418b20",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a refund occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refundNotes\": \"Frequently refunded item.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "68bb808c-a34c-47bf-b2b5-727a32d27576",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a refund occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refundNotes\": \"Frequently refunded item.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "36891590-b8a3-48cd-b6d6-0714acd61804",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "enrichments",
+                    ":enrichmentId",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "enrichmentId",
+                      "description": "(Required) The `enrichmentId` of enrichment associated with the transaction where a refund occurred."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refundNotes\": \"Frequently refunded item.\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"isFraud\": false,\n  \"fraudType\": \"stolen_card\",\n  \"fraudNotes\": \"Merchant is believed to commonly be used for card testing.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://east.sandbox.spade.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Api-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a0a3dbd6-e9a4-4115-857f-1459f9b76425",
+    "name": "Spade Card Enrichment Feedback and Reporting API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.",
+      "type": "text/plain"
+    }
+  }
+}

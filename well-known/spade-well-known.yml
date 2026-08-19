@@ -1,0 +1,166 @@
+generated: '2026-08-14'
+method: probed
+source: live GET probes of every apis.yml baseURL host, every OpenAPI servers[] host, and the docs host
+note: >-
+  Two real documents are served, both from the docs host (docs.spade.com). The API hosts
+  (east/west .api. and .sandbox. spade.com) answer 403 Forbidden to every anonymous request
+  including /.well-known/* — the edge rejects unauthenticated traffic before routing, so absence
+  there is unproven rather than measured. www.spade.com returns its Next.js 404 page for every
+  /.well-known/ path. No security.txt is published anywhere, so no SecurityTxt pointer is emitted.
+hosts_probed:
+  - docs.spade.com
+  - www.spade.com
+  - east.api.spade.com
+  - west.api.spade.com
+  - v2.spadeapi.com
+probes:
+  - host: docs.spade.com
+    path: /.well-known/api-catalog
+    status: 200
+    content_type: application/json
+    document: true
+    file: well-known/spade-api-catalog.json
+    format: RFC 9727 linkset
+    note: >-
+      Linkset with one anchor (https://docs.spade.com/) and one service-desc of type
+      application/vnd.oai.openapi+json. The href is a SHORT-LIVED PRESIGNED S3 URL issued by the
+      Mintlify docs platform (1 hour expiry) — the AWS credential in the query string has been
+      replaced by the repo secret sanitizer, so the saved copy documents the shape of the linkset,
+      not a fetchable link. Fetched live on 2026-08-14 it returned the full Spade OpenAPI 3.1.0
+      v2.7.3 (38 paths / 70 operations), which is now captured in openapi/.
+  - host: docs.spade.com
+    path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    document: true
+    file: well-known/spade-agent-card.json
+    format: A2A Agent Card
+    note: See a2a/spade-a2a.yml for the graded manifest. Also saved verbatim to a2a/.
+  - host: docs.spade.com
+    path: /.well-known/agent-skills/spade/skill.md
+    status: 200
+    content_type: text/markdown
+    document: true
+    file: skills/spade-skill.md
+    format: Agent Skill (markdown + YAML frontmatter)
+    note: Referenced from the agent card's skills[0].url. Provider-published, saved verbatim.
+  - host: docs.spade.com
+    path: /.well-known/security.txt
+    status: 404
+    document: false
+  - host: docs.spade.com
+    path: /.well-known/openid-configuration
+    status: 404
+    document: false
+  - host: docs.spade.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+    document: false
+  - host: docs.spade.com
+    path: /.well-known/oauth-protected-resource
+    status: 404
+    document: false
+  - host: docs.spade.com
+    path: /.well-known/ai-plugin.json
+    status: 404
+    document: false
+  - host: docs.spade.com
+    path: /.well-known/agent.json
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/security.txt
+    status: 404
+    document: false
+    note: Returns the site's HTML 404 page, not a document.
+  - host: www.spade.com
+    path: /.well-known/api-catalog
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/agent-card.json
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/agent.json
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/openid-configuration
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/oauth-protected-resource
+    status: 404
+    document: false
+  - host: www.spade.com
+    path: /.well-known/ai-plugin.json
+    status: 404
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/security.txt
+    status: 403
+    document: false
+    note: Every anonymous path on the API hosts returns a bare nginx 403; the edge blocks before routing.
+  - host: east.api.spade.com
+    path: /.well-known/api-catalog
+    status: 403
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/agent-card.json
+    status: 403
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/agent.json
+    status: 403
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/openid-configuration
+    status: 403
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/oauth-authorization-server
+    status: 403
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/oauth-protected-resource
+    status: 403
+    document: false
+  - host: east.api.spade.com
+    path: /.well-known/ai-plugin.json
+    status: 403
+    document: false
+  - host: west.api.spade.com
+    path: /.well-known/security.txt
+    status: 403
+    document: false
+  - host: west.api.spade.com
+    path: /.well-known/api-catalog
+    status: 403
+    document: false
+  - host: west.api.spade.com
+    path: /.well-known/agent-card.json
+    status: 403
+    document: false
+  - host: west.api.spade.com
+    path: /.well-known/agent.json
+    status: 403
+    document: false
+  - host: v2.spadeapi.com
+    path: /.well-known/security.txt
+    status: 403
+    document: false
+  - host: v2.spadeapi.com
+    path: /.well-known/agent-card.json
+    status: 403
+    document: false
+summary:
+  documents_found: 3
+  security_txt: false
+  api_catalog: true
+  agent_card: true
+  oauth_metadata: false

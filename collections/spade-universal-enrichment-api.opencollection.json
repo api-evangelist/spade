@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Universal Enrichment API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Universal Enrichment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Enrich a batch of universal transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/batches/transactions/universal/enrich",
+            "params": [
+              {
+                "name": "synchronous",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of universal transactions for enrichment.\nThis endpoint will return a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results`\nendpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n\nNote that we impose a rate limit on the number of b"
+        },
+        {
+          "info": {
+            "name": "Get metadata for the batch universal enrichment endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://east.sandbox.spade.com/batches/transactions/universal/enrich"
+          },
+          "docs": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n"
+        },
+        {
+          "info": {
+            "name": "Enrich a universal transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/universal/enrich",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enrich any type of transaction such as an aggregator transaction, card transaction, ACH withdrawal, ACH deposit, or wire transfer.\n\nNote that universal enrichment is currently in *beta*, please reach out to sales@spade.com to request access."
+        },
+        {
+          "info": {
+            "name": "Get the results of a batch universal enrichment job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/batches/:universalEnrichmentBatchId/results",
+            "params": [
+              {
+                "name": "universalEnrichmentBatchId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the batch universal enrichment job"
+              }
+            ]
+          },
+          "docs": "Get the results of a batch universal enrichment job.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

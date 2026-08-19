@@ -1,0 +1,318 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Category Personalization API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Category Personalization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all default and custom integration-level categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/categories",
+            "params": [
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "An optional comma-separated string specifying which category types to include. Valid values include 'default', 'custom', 'default,custom'."
+              }
+            ]
+          },
+          "docs": "Fetch categories from Spade's database.\n\nThis endpoint returns a list containing Spade's default categories, plus any custom integration-level categories you've created.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Create a custom integration-level category",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/categories",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a custom integration-level category.\n\nThis category will be available to all users of your integration.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete all custom integration-level categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/categories"
+          },
+          "docs": "Delete all custom integration-level categories.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Get categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/users/:userId/categories",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              }
+            ]
+          },
+          "docs": "Fetch custom user-level categories from Spade's database.\n\nThis endpoint returns a list containing all custom categories that the user with the given `userId` has created.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Create a custom user-level category",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/users/:userId/categories",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a custom user-level category.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete all custom user-level categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/categories",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              }
+            ]
+          },
+          "docs": "Delete all custom user-level categories.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Get all user-level counterparty category personalizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/users/:userId/counterparty-category-personalizations",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              }
+            ]
+          },
+          "docs": "Fetch user-level counterparty category personalizations from Spade's database.\n\nThis endpoint returns a list containing all user-level counterparty category personalizations for the user with the given `userId`.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Create a user-level counterparty category personalization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/users/:userId/counterparty-category-personalizations",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a user-level counterparty category personalization.\n\nThis personalization will apply to all enrichments that take place at the given `counterpartyId` for the user with the given `userId`.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete all user-level counterparty category personalizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/counterparty-category-personalizations",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              }
+            ]
+          },
+          "docs": "Delete all user-level counterparty category personalizations.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Get all integration-level counterparty category personalizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/counterparty-category-personalizations"
+          },
+          "docs": "Fetch counterparty category personalizations from Spade's database.\n\nThis endpoint returns a list containing all integration-level counterparty category personalizations for your integration.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Create an integration-level counterparty category personalization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/counterparty-category-personalizations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an integration-level counterparty category personalization.\n\nThis personalization will apply to all enrichments that take place at the given `counterpartyId` for your integration.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete all integration-level counterparty category personalizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/counterparty-category-personalizations"
+          },
+          "docs": "Delete all integration-level counterparty category personalizations.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete a counterparty category personalization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/counterparty-category-personalizations/:counterpartyId",
+            "params": [
+              {
+                "name": "counterpartyId",
+                "value": "",
+                "type": "path",
+                "description": "The `counterpartyId` of the relevant counterparty category personalization."
+              }
+            ]
+          },
+          "docs": "Delete a counterparty category personalization.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete a custom integration-level category",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/categories/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The `id` of the relevant category."
+              }
+            ]
+          },
+          "docs": "Delete a custom integration-level category.\n\nTo learn more about category personalization, please read the [Category Personalization Guide](https://docs.spade.com/reference/category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete a custom user-level category",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/categories/:id",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The `id` of the relevant category."
+              }
+            ]
+          },
+          "docs": "Delete a custom user-level category.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        },
+        {
+          "info": {
+            "name": "Delete a user-level counterparty category personalization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/counterparty-category-personalizations/:counterpartyId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "The `userId` of the relevant user."
+              },
+              {
+                "name": "counterpartyId",
+                "value": "",
+                "type": "path",
+                "description": "The `counterpartyId` of the relevant counterparty category personalization."
+              }
+            ]
+          },
+          "docs": "Delete a user-level counterparty category personalization.\n\nTo learn more about user category personalization, please read the [User Category Personalization Guide](https://docs.spade.com/reference/user-category-personalization-guide)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

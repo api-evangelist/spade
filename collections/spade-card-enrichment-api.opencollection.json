@@ -1,0 +1,184 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Card Enrichment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Enrich a batch of card transactions with DE43 data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/batches/transactions/cards/enrich/parse",
+            "params": [
+              {
+                "name": "synchronous",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of card transactions for enrichment where de43 data in the request body takes precedence over the other fields in the request body.\nJust like the `/transactions/cards/enrich/parse` endpoint, the transactions can omit `city` and `merchantName` fields if the `de43` field is present.\nThis endpoint returns a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results` endpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?s"
+        },
+        {
+          "info": {
+            "name": "Get metadata for the batch card parse enrichment endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://east.sandbox.spade.com/batches/transactions/cards/enrich/parse"
+          },
+          "docs": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n"
+        },
+        {
+          "info": {
+            "name": "Enrich a batch of card transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/batches/transactions/cards/enrich",
+            "params": [
+              {
+                "name": "synchronous",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of transactions for enrichment. This endpoint will return a `batchId` which can\nbe used in the `/batches/{batchId}` and `/batches/{batchId}/results` endpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n\nNote that we impose a rate limit on the number of batch reque"
+        },
+        {
+          "info": {
+            "name": "Get metadata for the batch card enrichment endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://east.sandbox.spade.com/batches/transactions/cards/enrich"
+          },
+          "docs": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n"
+        },
+        {
+          "info": {
+            "name": "Enrich a card transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/enrich"
+          },
+          "docs": "Enrich a card transaction. Please use `/transactions/cards/enrich` instead. This endpoint now aliases to `/transactions/cards/enrich`."
+        },
+        {
+          "info": {
+            "name": "Enrich a card transaction with an unparsed de43",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/enrich/parse"
+          },
+          "docs": "Enrich a card transaction. Please use `/transactions/cards/enrich/parse` instead. This endpoint now aliases to `/transactions/cards/enrich/parse`."
+        },
+        {
+          "info": {
+            "name": "Enrich a card transaction with an unparsed de43",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/cards/enrich/parse",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enrich a card transaction where parsed de43 data takes precedence over the other fields in the request body.\nThis otherwise endpoint is identical to `/transactions/cards/enrich` except that `city` and `merchantName` are now\noptional, but only when `de43` is included. Note: Because DE43 format is not consistent between sources, we recommend parsing\nyour own data and using `/transactions/cards/enrich/` if possible.\n\nNote that some response fields may not be included in your product package, please"
+        },
+        {
+          "info": {
+            "name": "Enrich a card transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/cards/enrich",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "When working with this endpoint, note that several of the input fields are optional (region, acquirerId, etc.). However, we *strongly* recommend including all of the fields that you have available. Some optional fields can substantially improve performance.\n\nTake care to ensure you are using unaltered and correct data in each field. Some fields go by multiple names, so if you have any questions regarding integration please feel free to reach out.\n\nNote that some response fields may not be includ"
+        },
+        {
+          "info": {
+            "name": "Get the results of a batch card enrichment job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/batches/:cardEnrichmentBatchId/results",
+            "params": [
+              {
+                "name": "cardEnrichmentBatchId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the batch card enrichment job"
+              }
+            ]
+          },
+          "docs": "Get the results of a batch card enrichment job.\n"
+        },
+        {
+          "info": {
+            "name": "Get the status of a batch card enrichment job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/batches/:cardEnrichmentBatchId",
+            "params": [
+              {
+                "name": "cardEnrichmentBatchId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the batch card enrichment job"
+              }
+            ]
+          },
+          "docs": "Get the status of a batch job.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

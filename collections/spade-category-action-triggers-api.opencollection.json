@@ -1,0 +1,354 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Category Action Triggers API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Category Action Triggers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get account-level category trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/category-action-triggers"
+          },
+          "docs": "Get the status and version of the latest category action trigger registration at the account scope.\n\nAccount-level triggers apply to all transactions for all users in your account.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register category triggers at account scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/category-action-triggers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register category action triggers at the account scope.\n\nAccount-level triggers apply to all transactions for all users in your account.\n\n**Field requirements:**\n- `id`, `categoryId`, and `action` are required for each trigger\n- `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)\n\n**Limit:** A maximum of 300 `categoryTriggers` can be su"
+        },
+        {
+          "info": {
+            "name": "Incremental category trigger operations at account scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/category-action-triggers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on category action triggers at the account scope.\n\nSupports two operations:\n- **add**: Register new category triggers or update existing ones. Only the submitted triggers are affected—existing registrations are preserved. If a trigger ID already exists, its registration is replaced (upsert). All registrations are processed synchronously.\n- **remove**: Remove category triggers by trigger ID. Removed triggers are excluded from enrichment lookups. Trigger IDs that are"
+        },
+        {
+          "info": {
+            "name": "Clear account-level category triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/category-action-triggers"
+          },
+          "docs": "Clear all category action triggers at the account scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Get card-level category trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ]
+          },
+          "docs": "Get the status and version of the latest category action trigger registration at the card scope.\n\nCard-level triggers apply only to transactions for the specified card.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register category triggers at card scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register category action triggers at the card scope.\n\nCard-level triggers apply only to transactions for the specified card.\n\n**Field requirements:**\n- `id`, `categoryId`, and `action` are required for each trigger\n- `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)\n\n**Limit:** A maximum of 300 `categoryTriggers` can be submitted per "
+        },
+        {
+          "info": {
+            "name": "Incremental category trigger operations at card scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on category action triggers at the card scope.\n\nSee the account-scope PATCH endpoint for full documentation on supported operations (add, remove)."
+        },
+        {
+          "info": {
+            "name": "Clear card-level category triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ]
+          },
+          "docs": "Clear all category action triggers at the card scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Get program-level category trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/programs/:programId/category-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ]
+          },
+          "docs": "Get the status and version of the latest category action trigger registration at the program scope.\n\nProgram-level triggers apply to all enrichment requests where the `programId` field matches this program.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register category triggers at program scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/programs/:programId/category-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register category action triggers at the program scope.\n\nProgram-level triggers apply to all enrichment requests where the `programId` field matches this program.\n\n**Field requirements:**\n- `id`, `categoryId`, and `action` are required for each trigger\n- `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)\n\n**Limit:** A maximum of 300 `c"
+        },
+        {
+          "info": {
+            "name": "Incremental category trigger operations at program scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/programs/:programId/category-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on category action triggers at the program scope.\n\nSee the account-scope PATCH endpoint for full documentation on supported operations (add, remove)."
+        },
+        {
+          "info": {
+            "name": "Clear program-level category triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/programs/:programId/category-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ]
+          },
+          "docs": "Clear all category action triggers at the program scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Get user-level category trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/users/:userId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ]
+          },
+          "docs": "Get the status and version of the latest category action trigger registration at the user scope.\n\nUser-level triggers apply to all transactions for all cards belonging to the specified user.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register category triggers at user scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/users/:userId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register category action triggers at the user scope.\n\nUser-level triggers apply to all transactions for all cards belonging to the specified user.\n\n**Field requirements:**\n- `id`, `categoryId`, and `action` are required for each trigger\n- `categoryId` must be a valid Spade category ID (use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs)\n\n**Limit:** A maximum of 300 `categoryTriggers`"
+        },
+        {
+          "info": {
+            "name": "Incremental category trigger operations at user scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/users/:userId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on category action triggers at the user scope.\n\nSee the account-scope PATCH endpoint for full documentation on supported operations (add, remove)."
+        },
+        {
+          "info": {
+            "name": "Clear user-level category triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/category-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ]
+          },
+          "docs": "Clear all category action triggers at the user scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Category Action Triggers Guide](https://docs.spade.com/reference/category-action-triggers-guide)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

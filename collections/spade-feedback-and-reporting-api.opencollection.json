@@ -1,0 +1,133 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Feedback and Reporting API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feedback and Reporting",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Report a card enrichment as incorrect",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/report",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Endpoint to report a card enrichment as incorrect. An `enrichmentId` and an `errorDescription` are required fields to report an enrichment. Optional request fields such as `incorrectLocation`, `incorrectLocationDescription`, `incorrectCategory`, `incorrectCategoryDescription`, `incorrectChannel`, `incorrectChannelDescription`, `incorrectCounterparty`,  and `incorrectCounterpartyDescription`, can be set to indicate what needs to be addressed in  the enrichment. Once a report has been addressed, y"
+        },
+        {
+          "info": {
+            "name": "Report fraud on a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/enrichments/:enrichmentId/fraud",
+            "params": [
+              {
+                "name": "enrichmentId",
+                "value": "",
+                "type": "path",
+                "description": "The `enrichmentId` of enrichment associated with the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An endpoint for reporting suspected fraud on a transaction which was not related to a chargeback, decline, or refund. If you've already indicated suspected fraud in a chargeback, decline, or refund, it's not necessary to send a request to this endpoint. The `isFraud`, `fraudType`, and `fraudNotes` fields are used to provide information about fraud or suspected fraud on this transaction. Note that this transaction must previously have been enriched to report other fraud information.\n"
+        },
+        {
+          "info": {
+            "name": "Report that a card decline occurred",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/enrichments/:enrichmentId/decline",
+            "params": [
+              {
+                "name": "enrichmentId",
+                "value": "",
+                "type": "path",
+                "description": "The `enrichmentId` of enrichment associated with the transaction where a card decline occurred."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An endpoint for reporting that a card decline has occurred on a transaction. The `declineCode`, `declineDescription`, and `declineNotes` properties can be used to provide information about the decline. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this decline. Note that this transaction must previously have been enriched to report the decline.\n"
+        },
+        {
+          "info": {
+            "name": "Report that a chargeback occurred",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/enrichments/:enrichmentId/chargeback",
+            "params": [
+              {
+                "name": "enrichmentId",
+                "value": "",
+                "type": "path",
+                "description": "The `enrichmentId` of enrichment associated with the transaction where a chargeback occurred."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An endpoint for reporting that a chargeback process has occurred on a transaction. The `state` and `chargebackNotes` properties can be used to provide information about the chargeback. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this chargeback. Note that this transaction must previously have been enriched to report the chargeback.\n"
+        },
+        {
+          "info": {
+            "name": "Report that a refund occurred",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/enrichments/:enrichmentId/refund",
+            "params": [
+              {
+                "name": "enrichmentId",
+                "value": "",
+                "type": "path",
+                "description": "The `enrichmentId` of enrichment associated with the transaction where a refund occurred."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An endpoint for reporting that a refund has occurred on a transaction associated with an enrichment. The `refundNotes` property can be used to provide information about the refund. The `isFraud`, `fraudType`, and `fraudNotes` are used to provide information about fraud or suspected fraud related to this refund. Note that this transaction must previously have been enriched to report the refund.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

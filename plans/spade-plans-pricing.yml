@@ -1,0 +1,71 @@
+generated: '2026-08-14'
+method: searched
+source: https://www.spade.com/pricing
+plan_count: 3
+published_prices: false
+currency: null
+billing_model: usage-based
+note: >-
+  Spade names three tiers on its public pricing page but publishes NO price for any of them. Every
+  tier renders a literal `$00.00 [per month]` placeholder, and every tier description is still the
+  unedited "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" template
+  filler, with a single placeholder feature bullet reading "Tempus leo eu aenean". The page is
+  published and reachable (HTTP 200 on 2026-08-14) but its per-tier content has never been written.
+  The only real, tier-independent content is the "Always included" list. Every CTA on the page
+  ("Start now" on each tier, "Contact sales" in the nav) resolves to `/#` or /contact/ — there is no
+  self-serve signup, which matches the developer docs: API keys are issued by a Spade representative,
+  not generated in a console. apis.yml therefore carries no SignUp pointer.
+plans:
+  - name: Essentials
+    price: null
+    currency: null
+    billing_period: month
+    price_note: Rendered as the placeholder "$00.00 [per month]".
+    description_note: Placeholder lorem-ipsum text; no real tier description published.
+    included_quota: null
+    overage: null
+    limits: null
+    cta: Start now
+    cta_url: null
+    cta_note: The "Start now" control links to `/#` and performs no signup.
+  - name: Advanced
+    price: null
+    currency: null
+    billing_period: month
+    price_note: Rendered as the placeholder "$00.00 [per month]".
+    description_note: Placeholder lorem-ipsum text; no real tier description published.
+    included_quota: null
+    overage: null
+    limits: null
+    cta: Start now
+    cta_url: null
+  - name: Enterprise
+    price: null
+    currency: null
+    billing_period: month
+    price_note: Rendered as the placeholder "$00.00 [per month]".
+    description_note: Placeholder lorem-ipsum text; no real tier description published.
+    included_quota: null
+    overage: null
+    limits: null
+    cta: Start now
+    cta_url: null
+included_in_all_plans:
+  - '<50ms average enrichment latency'
+  - 99% enrichment accuracy
+  - 99.9% Uptime SLA
+  - 99.9% merchant coverage (U.S. & Canada)
+  - Real-time API monitoring
+  - Ongoing access to developer documentation
+positioning_quote: >-
+  "Choose the model that fits your growth. Spade offers flexible, usage-based plans with
+  enterprise-grade reliability, industry-leading accuracy, and world-class support included."
+how_to_buy:
+  path: contact sales
+  url: https://www.spade.com/contact
+  self_serve: false
+  evidence: >-
+    Docs (https://docs.spade.com/reference/integrate-with-spades-api) state that sandbox and
+    production API keys are issued by a Spade representative; the batch rate-limit ceiling is also
+    directed to sales@spade.com. No console, dashboard or signup host resolves
+    (app.spade.com and dashboard.spade.com do not resolve at all).

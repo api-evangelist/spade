@@ -1,6 +1,11 @@
-generated: '2026-07-21'
+generated: '2026-08-14'
 method: searched
 source: https://docs.spade.com/reference/integrate-with-spades-api
+sources:
+  - https://docs.spade.com/reference/integrate-with-spades-api
+  - https://docs.spade.com/reference/microbatch-enrichment-guide
+  - https://docs.spade.com/reference/realtime-action-triggers-guide
+  - openapi/_original/spade-openapi-original.yml
 note: Cross-cutting request/response semantics for Spade, searched from docs and derived from OpenAPI.
 authentication:
   style: api-key
@@ -19,11 +24,74 @@ batch_processing:
     cap is `synchronousMax`, discoverable at runtime via the endpoint metadata (OPTIONS) operations.
 idempotency:
   key_header: false
+  key_header_name: null
+  retention: null
+  scope: operation-level only
   note: >-
-    Spade does not document an Idempotency-Key header for retry-safe writes. Trigger and registration
-    operations are described as naturally idempotent (PUT registrations replace state; trigger IDs that
-    are not active are silently ignored). A 409 is returned when a registration is already in progress
-    for a scope.
+    Spade documents NO Idempotency-Key header, and there is no request-scoped dedupe key anywhere in
+    the API. What it does document is method-level idempotency on the action-trigger surface only:
+    PUT registrations replace the entire trigger list at a scope (so a repeat is a no-op), and
+    PATCH `remove` silently ignores trigger IDs that are not currently active — the docs use the
+    word "idempotent" for exactly this case. A 409 Conflict is returned when a registration is
+    already in progress for a scope, which forces the caller to poll to `succeeded` rather than
+    blindly retry.
+  enrichment_writes:
+    retry_safe: false
+    note: >-
+      The marquee write path — POST /transactions/*/enrich and the /batches/* submissions — carries
+      no dedupe key. A retried batch submission creates a second batch job with a new `batchId`.
+      Callers must dedupe on their own `transactionId` / `customAttributes` downstream.
+  apis_yml_pointer: >-
+    No `Idempotency` pointer is emitted. Retry-safety by key is the thing that check asserts, and
+    Spade does not offer it; recording the partial trigger-surface idempotency here is the honest
+    representation.
+concurrency:
+  registrations:
+    rule: >-
+      Only one action-trigger registration may be in progress per scope at a time. Concurrent
+      registrations to the same scope return 409; poll the scope's GET status endpoint until
+      `succeeded` before the next batch.
+    status: 409
+    statuses: [pending, succeeded, failed]
+    note: >-
+      Category trigger registrations are processed SYNCHRONOUSLY (status is succeeded/failed
+      immediately); merchant trigger registrations at account/program scope are ASYNCHRONOUS and
+      must be polled. Triggers only apply to enrichment responses once the status is `succeeded`.
+limits:
+  see: rate-limits/spade-rate-limits.yml
+  summary: >-
+    1000 requests / 5 minutes per IP (429); 10 requests/second to batch endpoints; an undisclosed
+    batch-request cap over a rolling 12-hour window; 120-second supported request timeout; 50,000
+    transactions per async batch; per-endpoint `synchronousMax` for microbatches (50 for merchants,
+    100 for transactions), readable at runtime from each endpoint's OPTIONS response.
+rate_limit_signaling:
+  headers: none
+  note: >-
+    No X-RateLimit-*, no RFC 9331 RateLimit-*, no Retry-After. 429 with a `details` string is the
+    only runtime signal. See rate-limits/spade-rate-limits.yml.
+pagination:
+  style: none
+  note: >-
+    Spade exposes no paginated collection endpoints. Bulk work is expressed as batch jobs
+    (submit -> poll /batches/{batchId} -> GET /batches/{batchId}/results) or as microbatches with
+    inline `results` arrays, not as offset/cursor pages.
+identifiers:
+  caller_supplied: [transactionId, userId, cardId, programId, accountId]
+  max_length: 512
+  pii_rule: >-
+    The docs are explicit that none of these caller-supplied identifiers should contain PII. Premium
+    features (recurrence detection, category personalization) require a stable unique user
+    identifier, so the identifier must be a durable opaque key.
+  merchant_ids:
+    stable: mostly
+    note: >-
+      Merchant `id`s are described as "relatively stable" but may change over time from real-world
+      mergers/acquisitions and from improvements to Spade's merchant database. Consumers must not
+      treat a merchant id as a permanent primary key.
+custom_attributes:
+  field: customAttributes
+  behavior: Passed through untouched and returned alongside the enriched transaction.
+  use: The supported way to correlate an enrichment response back to caller-side records.
 error_semantics:
   content_type: application/json
   rfc9457: false

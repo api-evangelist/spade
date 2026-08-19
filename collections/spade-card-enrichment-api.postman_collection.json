@@ -1,0 +1,2067 @@
+{
+  "item": [
+    {
+      "id": "4a44a9c5-9f24-4166-8843-8d3055232c75",
+      "name": "Card Enrichment",
+      "description": {
+        "content": "Enrich card transactions",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ae566f29-f02c-4157-a71a-0921193533eb",
+          "name": "Enrich a batch of card transactions with DE43 data",
+          "request": {
+            "name": "Enrich a batch of card transactions with DE43 data",
+            "description": {
+              "content": "Submit a batch of card transactions for enrichment where de43 data in the request body takes precedence over the other fields in the request body.\nJust like the `/transactions/cards/enrich/parse` endpoint, the transactions can omit `city` and `merchantName` fields if the `de43` field is present.\nThis endpoint returns a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results` endpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n\nNote that we impose a rate limit on the number of batch requests made in a rolling 12 hour window. Please reach out to\nsales@spade.com with any questions.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "batches",
+                "transactions",
+                "cards",
+                "enrich",
+                "parse"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "synchronous",
+                  "value": "false",
+                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"<number,string>\",\n      \"categoryCode\": \"<string>\",\n      \"currencyCode\": \"<string>\",\n      \"de43\": \"<string>\",\n      \"location\": {\n        \"address\": \"<string>\",\n        \"city\": \"<string>\",\n        \"region\": \"<string>\",\n        \"country\": \"<string>\",\n        \"postalCode\": \"<string>\",\n        \"latitude\": \"<number,null>\",\n        \"longitude\": \"<number,null>\"\n      },\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"merchantName\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"programId\": \"<string>\",\n      \"cardId\": \"<string>\",\n      \"cardFirstSix\": \"<string>\",\n      \"cardLastFour\": \"<string>\",\n      \"acquirerId\": \"<string>\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"<string>\",\n      \"customAttributes\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\",\n        \"key_3\": \"<string>\",\n        \"key_4\": \"<string>\",\n        \"key_5\": \"<string>\",\n        \"key_6\": \"<string>\",\n        \"key_7\": \"<string>\",\n        \"key_8\": \"<string>\",\n        \"key_9\": \"<string>\",\n        \"key_10\": \"<string>\",\n        \"key_11\": \"<string>\",\n        \"key_12\": \"<string>\",\n        \"key_13\": \"<string>\",\n        \"key_14\": \"<string>\",\n        \"key_15\": \"<string>\",\n        \"key_16\": \"<string>\",\n        \"key_17\": \"<string>\",\n        \"key_18\": \"<string>\",\n        \"key_19\": \"<string>\"\n      }\n    },\n    {\n      \"amount\": \"<number,string>\",\n      \"categoryCode\": \"<string>\",\n      \"currencyCode\": \"<string>\",\n      \"de43\": \"<string>\",\n      \"location\": {\n        \"address\": \"<string>\",\n        \"city\": \"<string>\",\n        \"region\": \"<string>\",\n        \"country\": \"<string>\",\n        \"postalCode\": \"<string>\",\n        \"latitude\": \"<number,null>\",\n        \"longitude\": \"<number,null>\"\n      },\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"merchantName\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"programId\": \"<string>\",\n      \"cardId\": \"<string>\",\n      \"cardFirstSix\": \"<string>\",\n      \"cardLastFour\": \"<string>\",\n      \"acquirerId\": \"<string>\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"<string>\",\n      \"customAttributes\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\",\n        \"key_3\": \"<string>\",\n        \"key_4\": \"<string>\",\n        \"key_5\": \"<string>\",\n        \"key_6\": \"<string>\",\n        \"key_7\": \"<string>\",\n        \"key_8\": \"<string>\",\n        \"key_9\": \"<string>\",\n        \"key_10\": \"<string>\",\n        \"key_11\": \"<string>\",\n        \"key_12\": \"<string>\",\n        \"key_13\": \"<string>\",\n        \"key_14\": \"<string>\",\n        \"key_15\": \"<string>\",\n        \"key_16\": \"<string>\",\n        \"key_17\": \"<string>\",\n        \"key_18\": \"<string>\",\n        \"key_19\": \"<string>\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"<url>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2f513d8e-358c-4749-89ec-0d1b1732dc37",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    },\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"https://example.com/callback\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batchId\": \"36204856-6b52-5d32-1b9d-4b7d2c97f568\",\n  \"status\": \"failed\",\n  \"batchSize\": 1,\n  \"submittedAt\": \"2024-11-21T20:07:20.213660Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c899d117-2647-43b7-9f0d-f59f5a29d091",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    },\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"https://example.com/callback\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14296e98-a6f0-4c4a-87a3-4850102ae9d1",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    },\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"https://example.com/callback\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "760d3e17-e13f-4bea-8af6-035b00521007",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    },\n    {\n      \"amount\": \"25.23\",\n      \"categoryCode\": \"5812\",\n      \"currencyCode\": \"USD\",\n      \"de43\": \"de43_123456789\",\n      \"location\": {\n        \"address\": \"1234 W 5th Ave Suite 100\",\n        \"city\": \"New York\",\n        \"region\": \"NY\",\n        \"country\": \"USA\",\n        \"postalCode\": \"10001\",\n        \"latitude\": 45,\n        \"longitude\": 120\n      },\n      \"occurredAt\": \"2022-06-15 18:27:51Z\",\n      \"transactionId\": \"transaction_id_123456789\",\n      \"userId\": \"user_id_123456789\",\n      \"merchantName\": \"Amazon\",\n      \"organizationId\": \"organization_id_123\",\n      \"programId\": \"program_id_123\",\n      \"cardId\": \"card_id_123456789\",\n      \"cardFirstSix\": \"123456\",\n      \"cardLastFour\": \"7890\",\n      \"acquirerId\": \"000000000123456\",\n      \"categoryType\": \"MCC\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"custom_attribute_1\": \"value_1\",\n        \"custom_attribute_2\": \"value_2\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"https://example.com/callback\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5fefcb37-a872-4a43-80a4-e8ad9957b240",
+          "name": "Get metadata for the batch card parse enrichment endpoint",
+          "request": {
+            "name": "Get metadata for the batch card parse enrichment endpoint",
+            "description": {
+              "content": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "batches",
+                "transactions",
+                "cards",
+                "enrich",
+                "parse"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "OPTIONS",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "34faf27a-d05f-45a2-afb7-76827697c3cb",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "OPTIONS",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"Post\",\n  \"description\": \"Enrich a list of universal transactions\",\n  \"renders\": [\n    \"application/json\"\n  ],\n  \"parses\": [\n    \"application/json\"\n  ],\n  \"synchronousMax\": 100\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d63fb771-7a8e-415d-b482-1e96db77a9a3",
+          "name": "Enrich a batch of card transactions",
+          "request": {
+            "name": "Enrich a batch of card transactions",
+            "description": {
+              "content": "Submit a batch of transactions for enrichment. This endpoint will return a `batchId` which can\nbe used in the `/batches/{batchId}` and `/batches/{batchId}/results` endpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n\nNote that we impose a rate limit on the number of batch requests made in a rolling 12 hour window. Please reach out to\nsales@spade.com with any questions.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "batches",
+                "transactions",
+                "cards",
+                "enrich"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "synchronous",
+                  "value": "false",
+                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "92a7d14f-96f2-4fce-af42-a472f3b02d32",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batchId\": \"36204856-6b52-5d32-1b9d-4b7d2c97f568\",\n  \"status\": \"failed\",\n  \"batchSize\": 1,\n  \"submittedAt\": \"2024-11-21T20:07:20.213660Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0229d599-9626-44dc-b321-5e253f7f4371",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79c1cad3-a980-4191-9332-83200cdf7426",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "61d73ad4-e9e6-43c1-93dc-a803b9189402",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "synchronous",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8ddaab38-78a6-4c35-9255-5b5d6ba4e6ca",
+          "name": "Get metadata for the batch card enrichment endpoint",
+          "request": {
+            "name": "Get metadata for the batch card enrichment endpoint",
+            "description": {
+              "content": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "batches",
+                "transactions",
+                "cards",
+                "enrich"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "OPTIONS",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6002b96a-b78a-4eea-8793-9930a05af491",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "OPTIONS",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"Post\",\n  \"description\": \"Enrich a list of universal transactions\",\n  \"renders\": [\n    \"application/json\"\n  ],\n  \"parses\": [\n    \"application/json\"\n  ],\n  \"synchronousMax\": 100\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2590fdd4-dbb3-4789-a06c-353f0ace1f30",
+          "name": "Enrich a card transaction",
+          "request": {
+            "name": "Enrich a card transaction",
+            "description": {
+              "content": "Enrich a card transaction. Please use `/transactions/cards/enrich` instead. This endpoint now aliases to `/transactions/cards/enrich`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "enrich"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b8e8f091-5a91-4bd5-a3e5-7ab8b3150466",
+          "name": "Enrich a card transaction with an unparsed de43",
+          "request": {
+            "name": "Enrich a card transaction with an unparsed de43",
+            "description": {
+              "content": "Enrich a card transaction. Please use `/transactions/cards/enrich/parse` instead. This endpoint now aliases to `/transactions/cards/enrich/parse`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "enrich",
+                "parse"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6f696f35-5ceb-4c86-b94c-b6d3822da13d",
+          "name": "Enrich a card transaction with an unparsed de43",
+          "request": {
+            "name": "Enrich a card transaction with an unparsed de43",
+            "description": {
+              "content": "Enrich a card transaction where parsed de43 data takes precedence over the other fields in the request body.\nThis otherwise endpoint is identical to `/transactions/cards/enrich` except that `city` and `merchantName` are now\noptional, but only when `de43` is included. Note: Because DE43 format is not consistent between sources, we recommend parsing\nyour own data and using `/transactions/cards/enrich/` if possible.\n\nNote that some response fields may not be included in your product package, please reach out to sales@spade.com with any questions.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "cards",
+                "enrich",
+                "parse"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"categoryCode\": \"<string>\",\n  \"location\": {\n    \"address\": \"<string>\",\n    \"city\": \"<string>\",\n    \"region\": \"<string>\",\n    \"country\": \"<string>\",\n    \"postalCode\": \"<string>\",\n    \"latitude\": \"<number,null>\",\n    \"longitude\": \"<number,null>\"\n  },\n  \"merchantName\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"programId\": \"<string>\",\n  \"cardId\": \"<string>\",\n  \"cardFirstSix\": \"<string>\",\n  \"cardLastFour\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"acquirerId\": \"<string>\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"<string>\",\n  \"customAttributes\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\",\n    \"key_2\": \"<string>\",\n    \"key_3\": \"<string>\",\n    \"key_4\": \"<string>\",\n    \"key_5\": \"<string>\",\n    \"key_6\": \"<string>\",\n    \"key_7\": \"<string>\",\n    \"key_8\": \"<string>\",\n    \"key_9\": \"<string>\",\n    \"key_10\": \"<string>\"\n  },\n  \"de43\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "94ab4acb-be6b-4d4b-a2de-acf913e47067",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"25.23\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"categoryCode\": \"5812\",\n  \"location\": {\n    \"address\": \"1234 W 5th Ave Suite 100\",\n    \"city\": \"New York\",\n    \"region\": \"NY\",\n    \"country\": \"USA\",\n    \"postalCode\": \"10001\",\n    \"latitude\": 45,\n    \"longitude\": 120\n  },\n  \"merchantName\": \"Amazon\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  },\n  \"de43\": \"WALMART.COM            BENTONVILLE  ARUS\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b2ff1d3-676e-4eb3-b46b-86104ce3e4f2",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"25.23\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"categoryCode\": \"5812\",\n  \"location\": {\n    \"address\": \"1234 W 5th Ave Suite 100\",\n    \"city\": \"New York\",\n    \"region\": \"NY\",\n    \"country\": \"USA\",\n    \"postalCode\": \"10001\",\n    \"latitude\": 45,\n    \"longitude\": 120\n  },\n  \"merchantName\": \"Amazon\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  },\n  \"de43\": \"WALMART.COM            BENTONVILLE  ARUS\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f46598cd-0a96-4742-a8e6-48a8c4413027",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"25.23\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"categoryCode\": \"5812\",\n  \"location\": {\n    \"address\": \"1234 W 5th Ave Suite 100\",\n    \"city\": \"New York\",\n    \"region\": \"NY\",\n    \"country\": \"USA\",\n    \"postalCode\": \"10001\",\n    \"latitude\": 45,\n    \"longitude\": 120\n  },\n  \"merchantName\": \"Amazon\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  },\n  \"de43\": \"WALMART.COM            BENTONVILLE  ARUS\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "40778ca1-21f4-4f81-ad96-d45b609aab51",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich",
+                    "parse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"25.23\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"categoryCode\": \"5812\",\n  \"location\": {\n    \"address\": \"1234 W 5th Ave Suite 100\",\n    \"city\": \"New York\",\n    \"region\": \"NY\",\n    \"country\": \"USA\",\n    \"postalCode\": \"10001\",\n    \"latitude\": 45,\n    \"longitude\": 120\n  },\n  \"merchantName\": \"Amazon\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  },\n  \"de43\": \"WALMART.COM            BENTONVILLE  ARUS\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2124a021-da2d-4d56-a008-1f9bfce97585",
+          "name": "Enrich a card transaction",
+          "request": {
+            "name": "Enrich a card transaction",
+            "description": {
+              "content": "When working with this endpoint, note that several of the input fields are optional (region, acquirerId, etc.). However, we *strongly* recommend including all of the fields that you have available. Some optional fields can substantially improve performance.\n\nTake care to ensure you are using unaltered and correct data in each field. Some fields go by multiple names, so if you have any questions regarding integration please feel free to reach out.\n\nNote that some response fields may not be included in your product package, please reach out with any questions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "transactions",
+                "cards",
+                "enrich"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"<number,string>\",\n  \"categoryCode\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"location\": \"<object>\",\n  \"merchantName\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"userId\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"programId\": \"<string>\",\n  \"cardId\": \"<string>\",\n  \"cardFirstSix\": \"<string>\",\n  \"cardLastFour\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"acquirerId\": \"<string>\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"<string>\",\n  \"customAttributes\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\",\n    \"key_2\": \"<string>\",\n    \"key_3\": \"<string>\",\n    \"key_4\": \"<string>\",\n    \"key_5\": \"<string>\",\n    \"key_6\": \"<string>\",\n    \"key_7\": \"<string>\",\n    \"key_8\": \"<string>\",\n    \"key_9\": \"<string>\",\n    \"key_10\": \"<string>\",\n    \"key_11\": \"<string>\",\n    \"key_12\": \"<string>\",\n    \"key_13\": \"<string>\",\n    \"key_14\": \"<string>\",\n    \"key_15\": \"<string>\",\n    \"key_16\": \"<string>\",\n    \"key_17\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d3de30d5-7b3c-4841-865f-ea71a5676994",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"25.23\",\n  \"categoryCode\": \"5812\",\n  \"currencyCode\": \"USD\",\n  \"location\": \"<object>\",\n  \"merchantName\": \"Amazon\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"userId\": \"user_id_123456789\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e9ef953a-cfe8-4450-b932-5b265dd24ddd",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"25.23\",\n  \"categoryCode\": \"5812\",\n  \"currencyCode\": \"USD\",\n  \"location\": \"<object>\",\n  \"merchantName\": \"Amazon\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"userId\": \"user_id_123456789\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d7d89021-0708-401b-b162-4d0cd108b70d",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"25.23\",\n  \"categoryCode\": \"5812\",\n  \"currencyCode\": \"USD\",\n  \"location\": \"<object>\",\n  \"merchantName\": \"Amazon\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"userId\": \"user_id_123456789\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee809c8a-3677-4d8f-8b20-aa075b44c6d7",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "transactions",
+                    "cards",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"25.23\",\n  \"categoryCode\": \"5812\",\n  \"currencyCode\": \"USD\",\n  \"location\": \"<object>\",\n  \"merchantName\": \"Amazon\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"userId\": \"user_id_123456789\",\n  \"organizationId\": \"organization_id_123\",\n  \"programId\": \"program_id_123\",\n  \"cardId\": \"card_id_123456789\",\n  \"cardFirstSix\": \"123456\",\n  \"cardLastFour\": \"7890\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"acquirerId\": \"000000000123456\",\n  \"categoryType\": \"MCC\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "93226e79-552e-40c1-85b3-153c812bcb22",
+          "name": "Get the results of a batch card enrichment job",
+          "request": {
+            "name": "Get the results of a batch card enrichment job",
+            "description": {
+              "content": "Get the results of a batch card enrichment job.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "batches",
+                ":cardEnrichmentBatchId",
+                "results"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "cardEnrichmentBatchId",
+                  "description": "(Required) ID of the batch card enrichment job"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f6f5fe81-11f6-4f4f-98d2-7ce6081fa586",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"statusCode\": 200,\n      \"errors\": {\n        \"currencyCode\": [\n          \"This field is required.\"\n        ],\n        \"categoryCode\": [\n          \"This field is required.\"\n        ]\n      }\n    },\n    {\n      \"statusCode\": 200,\n      \"errors\": {\n        \"currencyCode\": [\n          \"This field is required.\"\n        ],\n        \"categoryCode\": [\n          \"This field is required.\"\n        ]\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e12d10a2-235c-4bc1-b54d-7bfbad6913fa",
+              "name": "Batch job is not yet complete. Results aren't currently available.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batchId\": \"74635df8-9bdb-78bb-c9e7-ca7f2434bda8\",\n  \"status\": \"pending\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0676b5f4-22c9-4f6d-9d1e-a2c29e76ce13",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fa1b7403-3895-4910-8253-c7f2a603692b",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c8288ab2-9325-44af-bf3c-94a27fc5921d",
+              "name": "Batch job not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Batch job not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e64e1459-122e-453c-b41a-92751e09301d",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId",
+                    "results"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "76d9ccbc-b961-455b-8966-8a6389343aca",
+          "name": "Get the status of a batch card enrichment job",
+          "request": {
+            "name": "Get the status of a batch card enrichment job",
+            "description": {
+              "content": "Get the status of a batch job.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "batches",
+                ":cardEnrichmentBatchId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "cardEnrichmentBatchId",
+                  "description": "(Required) ID of the batch card enrichment job"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "aac9c7a8-82cb-4eab-8466-3d342ba9b335",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"batchId\": \"74635df8-9bdb-78bb-c9e7-ca7f2434bda8\",\n  \"status\": \"pending\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5b0a4c89-96d6-4247-8450-59f47971e13e",
+              "name": "Invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6201055b-7f33-4200-a566-846a376eaf47",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0dc4aeaf-b8c6-4c8c-a0bd-96daed984b32",
+              "name": "Batch job not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Batch job not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f3fad681-3a94-4e59-939d-6b63fd99b754",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "batches",
+                    ":cardEnrichmentBatchId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "cardEnrichmentBatchId",
+                      "description": "(Required) ID of the batch card enrichment job"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"details\": \"Internal server error.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://east.sandbox.spade.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Api-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "abc48de5-6310-4ce7-b517-d161e23304df",
+    "name": "Spade Card Enrichment API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.",
+      "type": "text/plain"
+    }
+  }
+}

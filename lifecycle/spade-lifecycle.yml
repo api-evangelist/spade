@@ -1,6 +1,11 @@
-generated: '2026-07-21'
+generated: '2026-08-14'
 method: searched
 source: https://docs.spade.com/changelog/changelog
+sources:
+  - https://docs.spade.com/changelog/changelog
+  - https://status.spadeapi.com
+  - https://www.spade.com/pricing
+  - https://www.spade.com/sla
 versioning:
   scheme: major-path
   current: v2
@@ -9,15 +14,48 @@ versioning:
 changelog: https://docs.spade.com/changelog/changelog
 sla:
   url: https://www.spade.com/sla
-  note: Spade publishes a Service Level Agreement page.
-status_page: null
-status_page_note: No public status page was found (status.spade.com did not resolve at capture).
+  note: >-
+    Spade publishes a Service Level Agreement page. The pricing page states a "99.9% Uptime SLA"
+    included in every tier, alongside "<50ms average enrichment latency", "99% enrichment accuracy"
+    and "Real-time API monitoring".
+  uptime_commitment: '99.9%'
+  uptime_source: https://www.spade.com/pricing
+status_page:
+  url: https://status.spadeapi.com
+  platform: Atlassian Statuspage
+  alias: https://spade.statuspage.io
+  api: https://spade.statuspage.io/api/v2/summary.json
+  page_title: Spade Status
+  operating_since: '2022-10-06'
+  components:
+    - API - Production
+    - API - Sandbox
+  x-evidence:
+    fetched: '2026-08-14'
+    url: https://spade.statuspage.io/api/v2/summary.json
+    http_status: 200
+    canonical_url_from_body: https://status.spadeapi.com
+status_page_note: >-
+  CORRECTION to the 2026-07-21 capture, which recorded "no public status page found" after probing
+  only status.spade.com (still does not resolve). The status page is hosted on the LEGACY spadeapi.com
+  domain — https://status.spadeapi.com — and is reachable via the Statuspage alias
+  https://spade.statuspage.io. It is real and current (components created 2022-10-06, page updated
+  2026-08-14) but it is NOT linked from spade.com, docs.spade.com or the developer reference, so a
+  caller who only knows the current spade.com domain cannot find it.
 deprecation:
   policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
   note: >-
-    No standalone deprecation-policy page found. Deprecation is expressed in-spec: two legacy card
-    enrichment operations are marked deprecated and alias to the current endpoints, and several
-    legacy spadeapi.com server hosts are labelled deprecated in favor of the *.spade.com hosts.
+    Re-confirmed 2026-08-14. No standalone deprecation-policy page exists, and the string
+    "deprecat" appears ZERO times in Spade's entire published documentation corpus
+    (https://docs.spade.com/llms-full.txt, 284 KB, the complete reference in one file) — so there
+    is no stated notice period, no sunset date, and no RFC 8594 Deprecation/Sunset response headers.
+    Deprecation is expressed only in-spec: two legacy card enrichment operations carry
+    `deprecated: true` and alias to the current endpoints, and four legacy spadeapi.com server
+    hosts are labelled deprecated in favor of the *.spade.com hosts. Because a practice is not a
+    policy, apis.yml carries NO `Deprecation` pointer.
 deprecated_operations:
   - openapi/spade-openapi-original.yml#cardEnrichDeprecated
   - openapi/spade-openapi-original.yml#cardEnrichParseDeprecated

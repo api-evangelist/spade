@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Merchant Search API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Merchant Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search for merchants",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/corporations",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the merchant you want to find"
+              }
+            ]
+          },
+          "docs": "<Info>This endpoint is in beta. To request access, contact [sales@spade.com](mailto:sales@spade.com).</Info>\n\nSearch for merchants in Spade's merchant database by name.\n\nDesigned for powering autocomplete experiences, this endpoint returns up to five matching merchants with their name, logo, and website.\n\nTo learn more, read the [Merchant Search Guide](https://docs.spade.com/reference/merchant-search-guide)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

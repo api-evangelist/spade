@@ -1,0 +1,113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Transfer Enrichment API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Transfer Enrichment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Enrich a batch of transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/batches/transactions/transfers/enrich",
+            "params": [
+              {
+                "name": "synchronous",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a batch of transfers for enrichment.\nThis endpoint will return a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results`\nendpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n\nNote that we impose a rate limit on the number of batch requests"
+        },
+        {
+          "info": {
+            "name": "Get metadata for the batch transfer enrichment endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "OPTIONS",
+            "url": "https://east.sandbox.spade.com/batches/transactions/transfers/enrich"
+          },
+          "docs": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n"
+        },
+        {
+          "info": {
+            "name": "Enrich a transfer transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://east.sandbox.spade.com/transactions/transfers/enrich",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enrich a transfer transaction such as an ACH withdrawal, ACH deposit, or wire transfer.\n\nWhen using this endpoint, take care to ensure you are using unaltered and correct data in each field.\n\nNote that transfers enrichment is currently private, please reach out to sales@spade.com to request access."
+        },
+        {
+          "info": {
+            "name": "Get the results of a batch transfer enrichment job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/batches/:transferEnrichmentBatchId/results",
+            "params": [
+              {
+                "name": "transferEnrichmentBatchId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the batch transfer enrichment job"
+              }
+            ]
+          },
+          "docs": "Get the results of a batch transfer enrichment job.\n"
+        },
+        {
+          "info": {
+            "name": "Get the status of a batch transfer enrichment job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/batches/:transferEnrichmentBatchId",
+            "params": [
+              {
+                "name": "transferEnrichmentBatchId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the batch transfer enrichment job"
+              }
+            ]
+          },
+          "docs": "Get the status of a batch transfer enrichment job.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

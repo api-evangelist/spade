@@ -1,0 +1,145 @@
+generated: '2026-08-14'
+method: searched
+source: https://docs.spade.com/reference/integrate-with-spades-api
+sources:
+  - https://docs.spade.com/reference/integrate-with-spades-api
+  - https://docs.spade.com/reference/microbatch-enrichment-guide
+  - https://docs.spade.com/reference/realtime-action-triggers-guide
+  - openapi/_original/spade-openapi-original.yml
+limit_count: 4
+note: >-
+  Spade publishes real numeric limits, but they live in prose and in the OpenAPI's
+  `TooManyRequests` response description rather than in response headers. NO rate-limit response
+  headers are documented anywhere in the reference — no X-RateLimit-*, no RateLimit-*, no
+  Retry-After. A live unauthenticated probe of POST https://east.api.spade.com/transactions/cards/enrich
+  on 2026-08-14 returned a bare nginx `403 Forbidden` with no rate-limit headers at all, so the
+  runtime signal could not be observed either. An agent integrating Spade must therefore treat 429
+  as the only feedback channel and back off blindly.
+exhaustion:
+  status: 429
+  body:
+    content_type: application/json
+    shape: '{"details": "<string>"}'
+    example: Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
+  retry_after_header: false
+headers:
+  published: false
+  observed: false
+  note: >-
+    No X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset, no RFC 9331 RateLimit-*, and
+    no Retry-After documented or observed. This is the single biggest agent-readiness gap in Spade's
+    runtime semantics.
+limits:
+  - id: global-per-ip
+    scope: per-ip
+    limit: 1000
+    window: 5 minutes
+    burst: null
+    applies_to: all endpoints
+    status_on_exhaustion: 429
+    evidence: >-
+      OpenAPI components.responses.TooManyRequests description: "Too many requests. Currently,
+      requests are limited to 1000 every 5 minutes per IP address."
+    source: openapi/_original/spade-openapi-original.yml
+    note: >-
+      Scoped to source IP, not to API key. Callers behind shared NAT or a single egress gateway
+      share one bucket, and the effective ceiling is ~3.33 req/s sustained.
+  - id: batch-requests-per-second
+    scope: per-caller
+    limit: 10
+    window: 1 second
+    applies_to: batch enrichment endpoints (/batches/transactions/*/enrich, /batches/merchants/enrich)
+    status_on_exhaustion: 429
+    evidence: >-
+      "Once you have prepared your batch(es) you can send up to 10 requests per second to our batch
+      enrichment endpoints."
+    source: https://docs.spade.com/reference/integrate-with-spades-api
+  - id: batch-requests-rolling-12h
+    scope: per-account
+    limit: null
+    window: rolling 12 hours
+    applies_to: batch enrichment endpoints
+    status_on_exhaustion: 429
+    evidence: >-
+      "Note that we impose a rate limit on the number of batch requests made in a rolling 12 hour
+      window. Please reach out to sales@spade.com with any questions."
+    source: https://docs.spade.com/reference/integrate-with-spades-api
+    note: >-
+      The number is NOT published — the docs direct callers to sales@spade.com. Recorded as an
+      acknowledged-but-undisclosed limit rather than omitted.
+  - id: request-timeout
+    scope: per-request
+    limit: 120
+    unit: seconds
+    window: per request
+    applies_to: batch enrichment uploads
+    evidence: '"We support up to a 120 second timeout window."'
+    source: https://docs.spade.com/reference/integrate-with-spades-api
+payload_caps:
+  note: >-
+    Distinct from rate limits — these cap the size of a single request and return 400 (not 429) when
+    exceeded. Captured here because an agent planning a batch needs them alongside the rate limits.
+  caps:
+  - id: async-batch-max-transactions
+    limit: 50000
+    unit: transactions per request
+    applies_to: /batches/transactions/{cards,transfers,universal}/enrich (async)
+    status_on_exceed: 400
+  - id: microbatch-synchronous-max
+    applies_to: batch endpoints with ?synchronous=true
+    status_on_exceed: 400
+    runtime_discovery: >-
+      Each endpoint's OPTIONS response returns the current `synchronousMax`, so the cap can be read
+      at runtime instead of hard-coded.
+    per_endpoint:
+      - endpoint: POST /batches/merchants/enrich
+        synchronousMax: 50
+      - endpoint: POST /batches/transactions/cards/enrich
+        synchronousMax: 100
+      - endpoint: POST /batches/transactions/cards/enrich/parse
+        synchronousMax: 100
+      - endpoint: POST /batches/transactions/transfers/enrich
+        synchronousMax: 100
+      - endpoint: POST /batches/transactions/universal/enrich
+        synchronousMax: 100
+  - id: merchant-triggers-per-request
+    limit: 100000
+    unit: triggers per PATCH add request
+    applies_to: merchant action triggers (account / program scope)
+    status_on_exceed: 400
+  - id: merchant-triggers-per-scope
+    limit: 300000
+    unit: active triggers per scope
+    applies_to: merchant action triggers (account / program scope)
+    status_on_exceed: 400
+  - id: merchant-triggers-card-scope-per-request
+    limit: 100
+    unit: merchantTriggers per request
+    applies_to: merchant action triggers at card scope
+    status_on_exceed: 400
+  - id: category-triggers-per-request
+    limit: 300
+    unit: categoryTriggers per request
+    applies_to: category action triggers
+    status_on_exceed: 400
+  - id: category-triggers-active-per-scope
+    limit: 300
+    unit: active triggers per scope
+    applies_to: category action triggers
+    status_on_exceed: 400
+concurrency:
+  - rule: >-
+      Only one action-trigger registration operation may be in progress per scope at a time.
+      Concurrent registrations to the same scope return 409 Conflict; the caller must poll the scope's
+      GET status endpoint until `succeeded` before sending the next batch.
+    status: 409
+    source: https://docs.spade.com/reference/realtime-action-triggers-guide
+client_guidance:
+  - Reuse connections; every new connection adds TLS handshake latency to a sub-50ms budget.
+  - >-
+    A single HTTP/1.1 connection will bottleneck at high volume — use multiple parallel connections
+    to reach high enrichment throughput.
+  - >-
+    Cloud instances (e.g. EC2) commonly impose their own egress throughput limits that will surface
+    before Spade's do.
+  - Implement retry logic for 5xx; do NOT retry a 400 caused by a missing required field — it will fail again.

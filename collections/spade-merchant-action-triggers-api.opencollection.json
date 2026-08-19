@@ -1,0 +1,354 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spade Card Enrichment Merchant Action Triggers API",
+    "version": "2.7.3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Api-Key",
+      "value": "{{X-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Merchant Action Triggers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get account-level trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/merchant-action-triggers"
+          },
+          "docs": "Get the status and version of the latest merchant action trigger registration at the account scope.\n\nAccount-level triggers apply to all transactions for all users in your account.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register merchant triggers at account scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/merchant-action-triggers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register merchant action triggers at the account scope.\n\nAccount-level triggers apply to all transactions for all users in your account.\n\n**Field requirements:**\n- `id`, `merchantName`, and `action` are always required for each trigger\n- If location fields (address, city) are NOT provided, `website` is required\n\n**Batch processing:** Registrations with more than 100 triggers are processed asynchronously as a batch job. Poll the GET endpoint to monitor completion.\n\n**Limits:** Up to 100,000 trigg"
+        },
+        {
+          "info": {
+            "name": "Incremental trigger operations at account scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/merchant-action-triggers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on merchant action triggers at the account scope.\n\nSupports two operations:\n- **add**: Register new merchants or update existing ones. Only the submitted merchants are affected—existing registrations are preserved. If a trigger ID already exists, its registration is replaced (upsert). Registrations with more than 100 triggers are processed asynchronously as a batch job.\n- **remove**: Remove merchants by trigger ID. Removed merchants are excluded from enrichment loo"
+        },
+        {
+          "info": {
+            "name": "Clear account-level triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/merchant-action-triggers"
+          },
+          "docs": "Clear all merchant action triggers at the account scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Get card-level trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ]
+          },
+          "docs": "Get the status and version of the latest merchant action trigger registration at the card scope.\n\nCard-level triggers apply only to transactions for the specified card.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register merchant triggers at card scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register merchant action triggers at the card scope.\n\nCard-level triggers apply only to transactions for the specified card.\n\n**Field requirements:**\n- `id`, `merchantName`, and `action` are always required for each trigger\n- If location fields (address, city) are NOT provided, `website` is required\n\n**Limit:** A maximum of 100 `merchantTriggers` can be submitted per request at the card scope. Requests exceeding this limit will receive a `400` error.\n\n**Important:** Triggers are only applied to "
+        },
+        {
+          "info": {
+            "name": "Incremental trigger operations at card scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on merchant action triggers at the card scope.\n\nSee the account-scope PATCH endpoint for full documentation on supported operations (add, remove)."
+        },
+        {
+          "info": {
+            "name": "Clear card-level triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/cards/:cardId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              },
+              {
+                "name": "cardId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the card"
+              }
+            ]
+          },
+          "docs": "Clear all merchant action triggers at the card scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Get program-level trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/programs/:programId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ]
+          },
+          "docs": "Get the status and version of the latest merchant action trigger registration at the program scope.\n\nProgram-level triggers apply to all enrichment requests where the `programId` field matches this program. See [What is a program?](/reference/merchant-action-triggers-guide#what-is-a-program) for more details.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](http"
+        },
+        {
+          "info": {
+            "name": "Register merchant triggers at program scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/programs/:programId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register merchant action triggers at the program scope.\n\nProgram-level triggers apply to all enrichment requests where the `programId` field matches this program.\n\n**Field requirements:**\n- `id`, `merchantName`, and `action` are always required for each trigger\n- If location fields (address, city) are NOT provided, `website` is required\n\n**Batch processing:** Registrations with more than 100 triggers are processed asynchronously as a batch job. Poll the GET endpoint to monitor completion.\n\n**Lim"
+        },
+        {
+          "info": {
+            "name": "Incremental trigger operations at program scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/programs/:programId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on merchant action triggers at the program scope.\n\nSee the account-scope PATCH endpoint for full documentation on supported operations (add, remove).\n\n**Limits:** Up to 100,000 triggers per `add` request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches and submit them with sequential `add` operations, waiting for each to reach `succeeded` before the next — see [Registering large trigger"
+        },
+        {
+          "info": {
+            "name": "Clear program-level triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/programs/:programId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "programId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the program"
+              }
+            ]
+          },
+          "docs": "Clear all merchant action triggers at the program scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Get user-level trigger status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://east.sandbox.spade.com/users/:userId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ]
+          },
+          "docs": "Get the status and version of the latest merchant action trigger registration at the user scope.\n\nUser-level triggers apply to all transactions for all cards belonging to the specified user.\n\n**Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        },
+        {
+          "info": {
+            "name": "Register merchant triggers at user scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://east.sandbox.spade.com/users/:userId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register merchant action triggers at the user scope.\n\nUser-level triggers apply to all transactions for all cards belonging to the specified user.\n\n**Field requirements:**\n- `id`, `merchantName`, and `action` are always required for each trigger\n- If location fields (address, city) are NOT provided, `website` is required\n\n**Limit:** A maximum of 100 `merchantTriggers` can be submitted per request at the user scope. Requests exceeding this limit will receive a `400` error.\n\n**Important:** Trigger"
+        },
+        {
+          "info": {
+            "name": "Incremental trigger operations at user scope",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://east.sandbox.spade.com/users/:userId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform incremental operations on merchant action triggers at the user scope.\n\nSee the account-scope PATCH endpoint for full documentation on supported operations (add, remove)."
+        },
+        {
+          "info": {
+            "name": "Clear user-level triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://east.sandbox.spade.com/users/:userId/merchant-action-triggers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique identifier for the user"
+              }
+            ]
+          },
+          "docs": "Clear all merchant action triggers at the user scope.\n\nThis creates a new version with an empty trigger list.\n\nTo learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
