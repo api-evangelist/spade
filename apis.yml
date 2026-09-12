@@ -155,6 +155,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Website
+  url: https://www.spade.com/
 - type: Overlay
   url: overlays/spade-openapi-overlay.yaml
 - type: DeveloperPortal
