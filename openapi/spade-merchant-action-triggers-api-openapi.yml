@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Spade Card Enrichment Merchant Action Triggers API
-  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.
+  title: Spade Merchant Action Triggers API
+  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to .
   version: 2.7.3
 servers:
 - url: https://east.sandbox.spade.com
@@ -27,29 +27,7 @@ tags:
   description: Register merchant action triggers and receive triggered actions in enrichment responses
 paths:
   /merchant-action-triggers:
-    delete:
-      tags:
-      - Merchant Action Triggers
-      summary: Clear account-level triggers
-      description: 'Clear all merchant action triggers at the account scope.
-
-
-        This creates a new version with an empty trigger list.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: merchantActionTriggersDelete
-      responses:
-        '204':
-          description: Triggers cleared successfully
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
     get:
-      tags:
-      - Merchant Action Triggers
-      summary: Get account-level trigger status
       description: 'Get the status and version of the latest merchant action trigger registration at the account scope.
 
 
@@ -59,7 +37,10 @@ paths:
         **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
 
 
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Get account-level trigger status
       operationId: merchantActionTriggersGet
       responses:
         '200':
@@ -83,10 +64,65 @@ paths:
                     - No action triggers exist for this scope
         '500':
           $ref: '#/components/responses/InternalServerError'
-    patch:
+    put:
+      description: 'Register merchant action triggers at the account scope.
+
+
+        Account-level triggers apply to all transactions for all users in your account.
+
+
+        **Field requirements:**
+
+        - `id`, `merchantName`, and `action` are always required for each trigger
+
+        - If location fields (address, city) are NOT provided, `website` is required
+
+
+        **Batch processing:** Registrations with more than 100 triggers are processed asynchronously as a batch job. Poll the GET endpoint to monitor completion.
+
+
+        **Limits:** Up to 100,000 triggers per request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches sent sequentially via PATCH `add` — see Registering large trigger sets.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
       tags:
       - Merchant Action Triggers
-      summary: Incremental trigger operations at account scope
+      summary: Register merchant triggers at account scope
+      operationId: merchantActionTriggersPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantActionTriggerRegistrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Registration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
       description: 'Perform incremental operations on merchant action triggers at the account scope.
 
 
@@ -97,7 +133,7 @@ paths:
         - **remove**: Remove merchants by trigger ID. Removed merchants are excluded from enrichment lookups. Trigger IDs that are not currently active are silently ignored (idempotent).
 
 
-        **Limits:** Up to 100,000 triggers per `add` request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches and submit them with sequential `add` operations, waiting for each to reach `succeeded` before the next — see [Registering large trigger sets](/reference/merchant-action-triggers-guide#registering-large-trigger-sets).
+        **Limits:** Up to 100,000 triggers per `add` request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches and submit them with sequential `add` operations, waiting for each to reach `succeeded` before the next — see Registering large trigger sets.
 
 
         Successful `add` operations return `201`; successful `remove` operations return `200`.
@@ -106,7 +142,10 @@ paths:
         **Important:** Only one operation can be in progress per scope at a time. Concurrent requests return 409.
 
 
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Incremental trigger operations at account scope
       operationId: merchantActionTriggersPatch
       requestBody:
         content:
@@ -165,225 +204,23 @@ paths:
                     - An action trigger registration is already in progress for this scope.
         '500':
           $ref: '#/components/responses/InternalServerError'
-    put:
-      tags:
-      - Merchant Action Triggers
-      summary: Register merchant triggers at account scope
-      description: 'Register merchant action triggers at the account scope.
-
-
-        Account-level triggers apply to all transactions for all users in your account.
-
-
-        **Field requirements:**
-
-        - `id`, `merchantName`, and `action` are always required for each trigger
-
-        - If location fields (address, city) are NOT provided, `website` is required
-
-
-        **Batch processing:** Registrations with more than 100 triggers are processed asynchronously as a batch job. Poll the GET endpoint to monitor completion.
-
-
-        **Limits:** Up to 100,000 triggers per request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches sent sequentially via PATCH `add` — see [Registering large trigger sets](/reference/realtime-action-triggers-guide#registering-large-trigger-sets).
-
-
-        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: merchantActionTriggersPut
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MerchantActionTriggerRegistrationRequest'
-        required: true
-      responses:
-        '201':
-          description: Registration created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerStatusResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '409':
-          description: A registration is already in progress for this scope
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    examples:
-                    - An action trigger registration is already in progress for this scope.
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-  /users/{userId}/cards/{cardId}/merchant-action-triggers:
-    parameters:
-    - in: path
-      name: userId
-      schema:
-        type: string
-        maxLength: 512
-      description: Your unique identifier for the user
-      required: true
-    - in: path
-      name: cardId
-      schema:
-        type: string
-        maxLength: 512
-      description: Your unique identifier for the card
-      required: true
     delete:
-      tags:
-      - Merchant Action Triggers
-      summary: Clear card-level triggers
-      description: 'Clear all merchant action triggers at the card scope.
+      description: 'Clear all merchant action triggers at the account scope.
 
 
         This creates a new version with an empty trigger list.
 
 
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: cardMerchantActionTriggersDelete
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Clear account-level triggers
+      operationId: merchantActionTriggersDelete
       responses:
         '204':
           description: Triggers cleared successfully
         '403':
           $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-    get:
-      tags:
-      - Merchant Action Triggers
-      summary: Get card-level trigger status
-      description: 'Get the status and version of the latest merchant action trigger registration at the card scope.
-
-
-        Card-level triggers apply only to transactions for the specified card.
-
-
-        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: cardMerchantActionTriggersGet
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerStatusResponse'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          description: No action triggers exist for this scope
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    examples:
-                    - No action triggers exist for this scope
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-    patch:
-      tags:
-      - Merchant Action Triggers
-      summary: Incremental trigger operations at card scope
-      description: 'Perform incremental operations on merchant action triggers at the card scope.
-
-
-        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
-      operationId: cardMerchantActionTriggersPatch
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MerchantActionTriggerPatchRequest'
-        required: true
-      responses:
-        '200':
-          description: Remove operation completed successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerPatchResponse'
-        '201':
-          description: Add operation completed (or submitted for batch processing)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerStatusResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '409':
-          description: A registration is already in progress for this scope
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-    put:
-      tags:
-      - Merchant Action Triggers
-      summary: Register merchant triggers at card scope
-      description: 'Register merchant action triggers at the card scope.
-
-
-        Card-level triggers apply only to transactions for the specified card.
-
-
-        **Field requirements:**
-
-        - `id`, `merchantName`, and `action` are always required for each trigger
-
-        - If location fields (address, city) are NOT provided, `website` is required
-
-
-        **Limit:** A maximum of 100 `merchantTriggers` can be submitted per request at the card scope. Requests exceeding this limit will receive a `400` error.
-
-
-        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: cardMerchantActionTriggersPut
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MerchantActionTriggerRegistrationRequest'
-        required: true
-      responses:
-        '201':
-          description: Registration created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerStatusResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '409':
-          description: A registration is already in progress for this scope
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    examples:
-                    - An action trigger registration is already in progress for this scope.
         '500':
           $ref: '#/components/responses/InternalServerError'
   /programs/{programId}/merchant-action-triggers:
@@ -395,39 +232,20 @@ paths:
         maxLength: 512
       description: Your unique identifier for the program
       required: true
-    delete:
-      tags:
-      - Merchant Action Triggers
-      summary: Clear program-level triggers
-      description: 'Clear all merchant action triggers at the program scope.
-
-
-        This creates a new version with an empty trigger list.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: programMerchantActionTriggersDelete
-      responses:
-        '204':
-          description: Triggers cleared successfully
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
     get:
-      tags:
-      - Merchant Action Triggers
-      summary: Get program-level trigger status
       description: 'Get the status and version of the latest merchant action trigger registration at the program scope.
 
 
-        Program-level triggers apply to all enrichment requests where the `programId` field matches this program. See [What is a program?](/reference/merchant-action-triggers-guide#what-is-a-program) for more details.
+        Program-level triggers apply to all enrichment requests where the `programId` field matches this program. See What is a program? for more details.
 
 
         **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
 
 
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Get program-level trigger status
       operationId: programMerchantActionTriggersGet
       responses:
         '200':
@@ -451,49 +269,7 @@ paths:
                     - No action triggers exist for this scope
         '500':
           $ref: '#/components/responses/InternalServerError'
-    patch:
-      tags:
-      - Merchant Action Triggers
-      summary: Incremental trigger operations at program scope
-      description: 'Perform incremental operations on merchant action triggers at the program scope.
-
-
-        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).
-
-
-        **Limits:** Up to 100,000 triggers per `add` request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches and submit them with sequential `add` operations, waiting for each to reach `succeeded` before the next — see [Registering large trigger sets](/reference/realtime-action-triggers-guide#registering-large-trigger-sets).'
-      operationId: programMerchantActionTriggersPatch
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MerchantActionTriggerPatchRequest'
-        required: true
-      responses:
-        '200':
-          description: Remove operation completed successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerPatchResponse'
-        '201':
-          description: Add operation completed (or submitted for batch processing)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerStatusResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '409':
-          description: A registration is already in progress for this scope
-        '500':
-          $ref: '#/components/responses/InternalServerError'
     put:
-      tags:
-      - Merchant Action Triggers
-      summary: Register merchant triggers at program scope
       description: 'Register merchant action triggers at the program scope.
 
 
@@ -510,13 +286,16 @@ paths:
         **Batch processing:** Registrations with more than 100 triggers are processed asynchronously as a batch job. Poll the GET endpoint to monitor completion.
 
 
-        **Limits:** Up to 100,000 triggers per request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches sent sequentially via PATCH `add` — see [Registering large trigger sets](/reference/realtime-action-triggers-guide#registering-large-trigger-sets).
+        **Limits:** Up to 100,000 triggers per request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches sent sequentially via PATCH `add` — see Registering large trigger sets.
 
 
         **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
 
 
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Register merchant triggers at program scope
       operationId: programMerchantActionTriggersPut
       requestBody:
         content:
@@ -548,80 +327,18 @@ paths:
                     - An action trigger registration is already in progress for this scope.
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /users/{userId}/merchant-action-triggers:
-    parameters:
-    - in: path
-      name: userId
-      schema:
-        type: string
-        maxLength: 512
-      description: Your unique identifier for the user
-      required: true
-    delete:
-      tags:
-      - Merchant Action Triggers
-      summary: Clear user-level triggers
-      description: 'Clear all merchant action triggers at the user scope.
-
-
-        This creates a new version with an empty trigger list.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: userMerchantActionTriggersDelete
-      responses:
-        '204':
-          description: Triggers cleared successfully
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-    get:
-      tags:
-      - Merchant Action Triggers
-      summary: Get user-level trigger status
-      description: 'Get the status and version of the latest merchant action trigger registration at the user scope.
-
-
-        User-level triggers apply to all transactions for all cards belonging to the specified user.
-
-
-        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
-
-
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
-      operationId: userMerchantActionTriggersGet
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActionTriggerStatusResponse'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          description: No action triggers exist for this scope
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    examples:
-                    - No action triggers exist for this scope
-        '500':
-          $ref: '#/components/responses/InternalServerError'
     patch:
+      description: 'Perform incremental operations on merchant action triggers at the program scope.
+
+
+        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).
+
+
+        **Limits:** Up to 100,000 triggers per `add` request, with a total cap of 300,000 active triggers per scope. To register more than 100,000 triggers, split them into ≤100,000 batches and submit them with sequential `add` operations, waiting for each to reach `succeeded` before the next — see Registering large trigger sets.'
       tags:
       - Merchant Action Triggers
-      summary: Incremental trigger operations at user scope
-      description: 'Perform incremental operations on merchant action triggers at the user scope.
-
-
-        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
-      operationId: userMerchantActionTriggersPatch
+      summary: Incremental trigger operations at program scope
+      operationId: programMerchantActionTriggersPatch
       requestBody:
         content:
           application/json:
@@ -649,10 +366,72 @@ paths:
           description: A registration is already in progress for this scope
         '500':
           $ref: '#/components/responses/InternalServerError'
-    put:
+    delete:
+      description: 'Clear all merchant action triggers at the program scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
       tags:
       - Merchant Action Triggers
-      summary: Register merchant triggers at user scope
+      summary: Clear program-level triggers
+      operationId: programMerchantActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/merchant-action-triggers:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the user
+      required: true
+    get:
+      description: 'Get the status and version of the latest merchant action trigger registration at the user scope.
+
+
+        User-level triggers apply to all transactions for all cards belonging to the specified user.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Get user-level trigger status
+      operationId: userMerchantActionTriggersGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerStatusResponse'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No action triggers exist for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - No action triggers exist for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
       description: 'Register merchant action triggers at the user scope.
 
 
@@ -672,7 +451,10 @@ paths:
         **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
 
 
-        To learn more about action triggers, please read the [Merchant Action Triggers Guide](https://docs.spade.com/reference/merchant-action-triggers-guide).'
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Register merchant triggers at user scope
       operationId: userMerchantActionTriggersPut
       requestBody:
         content:
@@ -704,75 +486,226 @@ paths:
                     - An action trigger registration is already in progress for this scope.
         '500':
           $ref: '#/components/responses/InternalServerError'
+    patch:
+      description: 'Perform incremental operations on merchant action triggers at the user scope.
+
+
+        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
+      tags:
+      - Merchant Action Triggers
+      summary: Incremental trigger operations at user scope
+      operationId: userMerchantActionTriggersPatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantActionTriggerPatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Remove operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerPatchResponse'
+        '201':
+          description: Add operation completed (or submitted for batch processing)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: 'Clear all merchant action triggers at the user scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Clear user-level triggers
+      operationId: userMerchantActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}/cards/{cardId}/merchant-action-triggers:
+    parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the user
+      required: true
+    - in: path
+      name: cardId
+      schema:
+        type: string
+        maxLength: 512
+      description: Your unique identifier for the card
+      required: true
+    get:
+      description: 'Get the status and version of the latest merchant action trigger registration at the card scope.
+
+
+        Card-level triggers apply only to transactions for the specified card.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Get card-level trigger status
+      operationId: cardMerchantActionTriggersGet
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerStatusResponse'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No action triggers exist for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - No action triggers exist for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      description: 'Register merchant action triggers at the card scope.
+
+
+        Card-level triggers apply only to transactions for the specified card.
+
+
+        **Field requirements:**
+
+        - `id`, `merchantName`, and `action` are always required for each trigger
+
+        - If location fields (address, city) are NOT provided, `website` is required
+
+
+        **Limit:** A maximum of 100 `merchantTriggers` can be submitted per request at the card scope. Requests exceeding this limit will receive a `400` error.
+
+
+        **Important:** Triggers are only applied to enrichment responses when the status is `succeeded`.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Register merchant triggers at card scope
+      operationId: cardMerchantActionTriggersPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantActionTriggerRegistrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Registration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    examples:
+                    - An action trigger registration is already in progress for this scope.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      description: 'Perform incremental operations on merchant action triggers at the card scope.
+
+
+        See the account-scope PATCH endpoint for full documentation on supported operations (add, remove).'
+      tags:
+      - Merchant Action Triggers
+      summary: Incremental trigger operations at card scope
+      operationId: cardMerchantActionTriggersPatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantActionTriggerPatchRequest'
+        required: true
+      responses:
+        '200':
+          description: Remove operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerPatchResponse'
+        '201':
+          description: Add operation completed (or submitted for batch processing)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionTriggerStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: A registration is already in progress for this scope
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: 'Clear all merchant action triggers at the card scope.
+
+
+        This creates a new version with an empty trigger list.
+
+
+        To learn more about action triggers, please read the Merchant Action Triggers Guide.'
+      tags:
+      - Merchant Action Triggers
+      summary: Clear card-level triggers
+      operationId: cardMerchantActionTriggersDelete
+      responses:
+        '204':
+          description: Triggers cleared successfully
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    ActionTriggerStatusResponse:
-      type: object
-      description: Response containing the status of an action trigger registration.
-      properties:
-        status:
-          type: string
-          description: 'The current status of the action trigger registration.
-
-            - `pending`: Registration received, processing not yet started
-
-            - `running`: Registration is being processed (for batch registrations with >100 triggers)
-
-            - `succeeded`: Registration complete, triggers are now active
-
-            - `failed`: Registration failed, check your request and retry
-
-            '
-          enum:
-          - pending
-          - running
-          - succeeded
-          - failed
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
-          examples:
-          - 1
-        merchantTriggers:
-          type: array
-          description: The list of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The trigger ID as provided during registration.
-                examples:
-                - merchant_123
-              action:
-                type: object
-                description: The action data associated with this trigger, as provided during registration.
-                additionalProperties: true
-                examples:
-                - type: REWARD
-                  points: 200
-        totalCount:
-          type: integer
-          description: The total number of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
-          examples:
-          - 50000
-    ActionTriggerPatchResponse:
-      type: object
-      description: Response for the remove PATCH operation.
-      properties:
-        status:
-          type: string
-          enum:
-          - succeeded
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this operation.
-          examples:
-          - 5
     MerchantActionTriggerPatchRequest:
       type: object
       description: 'Request body for incremental merchant action trigger operations.
@@ -830,6 +763,73 @@ components:
           examples:
           - - merchant_123
             - merchant_456
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
+    ActionTriggerStatusResponse:
+      type: object
+      description: Response containing the status of an action trigger registration.
+      properties:
+        status:
+          type: string
+          description: 'The current status of the action trigger registration.
+
+            - `pending`: Registration received, processing not yet started
+
+            - `running`: Registration is being processed (for batch registrations with >100 triggers)
+
+            - `succeeded`: Registration complete, triggers are now active
+
+            - `failed`: Registration failed, check your request and retry
+
+            '
+          enum:
+          - pending
+          - running
+          - succeeded
+          - failed
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
+          examples:
+          - 1
+        merchantTriggers:
+          type: array
+          description: The list of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The trigger ID as provided during registration.
+                examples:
+                - merchant_123
+              action:
+                type: object
+                description: The action data associated with this trigger, as provided during registration.
+                additionalProperties: true
+                examples:
+                - type: REWARD
+                  points: 200
+        totalCount:
+          type: integer
+          description: The total number of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          examples:
+          - 50000
     MerchantActionTriggerRegistrationRequest:
       type: object
       description: Request body for registering merchant action triggers.
@@ -977,8 +977,8 @@ components:
           examples:
           - storeId: store-789
   responses:
-    InternalServerError:
-      description: Unexpected Error
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -987,7 +987,7 @@ components:
               details:
                 type: string
                 examples:
-                - Internal server error.
+                - Incorrect authentication credentials.
     BadRequest:
       description: Invalid input
       content:
@@ -1001,8 +1001,8 @@ components:
                   type: string
                   examples:
                   - This field is required.
-    Unauthorized:
-      description: Unauthorized
+    InternalServerError:
+      description: Unexpected Error
       content:
         application/json:
           schema:
@@ -1011,7 +1011,7 @@ components:
               details:
                 type: string
                 examples:
-                - Incorrect authentication credentials.
+                - Internal server error.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

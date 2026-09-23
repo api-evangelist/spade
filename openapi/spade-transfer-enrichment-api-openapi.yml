@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Spade Card Enrichment Transfer Enrichment API
-  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.
+  title: Spade Transfer Enrichment API
+  description: Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to .
   version: 2.7.3
 servers:
 - url: https://east.sandbox.spade.com
@@ -26,11 +26,53 @@ tags:
 - name: Transfer Enrichment
   description: Enrich transfers
 paths:
-  /batches/transactions/transfers/enrich:
+  /transactions/transfers/enrich:
     post:
+      description: 'Enrich a transfer transaction such as an ACH withdrawal, ACH deposit, or wire transfer.
+
+
+        When using this endpoint, take care to ensure you are using unaltered and correct data in each field.
+
+
+        Note that transfers enrichment is currently private, please reach out to sales@spade.com to request access.'
       tags:
       - Transfer Enrichment
-      summary: Enrich a batch of transfers
+      summary: Enrich a transfer transaction
+      operationId: transferEnrich
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferEnrichmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferEnrichmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /batches/transactions/transfers/enrich:
+    options:
+      description: Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.
+      tags:
+      - Transfer Enrichment
+      summary: Get metadata for the batch transfer enrichment endpoint
+      operationId: batchesTransferEnrichOptions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchEndpointOptionsResponse'
+    post:
       description: 'Submit a batch of transfers for enrichment.
 
         This endpoint will return a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results`
@@ -38,14 +80,15 @@ paths:
         endpoints to check the status of the batch job and retrieve the results.
 
 
-        You can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.
+        You can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the Microbatch enrichment guide for details.
 
 
         Note that we impose a rate limit on the number of batch requests made in a rolling 12 hour window. Please reach out to
 
-        sales@spade.com with any questions.
-
-        '
+        sales@spade.com with any questions.'
+      tags:
+      - Transfer Enrichment
+      summary: Enrich a batch of transfers
       operationId: batchesTransferEnrich
       parameters:
       - $ref: '#/components/parameters/SynchronousBatchParam'
@@ -82,83 +125,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       callbacks:
         batchStatusCallback:
-          '{$request.body#/callbackUrl}':
-            post:
-              description: 'If you set a `callbackUrl` in the body parameters of the request to the `/batches` endpoint, Spade will send a `POST` request to that `callbackUrl` when the batch job finishes. The `requestBody` of the callback request will contain the body parameters specified below. We also include a webhook token in the X-Webhook-Token header. Use this token to verify that the callback is from Spade. Contact your Spade representative if you do not have this token. If the reported status is `completed`, you can use the [/batches/{batchId}/results](https://docs.spade.com/api-reference/transfer-enrichment/get-the-results-of-a-batch-transfer-enrichment-job) endpoint to retrieve the results of the batch job.
-
-                '
-              requestBody:
-                content:
-                  application/json:
-                    schema:
-                      allOf:
-                      - $ref: '#/components/schemas/BatchCallbackApiRequest'
-                      - type: object
-                        required:
-                        - batchId
-                        - status
-              parameters:
-              - in: header
-                name: X-Webhook-Token
-                schema:
-                  type: string
-                required: true
-                description: A token that can be used to verify the callback is from Spade. This will match the token provided to you by the Spade team.
-              responses:
-                '200':
-                  description: Your server returns this code if it accepts the callback
-                '500':
-                  description: Your server encountered an unexpected error
-              method: post
-              type: path
-            path: '{$request.body#/callbackUrl}'
-    options:
-      tags:
-      - Transfer Enrichment
-      summary: Get metadata for the batch transfer enrichment endpoint
-      description: 'Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.
-
-        '
-      operationId: batchesTransferEnrichOptions
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BatchEndpointOptionsResponse'
-  /transactions/transfers/enrich:
-    post:
-      tags:
-      - Transfer Enrichment
-      summary: Enrich a transfer transaction
-      description: 'Enrich a transfer transaction such as an ACH withdrawal, ACH deposit, or wire transfer.
-
-
-        When using this endpoint, take care to ensure you are using unaltered and correct data in each field.
-
-
-        Note that transfers enrichment is currently private, please reach out to sales@spade.com to request access.'
-      operationId: transferEnrich
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TransferEnrichmentRequest'
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransferEnrichmentResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/callbacks/batchStatusCallback'
   /batches/{transferEnrichmentBatchId}/results:
     parameters:
     - name: transferEnrichmentBatchId
@@ -169,12 +136,10 @@ paths:
         type: string
         format: uuid
     get:
+      description: Get the results of a batch transfer enrichment job.
       tags:
       - Transfer Enrichment
       summary: Get the results of a batch transfer enrichment job
-      description: 'Get the results of a batch transfer enrichment job.
-
-        '
       operationId: batchesTransactionsTransfersEnrichGetResults
       responses:
         '200':
@@ -213,12 +178,10 @@ paths:
         type: string
         format: uuid
     get:
+      description: Get the status of a batch transfer enrichment job.
       tags:
       - Transfer Enrichment
       summary: Get the status of a batch transfer enrichment job
-      description: 'Get the status of a batch transfer enrichment job.
-
-        '
       operationId: batchesTransactionsTransfersEnrichGetStatus
       responses:
         '200':
@@ -237,194 +200,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    ThirdParty:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          examples:
-          - ac48cef2-0d7f-4159-865e-e92b152262bc
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Paypal
-        type:
-          type: string
-          enum:
-          - bnpl
-          - delivery_service
-          - marketplace
-          - payment_processor
-          - platform
-          examples:
-          - payment_processor
-        logo:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
-          description: Third party logo.
-        website:
-          type:
-          - string
-          - 'null'
-          maxLength: 256
-          format: url
-          examples:
-          - https://www.paypal.com/
-          description: Third party website.
-    BatchTransferEnrichmentResponse:
-      allOf:
-      - $ref: '#/components/schemas/TransferEnrichmentResponse'
-      - type: object
-        properties:
-          statusCode:
-            type: integer
-            examples:
-            - 200
-            description: The HTTP status code for this element of the response array.
-          errors:
-            type: object
-            description: 'This field is only present if the status code is not 200.
-
-              An object containing error descriptions for this element of the response array.
-
-              '
-            examples:
-            - userId:
-              - This field is required.
-    BatchTransferEnrichmentRequestItem:
-      allOf:
-      - $ref: '#/components/schemas/TransferEnrichmentRequest'
-      - type: object
-        required:
-        - transactionId
-        properties:
-          transactionId:
-            type: string
-            maxLength: 512
-            description: Your ID representing this transaction. Required for batch requests.
-            examples:
-            - transaction_id_123456789
-    TransferEnrichmentResponse:
-      allOf:
-      - type: object
-        properties:
-          transactionInfo:
-            properties:
-              type:
-                examples:
-                - debt
-              subType:
-                examples:
-                - payment
-              spendingInfo:
-                examples:
-                - null
-              thirdParties:
-                items:
-                  allOf:
-                  - type: object
-                    properties:
-                      id:
-                        examples:
-                        - 038b7223-91b4-30bd-a2e8-851093c2f22d
-                      name:
-                        examples:
-                        - Synchrony
-                      type:
-                        examples:
-                        - payment_processor
-                      logo:
-                        examples:
-                        - https://static.v2.spadeapi.com/logos/038b722391b430bda2e8851093c2f22d/light.png
-                      website:
-                        examples:
-                        - https://synchrony.com/
-                  - $ref: '#/components/schemas/ThirdParty'
-              recurrenceInfo:
-                examples:
-                - null
-          counterparty:
-            items:
-              allOf:
-              - type: object
-                properties:
-                  location:
-                    items:
-                      allOf:
-                      - type: object
-                        properties:
-                          id:
-                            examples:
-                            - null
-                          address:
-                            examples:
-                            - null
-                          addressLine1:
-                            examples:
-                            - null
-                          addressLine2:
-                            examples:
-                            - null
-                          city:
-                            examples:
-                            - null
-                          region:
-                            examples:
-                            - null
-                          country:
-                            examples:
-                            - null
-                          postalCode:
-                            examples:
-                            - null
-                          latitude:
-                            examples:
-                            - null
-                          longitude:
-                            examples:
-                            - null
-                          phoneNumber:
-                            examples:
-                            - null
-                          matchScore:
-                            examples:
-                            - null
-                      - $ref: '#/components/schemas/ResponseLocation'
-                  possibleCounterpartyAlternate:
-                    examples:
-                    - null
-              - $ref: '#/components/schemas/Counterparty'
-      - $ref: '#/components/schemas/EnrichmentResponse'
-    IndustryCategoryLevel:
-      description: A node in a tree representing a hierarchical category system
-      type: object
-      properties:
-        id:
-          type: string
-          maxLength: 15
-          examples:
-          - 011-000-000-000
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Retail
-        icon:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
-          description: Category icon.
     BatchCallbackApiRequest:
       type: object
       properties:
@@ -453,100 +228,6 @@ components:
           - completed
           - failed
           description: Current status of the batch job
-    MobileAppInfo:
-      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
-
-
-        This is a premium Spade field available depending on your product package.
-
-        '
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: A unique identifier for this mobile app.
-        name:
-          type:
-          - string
-          maxLength: 512
-          examples:
-          - Roblox
-          description: The name of the mobile app.
-        url:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://play.google.com/store/apps/details?id=com.roblox.client
-          description: The URL of the mobile app in the app store.
-        logo:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
-          description: The URL of the mobile app's logo.
-        developerName:
-          type:
-          - string
-          maxLength: 256
-          examples:
-          - Roblox Corporation
-          description: The name of the developer of the mobile app.
-        developerId:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: The ID of the developer of the mobile app.
-        category:
-          type:
-          - string
-          enum:
-          - Auto and Transportation
-          - Creative and Design
-          - Education and Parenting
-          - Entertainment and Media
-          - Finance and Business
-          - Games
-          - Health and Lifestyle
-          - Shopping and Marketplaces
-          - Social and Communication
-          - Travel and Events
-          - Utility and Tools
-          examples:
-          - Auto and Transportation
-          description: The category of the mobile app.
-        hasGamblingOrRewards:
-          type: boolean
-          examples:
-          - false
-          description: Whether the mobile app has gambling or cash rewards.
-        hasSimulatedGambling:
-          type: boolean
-          examples:
-          - false
-          description: Whether the mobile app has simulated gambling.
-        ageRating:
-          type:
-          - string
-          enum:
-          - Children
-          - Teen
-          - Adult
-          - Unknown
-          examples:
-          - Teen
-          description: The age rating of the mobile app.
     TransferEnrichmentRequest:
       type: object
       required:
@@ -566,7 +247,7 @@ components:
         userId:
           type: string
           maxLength: 512
-          description: Anonymous ID representing your user. This will be used for summary features, and recurrence flagging purposes.
+          description: Anonymous ID representing your user. This will be used for summary features, recurrence flagging, and category personalization purposes.
           examples:
           - user_id_123456789
         accountId:
@@ -664,138 +345,6 @@ components:
           - standard
         customAttributes:
           $ref: '#/components/schemas/CustomAttributesRequestField'
-    BatchTransferEnrichmentRequest:
-      type: object
-      required:
-      - transactions
-      properties:
-        transactions:
-          type: array
-          description: An array of transactions to enrich. Each transaction must have a unique transactionId. Maximum 50,000 transactions.
-          maxItems: 50000
-          items:
-            $ref: '#/components/schemas/BatchTransferEnrichmentRequestItem'
-        callbackUrl:
-          type: string
-          description: The URL to call when the batch job is complete.
-          format: url
-          examples:
-          - https://example.com/callback
-    ResponseLocation:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          examples:
-          - fdf79470-3deb-4638-956a-6859e473b9d8
-          description: A unique identifier for this location.
-        address:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - 1234 W 5th Ave Suite 100
-          description: Street number, name, and any secondary address information.
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - 1234 W 5th Ave
-          description: Street number and name.
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          maxLength: 32
-          examples:
-          - Suite 100
-          description: Secondary address information.
-        city:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - New York
-        region:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - NY
-          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
-        country:
-          type:
-          - string
-          - 'null'
-          maxLength: 3
-          examples:
-          - USA
-          description: Three letter country code.
-        postalCode:
-          type:
-          - string
-          - 'null'
-          maxLength: 12
-          examples:
-          - '10001'
-          description: Location postal code or zip code.
-        latitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 45
-          description: Location latitude.
-        longitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 120
-          description: Location longitude.
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-          maxLength: 24
-          examples:
-          - '+18664862360'
-          description: Location phone number. This is a premium Spade field available depending on your product package.
-        matchScore:
-          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
-
-            This is a premium Spade field available depending on your product package.
-
-            '
-          type:
-          - number
-          - 'null'
-          examples:
-          - 93.5
-    CustomAttributesRequestField:
-      type: object
-      maxProperties: 30
-      description: 'A dictionary containing custom attributes that you would like to be returned in the response.
-
-        Please ensure this object does not contain any PII.
-
-        Restrictions include: `customAttributes` must be an object, up 30 custom attributes are allowed, each key must be a string <= 40 characters in length, and each value must be a string <= 250 characters in length.
-
-        '
-      additionalProperties:
-        type: string
-        maxLength: 250
-      examples:
-      - custom_attribute_1: value_1
-        custom_attribute_2: value_2
     CustomAttributesResponseField:
       type: object
       description: A dictionary containing the custom attributes that were included in the enrichment request (if any).
@@ -804,6 +353,97 @@ components:
       examples:
       - custom_attribute_1: value_1
         custom_attribute_2: value_2
+    TransferEnrichmentResponse:
+      allOf:
+      - type: object
+        properties:
+          transactionInfo:
+            properties:
+              type:
+                examples:
+                - debt
+              subType:
+                examples:
+                - payment
+              spendingInfo:
+                examples:
+                - null
+              thirdParties:
+                items:
+                  allOf:
+                  - type: object
+                    properties:
+                      id:
+                        examples:
+                        - 038b7223-91b4-30bd-a2e8-851093c2f22d
+                      name:
+                        examples:
+                        - Synchrony
+                      type:
+                        examples:
+                        - payment_processor
+                      logo:
+                        examples:
+                        - https://static.v2.spadeapi.com/logos/038b722391b430bda2e8851093c2f22d/light.png
+                      website:
+                        examples:
+                        - https://synchrony.com/
+                  - $ref: '#/components/schemas/ThirdParty'
+              recurrenceInfo:
+                examples:
+                - null
+          counterparty:
+            items:
+              allOf:
+              - type: object
+                properties:
+                  location:
+                    items:
+                      allOf:
+                      - type: object
+                        properties:
+                          id:
+                            examples:
+                            - null
+                          address:
+                            examples:
+                            - null
+                          addressLine1:
+                            examples:
+                            - null
+                          addressLine2:
+                            examples:
+                            - null
+                          city:
+                            examples:
+                            - null
+                          region:
+                            examples:
+                            - null
+                          country:
+                            examples:
+                            - null
+                          postalCode:
+                            examples:
+                            - null
+                          latitude:
+                            examples:
+                            - null
+                          longitude:
+                            examples:
+                            - null
+                          phoneNumber:
+                            examples:
+                            - null
+                          matchScore:
+                            examples:
+                            - null
+                      - $ref: '#/components/schemas/ResponseLocation'
+                  possibleCounterpartyAlternate:
+                    examples:
+                    - null
+              - $ref: '#/components/schemas/Counterparty'
+      - $ref: '#/components/schemas/EnrichmentResponse'
     TriggeredActionResponse:
       type: object
       description: A triggered action returned in the enrichment response.
@@ -893,6 +533,287 @@ components:
           description: The name of the Spade category that matched this trigger. Only present when `type` is `category_trigger`.
           examples:
           - Travel
+    MobileAppInfo:
+      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
+
+        '
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: A unique identifier for this mobile app.
+        name:
+          type:
+          - string
+          maxLength: 512
+          examples:
+          - Roblox
+          description: The name of the mobile app.
+        url:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://play.google.com/store/apps/details?id=com.roblox.client
+          description: The URL of the mobile app in the app store.
+        logo:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
+          description: The URL of the mobile app's logo.
+        developerName:
+          type:
+          - string
+          maxLength: 256
+          examples:
+          - Roblox Corporation
+          description: The name of the developer of the mobile app.
+        developerId:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: The ID of the developer of the mobile app.
+        category:
+          type:
+          - string
+          enum:
+          - Auto and Transportation
+          - Creative and Design
+          - Education and Parenting
+          - Entertainment and Media
+          - Finance and Business
+          - Games
+          - Health and Lifestyle
+          - Shopping and Marketplaces
+          - Social and Communication
+          - Travel and Events
+          - Utility and Tools
+          examples:
+          - Auto and Transportation
+          description: The category of the mobile app.
+        hasGamblingOrRewards:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has gambling or cash rewards.
+        hasSimulatedGambling:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has simulated gambling.
+        ageRating:
+          type:
+          - string
+          enum:
+          - Children
+          - Teen
+          - Adult
+          - Unknown
+          examples:
+          - Teen
+          description: The age rating of the mobile app.
+    ThirdParty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples:
+          - ac48cef2-0d7f-4159-865e-e92b152262bc
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Paypal
+        type:
+          type: string
+          enum:
+          - bnpl
+          - delivery_service
+          - marketplace
+          - payment_processor
+          - platform
+          examples:
+          - payment_processor
+        logo:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
+          description: Third party logo.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.paypal.com/
+          description: Third party website.
+    BatchTransferEnrichmentRequest:
+      type: object
+      required:
+      - transactions
+      properties:
+        transactions:
+          type: array
+          description: An array of transactions to enrich. Each transaction must have a unique transactionId. Maximum 50,000 transactions.
+          maxItems: 50000
+          items:
+            $ref: '#/components/schemas/BatchTransferEnrichmentRequestItem'
+        callbackUrl:
+          type: string
+          description: The URL to call when the batch job is complete.
+          format: url
+          examples:
+          - https://example.com/callback
+    BatchTransferEnrichmentResponse:
+      allOf:
+      - $ref: '#/components/schemas/TransferEnrichmentResponse'
+      - type: object
+        properties:
+          statusCode:
+            type: integer
+            examples:
+            - 200
+            description: The HTTP status code for this element of the response array.
+          errors:
+            type: object
+            description: 'This field is only present if the status code is not 200.
+
+              An object containing error descriptions for this element of the response array.
+
+              '
+            examples:
+            - userId:
+              - This field is required.
+    BatchTransferEnrichmentRequestItem:
+      allOf:
+      - $ref: '#/components/schemas/TransferEnrichmentRequest'
+      - type: object
+        required:
+        - transactionId
+        properties:
+          transactionId:
+            type: string
+            maxLength: 512
+            description: Your ID representing this transaction. Required for batch requests.
+            examples:
+            - transaction_id_123456789
+    ResponseLocation:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          examples:
+          - fdf79470-3deb-4638-956a-6859e473b9d8
+          description: A unique identifier for this location.
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave Suite 100
+          description: Street number, name, and any secondary address information.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave
+          description: Street number and name.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          maxLength: 32
+          examples:
+          - Suite 100
+          description: Secondary address information.
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - New York
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - NY
+          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
+        country:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          examples:
+          - USA
+          description: Three letter country code.
+        postalCode:
+          type:
+          - string
+          - 'null'
+          maxLength: 12
+          examples:
+          - '10001'
+          description: Location postal code or zip code.
+        latitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 45
+          description: Location latitude.
+        longitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 120
+          description: Location longitude.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          maxLength: 24
+          examples:
+          - '+18664862360'
+          description: Location phone number.
+        matchScore:
+          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
+
+            This is a premium Spade field available depending on your product package.
+
+            '
+          type:
+          - number
+          - 'null'
+          examples:
+          - 93.5
     BatchSubmissionResponse:
       type: object
       required:
@@ -951,7 +872,7 @@ components:
           maxLength: 128
           examples:
           - Amazon Inc.
-          description: Counterparty legal name. This is a premium Spade field available depending on your product package.
+          description: Counterparty legal name.
         industry:
           description: Array with increasingly specific category information.
           type: array
@@ -968,7 +889,7 @@ components:
           - 93.5
         location:
           type: array
-          description: 'An array of locations matched to the transaction (and associated with this counterparty). Can currently contain only one location. This is a premium Spade field available depending on your product package.
+          description: 'An array of locations matched to the transaction (and associated with this counterparty). Can currently contain only one location.
 
             '
           items:
@@ -981,7 +902,7 @@ components:
           format: url
           examples:
           - https://static.v2.spadeapi.com/logos/de33f8973bc934c5b368a5b27155db02/light.png
-          description: Counterparty logo. This is a premium Spade field available depending on your product package.
+          description: Counterparty logo.
         phoneNumber:
           type:
           - string
@@ -989,7 +910,7 @@ components:
           maxLength: 24
           examples:
           - '+18664862360'
-          description: Counterparty phone number. This is a premium Spade field available depending on your product package.
+          description: Counterparty phone number.
         website:
           type:
           - string
@@ -998,7 +919,7 @@ components:
           format: url
           examples:
           - https://www.amazon.com
-          description: Counterparty website. This is a premium Spade field available depending on your product package.
+          description: Counterparty website.
         possibleCounterpartyAlternate:
           type:
           - object
@@ -1024,44 +945,6 @@ components:
             Premium Spade Field available depending on your product package.
 
             '
-    BatchEndpointOptionsResponse:
-      type: object
-      required:
-      - name
-      - description
-      - renders
-      - parses
-      - synchronousMax
-      properties:
-        name:
-          type: string
-          description: The display name of the endpoint method.
-          examples:
-          - Post
-        description:
-          type: string
-          description: A short description of the endpoint.
-          examples:
-          - Enrich a list of universal transactions
-        renders:
-          type: array
-          items:
-            type: string
-          description: Content types this endpoint can render.
-          examples:
-          - - application/json
-        parses:
-          type: array
-          items:
-            type: string
-          description: Content types this endpoint can parse.
-          examples:
-          - - application/json
-        synchronousMax:
-          type: integer
-          description: The maximum number of items allowed in a single microbatch (`?synchronous=true`).
-          examples:
-          - 100
     EnrichmentResponse:
       type: object
       properties:
@@ -1431,18 +1314,95 @@ components:
                 rewardPercent: 5
               scope: account
               source: counterparty
+    BatchEndpointOptionsResponse:
+      type: object
+      required:
+      - name
+      - description
+      - renders
+      - parses
+      - synchronousMax
+      properties:
+        name:
+          type: string
+          description: The display name of the endpoint method.
+          examples:
+          - Post
+        description:
+          type: string
+          description: A short description of the endpoint.
+          examples:
+          - Enrich a list of universal transactions
+        renders:
+          type: array
+          items:
+            type: string
+          description: Content types this endpoint can render.
+          examples:
+          - - application/json
+        parses:
+          type: array
+          items:
+            type: string
+          description: Content types this endpoint can parse.
+          examples:
+          - - application/json
+        synchronousMax:
+          type: integer
+          description: The maximum number of items allowed in a single microbatch (`?synchronous=true`).
+          examples:
+          - 100
+    CustomAttributesRequestField:
+      type: object
+      maxProperties: 30
+      description: 'A dictionary containing custom attributes that you would like to be returned in the response.
+
+        Please ensure this object does not contain any PII.
+
+        Restrictions include: `customAttributes` must be an object, up 30 custom attributes are allowed, each key must be a string <= 40 characters in length, and each value must be a string <= 250 characters in length.
+
+        '
+      additionalProperties:
+        type: string
+        maxLength: 250
+      examples:
+      - custom_attribute_1: value_1
+        custom_attribute_2: value_2
+    IndustryCategoryLevel:
+      description: A node in a tree representing a hierarchical category system
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 15
+          examples:
+          - 011-000-000-000
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Retail
+        icon:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: Category icon.
+  parameters:
+    SynchronousBatchParam:
+      name: synchronous
+      in: query
+      required: false
+      description: 'When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.
+
+        '
+      schema:
+        type: boolean
+        default: false
   responses:
-    BatchJobNotFound:
-      description: Batch job not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Batch job not found.
     Unauthorized:
       description: Unauthorized
       content:
@@ -1454,17 +1414,6 @@ components:
                 type: string
                 examples:
                 - Incorrect authentication credentials.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
     BadRequest:
       description: Invalid input
       content:
@@ -1478,17 +1427,57 @@ components:
                   type: string
                   examples:
                   - This field is required.
-  parameters:
-    SynchronousBatchParam:
-      name: synchronous
-      in: query
-      required: false
-      description: 'When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    BatchJobNotFound:
+      description: Batch job not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Batch job not found.
+  callbacks:
+    batchStatusCallback:
+      '{$request.body#/callbackUrl}':
+        post:
+          description: 'If you set a `callbackUrl` in the body parameters of the request to the `/batches` endpoint, Spade will send a `POST` request to that `callbackUrl` when the batch job finishes. The `requestBody` of the callback request will contain the body parameters specified below. We also include a webhook token in the X-Webhook-Token header. Use this token to verify that the callback is from Spade. Contact your Spade representative if you do not have this token. If the reported status is `completed`, you can use the [/batches/{batchId}/results](https://docs.spade.com/api-reference/transfer-enrichment/get-the-results-of-a-batch-transfer-enrichment-job) endpoint to retrieve the results of the batch job.
 
-        '
-      schema:
-        type: boolean
-        default: false
+            '
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  allOf:
+                  - $ref: '#/components/schemas/BatchCallbackApiRequest'
+                  - type: object
+                    required:
+                    - batchId
+                    - status
+          parameters:
+          - in: header
+            name: X-Webhook-Token
+            schema:
+              type: string
+            required: true
+            description: A token that can be used to verify the callback is from Spade. This will match the token provided to you by the Spade team.
+          responses:
+            '200':
+              description: Your server returns this code if it accepts the callback
+            '500':
+              description: Your server encountered an unexpected error
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

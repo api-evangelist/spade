@@ -1,14 +1,7 @@
 {
   "provider": "spade",
   "sources": [
-    "spade-card-enrichment-api-openapi.yml",
-    "spade-category-action-triggers-api-openapi.yml",
-    "spade-category-personalization-api-openapi.yml",
-    "spade-feedback-and-reporting-api-openapi.yml",
-    "spade-merchant-action-triggers-api-openapi.yml",
-    "spade-merchant-search-api-openapi.yml",
-    "spade-transfer-enrichment-api-openapi.yml",
-    "spade-universal-enrichment-api-openapi.yml"
+    "_original/spade-openapi-original.yml"
   ],
   "outputs": [
     "spade-card-enrichment-api-openapi.yml",
@@ -23,6 +16,20 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "spade-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "spade-openapi-original.yml: declared missing tag: Universal Enrichment",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "spade-card-enrichment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-category-action-triggers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-category-personalization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-feedback-and-reporting-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-merchant-action-triggers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-merchant-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-transfer-enrichment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spade-universal-enrichment-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
