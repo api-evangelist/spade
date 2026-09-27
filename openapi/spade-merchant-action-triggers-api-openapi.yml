@@ -706,155 +706,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    MerchantActionTriggerPatchRequest:
-      type: object
-      description: 'Request body for incremental merchant action trigger operations.
-
-
-        - For `add`: `merchantTriggers` is required. `triggerIds` is optional and ignored if provided.
-
-        - For `remove`: `triggerIds` is required and must be a non-empty list.'
-      required:
-      - operation
-      properties:
-        operation:
-          type: string
-          enum:
-          - add
-          - remove
-          description: 'The operation to perform:
-
-            - `add`: Register new merchants or update existing ones via merchant matching
-
-            - `remove`: Remove merchants (excluded from enrichment lookups)'
-          examples:
-          - add
-        merchantTriggers:
-          type: array
-          description: 'List of merchant triggers to add. Required for the `add` operation.
-
-
-            If a trigger ID already exists, the old registration is replaced (upsert behavior).
-
-
-            **Field requirements:**
-
-            - `id`, `merchantName`, and `action` are always required
-
-            - If location fields (address, city) are NOT provided, `website` is required'
-          minItems: 1
-          maxItems: 100000
-          items:
-            $ref: '#/components/schemas/MerchantTriggerItem'
-        triggerIds:
-          type:
-          - array
-          - 'null'
-          description: 'List of trigger IDs to remove. Required and must be non-empty for the `remove` operation.
-
-
-            Trigger IDs that are not currently active are silently ignored (idempotent).
-
-
-            For `add` operations, this field is optional and ignored if provided — you may pass `null`, `[]`, or omit it entirely.'
-          items:
-            type: string
-            maxLength: 512
-          examples:
-          - - merchant_123
-            - merchant_456
-    ActionTriggerPatchResponse:
-      type: object
-      description: Response for the remove PATCH operation.
-      properties:
-        status:
-          type: string
-          enum:
-          - succeeded
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this operation.
-          examples:
-          - 5
-    ActionTriggerStatusResponse:
-      type: object
-      description: Response containing the status of an action trigger registration.
-      properties:
-        status:
-          type: string
-          description: 'The current status of the action trigger registration.
-
-            - `pending`: Registration received, processing not yet started
-
-            - `running`: Registration is being processed (for batch registrations with >100 triggers)
-
-            - `succeeded`: Registration complete, triggers are now active
-
-            - `failed`: Registration failed, check your request and retry
-
-            '
-          enum:
-          - pending
-          - running
-          - succeeded
-          - failed
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
-          examples:
-          - 1
-        merchantTriggers:
-          type: array
-          description: The list of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The trigger ID as provided during registration.
-                examples:
-                - merchant_123
-              action:
-                type: object
-                description: The action data associated with this trigger, as provided during registration.
-                additionalProperties: true
-                examples:
-                - type: REWARD
-                  points: 200
-        totalCount:
-          type: integer
-          description: The total number of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
-          examples:
-          - 50000
-    MerchantActionTriggerRegistrationRequest:
-      type: object
-      description: Request body for registering merchant action triggers.
-      required:
-      - merchantTriggers
-      properties:
-        merchantTriggers:
-          type: array
-          description: 'List of merchant triggers to register for action matching. Each trigger must have a unique `id`.
-
-
-            **Field requirements:**
-
-            - `id`, `merchantName`, and `action` are always required
-
-            - If location fields (address, city) are NOT provided, `website` is required
-
-
-            **Limits:** User-scope and card-scope registrations are limited to 100 triggers. Account-scope and program-scope registrations with more than 100 triggers will be processed asynchronously as a batch job.
-
-            '
-          minItems: 1
-          maxItems: 100000
-          items:
-            $ref: '#/components/schemas/MerchantTriggerItem'
     MerchantTriggerItem:
       type: object
       description: A merchant trigger to register for action matching.
@@ -976,6 +827,155 @@ components:
             type: string
           examples:
           - storeId: store-789
+    ActionTriggerStatusResponse:
+      type: object
+      description: Response containing the status of an action trigger registration.
+      properties:
+        status:
+          type: string
+          description: 'The current status of the action trigger registration.
+
+            - `pending`: Registration received, processing not yet started
+
+            - `running`: Registration is being processed (for batch registrations with >100 triggers)
+
+            - `succeeded`: Registration complete, triggers are now active
+
+            - `failed`: Registration failed, check your request and retry
+
+            '
+          enum:
+          - pending
+          - running
+          - succeeded
+          - failed
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
+          examples:
+          - 1
+        merchantTriggers:
+          type: array
+          description: The list of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The trigger ID as provided during registration.
+                examples:
+                - merchant_123
+              action:
+                type: object
+                description: The action data associated with this trigger, as provided during registration.
+                additionalProperties: true
+                examples:
+                - type: REWARD
+                  points: 200
+        totalCount:
+          type: integer
+          description: The total number of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          examples:
+          - 50000
+    MerchantActionTriggerRegistrationRequest:
+      type: object
+      description: Request body for registering merchant action triggers.
+      required:
+      - merchantTriggers
+      properties:
+        merchantTriggers:
+          type: array
+          description: 'List of merchant triggers to register for action matching. Each trigger must have a unique `id`.
+
+
+            **Field requirements:**
+
+            - `id`, `merchantName`, and `action` are always required
+
+            - If location fields (address, city) are NOT provided, `website` is required
+
+
+            **Limits:** User-scope and card-scope registrations are limited to 100 triggers. Account-scope and program-scope registrations with more than 100 triggers will be processed asynchronously as a batch job.
+
+            '
+          minItems: 1
+          maxItems: 100000
+          items:
+            $ref: '#/components/schemas/MerchantTriggerItem'
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
+    MerchantActionTriggerPatchRequest:
+      type: object
+      description: 'Request body for incremental merchant action trigger operations.
+
+
+        - For `add`: `merchantTriggers` is required. `triggerIds` is optional and ignored if provided.
+
+        - For `remove`: `triggerIds` is required and must be a non-empty list.'
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - add
+          - remove
+          description: 'The operation to perform:
+
+            - `add`: Register new merchants or update existing ones via merchant matching
+
+            - `remove`: Remove merchants (excluded from enrichment lookups)'
+          examples:
+          - add
+        merchantTriggers:
+          type: array
+          description: 'List of merchant triggers to add. Required for the `add` operation.
+
+
+            If a trigger ID already exists, the old registration is replaced (upsert behavior).
+
+
+            **Field requirements:**
+
+            - `id`, `merchantName`, and `action` are always required
+
+            - If location fields (address, city) are NOT provided, `website` is required'
+          minItems: 1
+          maxItems: 100000
+          items:
+            $ref: '#/components/schemas/MerchantTriggerItem'
+        triggerIds:
+          type:
+          - array
+          - 'null'
+          description: 'List of trigger IDs to remove. Required and must be non-empty for the `remove` operation.
+
+
+            Trigger IDs that are not currently active are silently ignored (idempotent).
+
+
+            For `add` operations, this field is optional and ignored if provided — you may pass `null`, `[]`, or omit it entirely.'
+          items:
+            type: string
+            maxLength: 512
+          examples:
+          - - merchant_123
+            - merchant_456
   responses:
     Unauthorized:
       description: Unauthorized
@@ -988,6 +988,17 @@ components:
                 type: string
                 examples:
                 - Incorrect authentication credentials.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
     BadRequest:
       description: Invalid input
       content:
@@ -1001,17 +1012,6 @@ components:
                   type: string
                   examples:
                   - This field is required.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

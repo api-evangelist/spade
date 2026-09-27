@@ -495,6 +495,42 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
   schemas:
     CommonPostCategoriesRequest:
       type: object
@@ -511,60 +547,6 @@ components:
         parentId:
           type: string
           description: The ID of the new category's parent. Can be a Spade category ID (e.g. "011-000-000-000") or a custom category ID (e.g. "e4cf5379-583f-44ed-b625-366044e666e6").
-          examples:
-          - 011-000-000-000
-    MerchantCategory:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          examples:
-          - 011-010-000-000
-          description: 'A unique identifier for this category. This identifier will show up in enrichments as `counterparty[i].industry[-1].id`, where `i` is the index of this merchant in the counterparty list. Note that each counterparty''s `industry` is a list containing its full category hierarchy (including parent categories); thus, this category will be the last one in the `industry` list.
-
-            '
-        name:
-          type:
-          - string
-          examples:
-          - Online Marketplace
-          description: The category's name
-        icon:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
-          description: The category's icon
-        fullCategoryHierarchy:
-          description: Array with increasingly specific category information.
-          type: array
-          items:
-            $ref: '#/components/schemas/IndustryCategoryLevel'
-          examples:
-          - - id: 011-000-000-000
-              name: Retail
-              icon: https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
-            - id: 011-010-000-000
-              name: Online Marketplace
-              icon: https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
-    CounterpartyCategoryPersonalization:
-      type: object
-      description: Schema for creating a counterparty category personalization.
-      required:
-      - counterpartyId
-      - categoryId
-      properties:
-        counterpartyId:
-          type: string
-          description: The ID of the counterparty.
-          examples:
-          - d730906b-f1a8-49f1-9939-f27390170a6d
-        categoryId:
-          type: string
-          description: The ID of the category. Can be a Spade category ID (e.g. "011-000-000-000") or a custom category ID (e.g. "e4cf5379-583f-44ed-b625-366044e666e6").
           examples:
           - 011-000-000-000
     CustomCategory:
@@ -625,42 +607,60 @@ components:
           examples:
           - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
           description: Category icon.
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
-    BadRequest:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              invalidField:
-                type: array
-                items:
-                  type: string
-                  examples:
-                  - This field is required.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
+    MerchantCategory:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          examples:
+          - 011-010-000-000
+          description: 'A unique identifier for this category. This identifier will show up in enrichments as `counterparty[i].industry[-1].id`, where `i` is the index of this merchant in the counterparty list. Note that each counterparty''s `industry` is a list containing its full category hierarchy (including parent categories); thus, this category will be the last one in the `industry` list.
+
+            '
+        name:
+          type:
+          - string
+          examples:
+          - Online Marketplace
+          description: The category's name
+        icon:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
+          description: The category's icon
+        fullCategoryHierarchy:
+          description: Array with increasingly specific category information.
+          type: array
+          items:
+            $ref: '#/components/schemas/IndustryCategoryLevel'
+          examples:
+          - - id: 011-000-000-000
+              name: Retail
+              icon: https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+            - id: 011-010-000-000
+              name: Online Marketplace
+              icon: https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
+    CounterpartyCategoryPersonalization:
+      type: object
+      description: Schema for creating a counterparty category personalization.
+      required:
+      - counterpartyId
+      - categoryId
+      properties:
+        counterpartyId:
+          type: string
+          description: The ID of the counterparty.
+          examples:
+          - d730906b-f1a8-49f1-9939-f27390170a6d
+        categoryId:
+          type: string
+          description: The ID of the category. Can be a Spade category ID (e.g. "011-000-000-000") or a custom category ID (e.g. "e4cf5379-583f-44ed-b625-366044e666e6").
+          examples:
+          - 011-000-000-000
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

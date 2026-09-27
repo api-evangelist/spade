@@ -738,21 +738,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    ActionTriggerPatchResponse:
-      type: object
-      description: Response for the remove PATCH operation.
-      properties:
-        status:
-          type: string
-          enum:
-          - succeeded
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this operation.
-          examples:
-          - 5
     CategoryTriggerItem:
       type: object
       description: A category trigger to register for action matching.
@@ -808,6 +793,21 @@ components:
           - type: BLOCK
             reason: Gambling not permitted
           - type: ALLOW_ONLY
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
     CategoryActionTriggerPatchRequest:
       type: object
       description: 'Request body for incremental category action trigger operations.
@@ -863,6 +863,29 @@ components:
           examples:
           - - travel-reward-1
             - block-gambling
+    CategoryActionTriggerRegistrationRequest:
+      type: object
+      description: Request body for registering category action triggers.
+      required:
+      - categoryTriggers
+      properties:
+        categoryTriggers:
+          type: array
+          description: 'List of category triggers to register for action matching. Each trigger must have a unique `id`.
+
+
+            **Field requirements:**
+
+            - `id`, `categoryId`, and `action` are always required
+
+
+            **Limit:** A maximum of 300 triggers across all scopes. All registrations are processed synchronously.
+
+            '
+          minItems: 1
+          maxItems: 300
+          items:
+            $ref: '#/components/schemas/CategoryTriggerItem'
     CategoryActionTriggerStatusResponse:
       type: object
       description: Response containing the status of a category action trigger registration.
@@ -914,29 +937,6 @@ components:
           description: The total number of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
           examples:
           - 10
-    CategoryActionTriggerRegistrationRequest:
-      type: object
-      description: Request body for registering category action triggers.
-      required:
-      - categoryTriggers
-      properties:
-        categoryTriggers:
-          type: array
-          description: 'List of category triggers to register for action matching. Each trigger must have a unique `id`.
-
-
-            **Field requirements:**
-
-            - `id`, `categoryId`, and `action` are always required
-
-
-            **Limit:** A maximum of 300 triggers across all scopes. All registrations are processed synchronously.
-
-            '
-          minItems: 1
-          maxItems: 300
-          items:
-            $ref: '#/components/schemas/CategoryTriggerItem'
   responses:
     Unauthorized:
       description: Unauthorized
@@ -949,6 +949,17 @@ components:
                 type: string
                 examples:
                 - Incorrect authentication credentials.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
     BadRequest:
       description: Invalid input
       content:
@@ -962,17 +973,6 @@ components:
                   type: string
                   examples:
                   - This field is required.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

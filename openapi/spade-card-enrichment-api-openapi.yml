@@ -331,7 +331,45 @@ paths:
       - Card Enrichment
 components:
   schemas:
-    BatchCallbackApiRequest:
+    BatchEndpointOptionsResponse:
+      type: object
+      required:
+      - name
+      - description
+      - renders
+      - parses
+      - synchronousMax
+      properties:
+        name:
+          type: string
+          description: The display name of the endpoint method.
+          examples:
+          - Post
+        description:
+          type: string
+          description: A short description of the endpoint.
+          examples:
+          - Enrich a list of universal transactions
+        renders:
+          type: array
+          items:
+            type: string
+          description: Content types this endpoint can render.
+          examples:
+          - - application/json
+        parses:
+          type: array
+          items:
+            type: string
+          description: Content types this endpoint can parse.
+          examples:
+          - - application/json
+        synchronousMax:
+          type: integer
+          description: The maximum number of items allowed in a single microbatch (`?synchronous=true`).
+          examples:
+          - 100
+    BatchGetStatusApiResponse:
       type: object
       properties:
         batchId:
@@ -341,197 +379,34 @@ components:
         status:
           type: string
           enum:
+          - pending
+          - running
           - completed
           - failed
-          description: Final status of the batch job
-    CustomAttributesResponseField:
+          description: Current status of the batch job
+    IndustryCategoryLevel:
+      description: A node in a tree representing a hierarchical category system
       type: object
-      description: A dictionary containing the custom attributes that were included in the enrichment request (if any).
-      additionalProperties:
-        type: string
-      examples:
-      - custom_attribute_1: value_1
-        custom_attribute_2: value_2
-    TriggeredActionResponse:
-      type: object
-      description: A triggered action returned in the enrichment response.
       properties:
         id:
           type: string
-          maxLength: 512
-          description: Your unique identifier for the matched trigger (as provided during registration).
+          maxLength: 15
           examples:
-          - trigger-12345
-        type:
-          type: string
-          description: The type of trigger that matched — `merchant_trigger` for merchant-based triggers, `category_trigger` for category-based triggers.
-          enum:
-          - merchant_trigger
-          - category_trigger
-          example: merchant_trigger
-          examples:
-          - merchant_trigger
-        action:
-          type: object
-          description: 'The custom action data you provided during registration for this trigger.
-
-
-            For `BLOCK` and `ALLOW_ONLY` action types, an `authRecommendation` field is automatically added:
-
-            - `BLOCK` triggers: `authRecommendation` is set to `"BLOCK"`.
-
-            - `ALLOW_ONLY` triggers that match: `authRecommendation` is set to `"ALLOW"`.
-
-            - `ALLOW_ONLY` triggers that do not match (inverse semantics): `authRecommendation` is set to `"BLOCK"`.
-
-            '
-          additionalProperties: true
-          properties:
-            authRecommendation:
-              type: string
-              description: Authorization recommendation injected for `BLOCK` and `ALLOW_ONLY` action types. Not present for other action types.
-              enum:
-              - ALLOW
-              - BLOCK
-          examples:
-          - type: REWARD
-            rewardPercent: 5
-            offerId: offer-abc123
-          - type: BLOCK
-            reason: Gambling merchant
-            authRecommendation: BLOCK
-          - type: ALLOW_ONLY
-            category: approved-vendors
-            authRecommendation: ALLOW
-        scope:
-          type: string
-          description: The scope at which this trigger was registered (account, program, user, or card).
-          enum:
-          - account
-          - program
-          - user
-          - card
-          example: account
-          examples:
-          - account
-        source:
-          type:
-          - string
-          - 'null'
-          description: 'Indicates whether the action was triggered by the matched counterparty or third party.
-
-
-            This field will be set to `null` when an `ALLOW_ONLY` action trigger was set up whose condition the current transaction did not meet. The `authRecommendation` in this case will be `BLOCK`.
-
-            '
-          enum:
-          - counterparty
-          - third_party
-          - null
-          example: counterparty
-          examples:
-          - counterparty
-        categoryId:
-          type: string
-          description: The Spade category ID that matched this trigger. Only present when `type` is `category_trigger`.
-          examples:
-          - b4b0d249-b402-49ac-b744-5027d4574fc5
-        categoryName:
-          type: string
-          description: The name of the Spade category that matched this trigger. Only present when `type` is `category_trigger`.
-          examples:
-          - Travel
-    MobileAppInfo:
-      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
-
-        '
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: A unique identifier for this mobile app.
+          - 011-000-000-000
         name:
-          type:
-          - string
-          maxLength: 512
+          type: string
+          maxLength: 64
           examples:
-          - Roblox
-          description: The name of the mobile app.
-        url:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://play.google.com/store/apps/details?id=com.roblox.client
-          description: The URL of the mobile app in the app store.
-        logo:
+          - Retail
+        icon:
           type:
           - string
           - 'null'
+          maxLength: 128
           format: url
           examples:
-          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
-          description: The URL of the mobile app's logo.
-        developerName:
-          type:
-          - string
-          maxLength: 256
-          examples:
-          - Roblox Corporation
-          description: The name of the developer of the mobile app.
-        developerId:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: The ID of the developer of the mobile app.
-        category:
-          type:
-          - string
-          enum:
-          - Auto and Transportation
-          - Creative and Design
-          - Education and Parenting
-          - Entertainment and Media
-          - Finance and Business
-          - Games
-          - Health and Lifestyle
-          - Shopping and Marketplaces
-          - Social and Communication
-          - Travel and Events
-          - Utility and Tools
-          examples:
-          - Auto and Transportation
-          description: The category of the mobile app.
-        hasGamblingOrRewards:
-          type: boolean
-          examples:
-          - false
-          description: Whether the mobile app has gambling or cash rewards.
-        hasSimulatedGambling:
-          type: boolean
-          examples:
-          - false
-          description: Whether the mobile app has simulated gambling.
-        ageRating:
-          type:
-          - string
-          enum:
-          - Children
-          - Teen
-          - Adult
-          - Unknown
-          examples:
-          - Teen
-          description: The age rating of the mobile app.
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: Category icon.
     BatchCardParseEnrichmentRequestItem:
       allOf:
       - $ref: '#/components/schemas/CardEnrichmentRequest'
@@ -552,433 +427,6 @@ components:
             description: The de43 to parse and enrich.
             examples:
             - de43_123456789
-    CardEnrichmentResponse:
-      allOf:
-      - type: object
-        properties:
-          transactionInfo:
-            properties:
-              transferInfo:
-                examples:
-                - null
-              isAccountVerification:
-                examples:
-                - null
-              isPeerToPeer:
-                examples:
-                - null
-              isDigitalWallet:
-                examples:
-                - null
-      - $ref: '#/components/schemas/EnrichmentResponse'
-    ThirdParty:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          examples:
-          - ac48cef2-0d7f-4159-865e-e92b152262bc
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Paypal
-        type:
-          type: string
-          enum:
-          - bnpl
-          - delivery_service
-          - marketplace
-          - payment_processor
-          - platform
-          examples:
-          - payment_processor
-        logo:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
-          description: Third party logo.
-        website:
-          type:
-          - string
-          - 'null'
-          maxLength: 256
-          format: url
-          examples:
-          - https://www.paypal.com/
-          description: Third party website.
-    CustomAttributesRequestField:
-      type: object
-      maxProperties: 30
-      description: 'A dictionary containing custom attributes that you would like to be returned in the response.
-
-        Please ensure this object does not contain any PII.
-
-        Restrictions include: `customAttributes` must be an object, up 30 custom attributes are allowed, each key must be a string <= 40 characters in length, and each value must be a string <= 250 characters in length.
-
-        '
-      additionalProperties:
-        type: string
-        maxLength: 250
-      examples:
-      - custom_attribute_1: value_1
-        custom_attribute_2: value_2
-    CommonRequestLocation:
-      type: object
-      properties:
-        address:
-          type: string
-          maxLength: 256
-          examples:
-          - 1234 W 5th Ave Suite 100
-        city:
-          type: string
-          maxLength: 256
-          examples:
-          - New York
-          description: 'The city as it appears in the transaction data; in some cases this can be a phone number or website, which are also valid inputs.
-
-            '
-        region:
-          type: string
-          maxLength: 256
-          examples:
-          - NY
-          description: 'Two letter code for state, province, territory, etc. For US states, ANSI codes may be provided instead (e.g. "15" for Hawaii). While standard two-letter or ANSI codes are preferred when available, full region names may also be provided (e.g. "Hawaii"). *For an enhanced response, we \*strongly\* recommend including this field.*
-
-            '
-        country:
-          type: string
-          maxLength: 256
-          examples:
-          - USA
-          description: Three letter country code.
-        postalCode:
-          type: string
-          maxLength: 32
-          examples:
-          - '10001'
-          description: A US zip code or other international postal code. In the case where a US zip code is provided and the state is missing, the state will be inferred from the zip code.
-        latitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 45
-          description: Additional latitude data related to the transaction being enriched.
-        longitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 120
-          description: Additional longitude data related to the transaction being enriched.
-    CardEnrichmentRequest:
-      type: object
-      required:
-      - userId
-      - amount
-      - currencyCode
-      - occurredAt
-      - categoryCode
-      - location
-      properties:
-        merchantName:
-          type: string
-          maxLength: 1024
-          description: The raw, unmodified merchant name (including asterisks, store numbers, etc...)
-          examples:
-          - Amazon
-        organizationId:
-          type: string
-          maxLength: 256
-          description: An ID representing the organization associated with this transaction. Use this field if you are enriching transactions on behalf of other organizations. Used for billing purposes and for scoping products such as action triggers and category personalizations at the organization-level. For more info, see [Supporting multiple data sources and clients](https://docs.spade.com/reference/integrate-with-spades-api#supporting-multiple-data-sources-and-clients)
-          examples:
-          - organization_id_123
-        programId:
-          type: string
-          maxLength: 512
-          description: An identifier for the program associated with this transaction. Programs can be used to group transactions and scope action triggers at the program level.
-          examples:
-          - program_id_123
-        userId:
-          type: string
-          maxLength: 512
-          description: Anonymous ID representing your user. This will be used for summary features, and recurrence flagging purposes.
-          examples:
-          - user_id_123456789
-        cardId:
-          type: string
-          maxLength: 512
-          description: Anonymous ID representing the card of the user.
-          examples:
-          - card_id_123456789
-        cardFirstSix:
-          type: string
-          minLength: 6
-          maxLength: 6
-          description: The first six digits of the card number associated with the transaction.
-          examples:
-          - '123456'
-        cardLastFour:
-          type: string
-          minLength: 4
-          maxLength: 4
-          description: The last four digits of the card number associated with the transaction.
-          examples:
-          - '7890'
-        transactionId:
-          type: string
-          maxLength: 512
-          description: Your ID representing this transaction
-          examples:
-          - transaction_id_123456789
-        acquirerId:
-          type: string
-          maxLength: 256
-          description: An alphanumeric code generally with a maximum length of 15. It is also known as "Network ID", "Card Acceptor ID", or "Merchant ID". (Found in field 42 of ISO 8583)
-          examples:
-          - '000000000123456'
-        amount:
-          type:
-          - number
-          - string
-          maxLength: 15
-          description: Value of the transaction in the given currency. Negative values indicate incoming money.
-          examples:
-          - '25.23'
-        currencyCode:
-          type: string
-          maxLength: 16
-          examples:
-          - USD
-        occurredAt:
-          type: string
-          format: date-time
-          description: The time the transaction occurred. Formatted as an ISO 8601 date time.
-          examples:
-          - '2022-06-15 18:27:51Z'
-        categoryCode:
-          type: string
-          maxLength: 32
-          description: Category code for the given categoryType
-          examples:
-          - '5812'
-        categoryType:
-          type: string
-          maxLength: 32
-          minLength: 1
-          nullable: false
-          enum:
-          - MCC
-          default: MCC
-          examples:
-          - MCC
-          description: The category system that categoryCode is a part of. Optional; if omitted it defaults to `MCC`. Do not send `null` or an empty string — when the field is present it must be a valid, non-empty value (`MCC`).
-        location:
-          $ref: '#/components/schemas/CommonRequestLocation'
-        billingProfile:
-          type: string
-          enum:
-          - standard
-          - resell
-          description: An optional billing profile for this transaction. When set to "resell", the `organizationId` field is required. For more information, see [Supporting multiple data sources and clients](https://docs.spade.com/reference/integrate-with-spades-api#supporting-multiple-data-sources-and-clients)
-          examples:
-          - standard
-        customAttributes:
-          $ref: '#/components/schemas/CustomAttributesRequestField'
-    ResponseLocation:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          examples:
-          - fdf79470-3deb-4638-956a-6859e473b9d8
-          description: A unique identifier for this location.
-        address:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - 1234 W 5th Ave Suite 100
-          description: Street number, name, and any secondary address information.
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - 1234 W 5th Ave
-          description: Street number and name.
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          maxLength: 32
-          examples:
-          - Suite 100
-          description: Secondary address information.
-        city:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - New York
-        region:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - NY
-          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
-        country:
-          type:
-          - string
-          - 'null'
-          maxLength: 3
-          examples:
-          - USA
-          description: Three letter country code.
-        postalCode:
-          type:
-          - string
-          - 'null'
-          maxLength: 12
-          examples:
-          - '10001'
-          description: Location postal code or zip code.
-        latitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 45
-          description: Location latitude.
-        longitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 120
-          description: Location longitude.
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-          maxLength: 24
-          examples:
-          - '+18664862360'
-          description: Location phone number.
-        matchScore:
-          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
-
-            This is a premium Spade field available depending on your product package.
-
-            '
-          type:
-          - number
-          - 'null'
-          examples:
-          - 93.5
-    BatchCardEnrichmentRequest:
-      type: object
-      required:
-      - transactions
-      properties:
-        transactions:
-          type: array
-          description: An array of transactions to enrich. Each transaction must have a unique transactionId. Maximum 50,000 transactions.
-          maxItems: 50000
-          items:
-            $ref: '#/components/schemas/BatchCardEnrichmentRequestItem'
-        callbackUrl:
-          type: string
-          description: Set this URL if you want to receive a notification when the batch job is complete.
-          format: url
-          examples:
-          - https://example.com/callback
-    BatchCardParseEnrichmentRequest:
-      type: object
-      required:
-      - transactions
-      properties:
-        transactions:
-          type: array
-          description: An array of transactions with de43's to parse and enrich. Each transaction must have a unique transactionId. Maximum 50,000 transactions.
-          maxItems: 50000
-          items:
-            $ref: '#/components/schemas/BatchCardParseEnrichmentRequestItem'
-        callbackUrl:
-          type: string
-          description: The URL to call when the batch job is complete.
-          format: url
-          examples:
-          - https://example.com/callback
-    BatchSubmissionResponse:
-      type: object
-      required:
-      - batchId
-      - status
-      - batchSize
-      - submittedAt
-      properties:
-        batchId:
-          type: string
-          format: uuid
-          description: Unique identifier for the batch job
-        status:
-          type: string
-          enum:
-          - pending
-          - running
-          - completed
-          - failed
-          description: Current status of the batch job
-        batchSize:
-          type: integer
-          minimum: 1
-          description: Number of transactions in the batch
-          examples:
-          - 1
-        submittedAt:
-          type: string
-          format: date-time
-          description: Timestamp of when the batch was submitted
-          examples:
-          - '2024-11-21T20:07:20.213660Z'
-    BatchCardEnrichmentResponse:
-      allOf:
-      - $ref: '#/components/schemas/CardEnrichmentResponse'
-      - type: object
-        properties:
-          statusCode:
-            type: integer
-            examples:
-            - 200
-            description: The HTTP status code for this element of the response array.
-          errors:
-            type: object
-            description: 'This field is only present if the status code is not 200.
-
-              An object containing error descriptions for this element of the response array.
-
-              '
-            examples:
-            - currencyCode:
-              - This field is required.
-              categoryCode:
-              - This field is required.
     Counterparty:
       type: object
       properties:
@@ -1078,6 +526,383 @@ components:
             Premium Spade Field available depending on your product package.
 
             '
+    CardEnrichmentResponse:
+      allOf:
+      - type: object
+        properties:
+          transactionInfo:
+            properties:
+              transferInfo:
+                examples:
+                - null
+              isAccountVerification:
+                examples:
+                - null
+              isPeerToPeer:
+                examples:
+                - null
+              isDigitalWallet:
+                examples:
+                - null
+      - $ref: '#/components/schemas/EnrichmentResponse'
+    BatchSubmissionResponse:
+      type: object
+      required:
+      - batchId
+      - status
+      - batchSize
+      - submittedAt
+      properties:
+        batchId:
+          type: string
+          format: uuid
+          description: Unique identifier for the batch job
+        status:
+          type: string
+          enum:
+          - pending
+          - running
+          - completed
+          - failed
+          description: Current status of the batch job
+        batchSize:
+          type: integer
+          minimum: 1
+          description: Number of transactions in the batch
+          examples:
+          - 1
+        submittedAt:
+          type: string
+          format: date-time
+          description: Timestamp of when the batch was submitted
+          examples:
+          - '2024-11-21T20:07:20.213660Z'
+    BatchCardEnrichmentResponse:
+      allOf:
+      - $ref: '#/components/schemas/CardEnrichmentResponse'
+      - type: object
+        properties:
+          statusCode:
+            type: integer
+            examples:
+            - 200
+            description: The HTTP status code for this element of the response array.
+          errors:
+            type: object
+            description: 'This field is only present if the status code is not 200.
+
+              An object containing error descriptions for this element of the response array.
+
+              '
+            examples:
+            - currencyCode:
+              - This field is required.
+              categoryCode:
+              - This field is required.
+    ResponseLocation:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          examples:
+          - fdf79470-3deb-4638-956a-6859e473b9d8
+          description: A unique identifier for this location.
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave Suite 100
+          description: Street number, name, and any secondary address information.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave
+          description: Street number and name.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          maxLength: 32
+          examples:
+          - Suite 100
+          description: Secondary address information.
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - New York
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - NY
+          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
+        country:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          examples:
+          - USA
+          description: Three letter country code.
+        postalCode:
+          type:
+          - string
+          - 'null'
+          maxLength: 12
+          examples:
+          - '10001'
+          description: Location postal code or zip code.
+        latitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 45
+          description: Location latitude.
+        longitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 120
+          description: Location longitude.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          maxLength: 24
+          examples:
+          - '+18664862360'
+          description: Location phone number.
+        matchScore:
+          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
+
+            This is a premium Spade field available depending on your product package.
+
+            '
+          type:
+          - number
+          - 'null'
+          examples:
+          - 93.5
+    BatchCardParseEnrichmentRequest:
+      type: object
+      required:
+      - transactions
+      properties:
+        transactions:
+          type: array
+          description: An array of transactions with de43's to parse and enrich. Each transaction must have a unique transactionId. Maximum 50,000 transactions.
+          maxItems: 50000
+          items:
+            $ref: '#/components/schemas/BatchCardParseEnrichmentRequestItem'
+        callbackUrl:
+          type: string
+          description: The URL to call when the batch job is complete.
+          format: url
+          examples:
+          - https://example.com/callback
+    BatchCardEnrichmentRequestItem:
+      allOf:
+      - $ref: '#/components/schemas/CardEnrichmentRequest'
+      - type: object
+        required:
+        - transactionId
+        - merchantName
+        properties:
+          location:
+            type: object
+            required:
+            - city
+            - country
+          transactionId:
+            type: string
+            maxLength: 512
+            description: Your ID representing this transaction. Required for batch requests.
+            examples:
+            - transaction_id_123456789
+    CommonRequestLocation:
+      type: object
+      properties:
+        address:
+          type: string
+          maxLength: 256
+          examples:
+          - 1234 W 5th Ave Suite 100
+        city:
+          type: string
+          maxLength: 256
+          examples:
+          - New York
+          description: 'The city as it appears in the transaction data; in some cases this can be a phone number or website, which are also valid inputs.
+
+            '
+        region:
+          type: string
+          maxLength: 256
+          examples:
+          - NY
+          description: 'Two letter code for state, province, territory, etc. For US states, ANSI codes may be provided instead (e.g. "15" for Hawaii). While standard two-letter or ANSI codes are preferred when available, full region names may also be provided (e.g. "Hawaii"). *For an enhanced response, we \*strongly\* recommend including this field.*
+
+            '
+        country:
+          type: string
+          maxLength: 256
+          examples:
+          - USA
+          description: Three letter country code.
+        postalCode:
+          type: string
+          maxLength: 32
+          examples:
+          - '10001'
+          description: A US zip code or other international postal code. In the case where a US zip code is provided and the state is missing, the state will be inferred from the zip code.
+        latitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 45
+          description: Additional latitude data related to the transaction being enriched.
+        longitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 120
+          description: Additional longitude data related to the transaction being enriched.
+    BatchCallbackApiRequest:
+      type: object
+      properties:
+        batchId:
+          type: string
+          format: uuid
+          description: Unique identifier for the batch job
+        status:
+          type: string
+          enum:
+          - completed
+          - failed
+          description: Final status of the batch job
+    BatchCardEnrichmentRequest:
+      type: object
+      required:
+      - transactions
+      properties:
+        transactions:
+          type: array
+          description: An array of transactions to enrich. Each transaction must have a unique transactionId. Maximum 50,000 transactions.
+          maxItems: 50000
+          items:
+            $ref: '#/components/schemas/BatchCardEnrichmentRequestItem'
+        callbackUrl:
+          type: string
+          description: Set this URL if you want to receive a notification when the batch job is complete.
+          format: url
+          examples:
+          - https://example.com/callback
+    TriggeredActionResponse:
+      type: object
+      description: A triggered action returned in the enrichment response.
+      properties:
+        id:
+          type: string
+          maxLength: 512
+          description: Your unique identifier for the matched trigger (as provided during registration).
+          examples:
+          - trigger-12345
+        type:
+          type: string
+          description: The type of trigger that matched — `merchant_trigger` for merchant-based triggers, `category_trigger` for category-based triggers.
+          enum:
+          - merchant_trigger
+          - category_trigger
+          example: merchant_trigger
+          examples:
+          - merchant_trigger
+        action:
+          type: object
+          description: 'The custom action data you provided during registration for this trigger.
+
+
+            For `BLOCK` and `ALLOW_ONLY` action types, an `authRecommendation` field is automatically added:
+
+            - `BLOCK` triggers: `authRecommendation` is set to `"BLOCK"`.
+
+            - `ALLOW_ONLY` triggers that match: `authRecommendation` is set to `"ALLOW"`.
+
+            - `ALLOW_ONLY` triggers that do not match (inverse semantics): `authRecommendation` is set to `"BLOCK"`.
+
+            '
+          additionalProperties: true
+          properties:
+            authRecommendation:
+              type: string
+              description: Authorization recommendation injected for `BLOCK` and `ALLOW_ONLY` action types. Not present for other action types.
+              enum:
+              - ALLOW
+              - BLOCK
+          examples:
+          - type: REWARD
+            rewardPercent: 5
+            offerId: offer-abc123
+          - type: BLOCK
+            reason: Gambling merchant
+            authRecommendation: BLOCK
+          - type: ALLOW_ONLY
+            category: approved-vendors
+            authRecommendation: ALLOW
+        scope:
+          type: string
+          description: The scope at which this trigger was registered (account, program, user, or card).
+          enum:
+          - account
+          - program
+          - user
+          - card
+          example: account
+          examples:
+          - account
+        source:
+          type:
+          - string
+          - 'null'
+          description: 'Indicates whether the action was triggered by the matched counterparty or third party.
+
+
+            This field will be set to `null` when an `ALLOW_ONLY` action trigger was set up whose condition the current transaction did not meet. The `authRecommendation` in this case will be `BLOCK`.
+
+            '
+          enum:
+          - counterparty
+          - third_party
+          - null
+          example: counterparty
+          examples:
+          - counterparty
+        categoryId:
+          type: string
+          description: The Spade category ID that matched this trigger. Only present when `type` is `category_trigger`.
+          examples:
+          - b4b0d249-b402-49ac-b744-5027d4574fc5
+        categoryName:
+          type: string
+          description: The name of the Spade category that matched this trigger. Only present when `type` is `category_trigger`.
+          examples:
+          - Travel
     EnrichmentResponse:
       type: object
       properties:
@@ -1447,124 +1272,277 @@ components:
                 rewardPercent: 5
               scope: account
               source: counterparty
-    BatchCardEnrichmentRequestItem:
-      allOf:
-      - $ref: '#/components/schemas/CardEnrichmentRequest'
-      - type: object
-        required:
-        - transactionId
-        - merchantName
-        properties:
-          location:
-            type: object
-            required:
-            - city
-            - country
-          transactionId:
-            type: string
-            maxLength: 512
-            description: Your ID representing this transaction. Required for batch requests.
-            examples:
-            - transaction_id_123456789
-    BatchEndpointOptionsResponse:
+    CardEnrichmentRequest:
       type: object
       required:
-      - name
-      - description
-      - renders
-      - parses
-      - synchronousMax
+      - userId
+      - amount
+      - currencyCode
+      - occurredAt
+      - categoryCode
+      - location
       properties:
-        name:
+        merchantName:
           type: string
-          description: The display name of the endpoint method.
+          maxLength: 1024
+          description: The raw, unmodified merchant name (including asterisks, store numbers, etc...)
           examples:
-          - Post
-        description:
+          - Amazon
+        organizationId:
           type: string
-          description: A short description of the endpoint.
+          maxLength: 256
+          description: An ID representing the organization associated with this transaction. Use this field if you are enriching transactions on behalf of other organizations. Used for billing purposes and for scoping products such as action triggers and category personalizations at the organization-level. For more info, see [Supporting multiple data sources and clients](https://docs.spade.com/reference/integrate-with-spades-api#supporting-multiple-data-sources-and-clients)
           examples:
-          - Enrich a list of universal transactions
-        renders:
-          type: array
-          items:
-            type: string
-          description: Content types this endpoint can render.
-          examples:
-          - - application/json
-        parses:
-          type: array
-          items:
-            type: string
-          description: Content types this endpoint can parse.
-          examples:
-          - - application/json
-        synchronousMax:
-          type: integer
-          description: The maximum number of items allowed in a single microbatch (`?synchronous=true`).
-          examples:
-          - 100
-    BatchGetStatusApiResponse:
-      type: object
-      properties:
-        batchId:
+          - organization_id_123
+        programId:
           type: string
-          format: uuid
-          description: Unique identifier for the batch job
-        status:
+          maxLength: 512
+          description: An identifier for the program associated with this transaction. Programs can be used to group transactions and scope action triggers at the program level.
+          examples:
+          - program_id_123
+        userId:
+          type: string
+          maxLength: 512
+          description: Anonymous ID representing your user. This will be used for summary features, and recurrence flagging purposes.
+          examples:
+          - user_id_123456789
+        cardId:
+          type: string
+          maxLength: 512
+          description: Anonymous ID representing the card of the user.
+          examples:
+          - card_id_123456789
+        cardFirstSix:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: The first six digits of the card number associated with the transaction.
+          examples:
+          - '123456'
+        cardLastFour:
+          type: string
+          minLength: 4
+          maxLength: 4
+          description: The last four digits of the card number associated with the transaction.
+          examples:
+          - '7890'
+        transactionId:
+          type: string
+          maxLength: 512
+          description: Your ID representing this transaction
+          examples:
+          - transaction_id_123456789
+        acquirerId:
+          type: string
+          maxLength: 256
+          description: An alphanumeric code generally with a maximum length of 15. It is also known as "Network ID", "Card Acceptor ID", or "Merchant ID". (Found in field 42 of ISO 8583)
+          examples:
+          - '000000000123456'
+        amount:
+          type:
+          - number
+          - string
+          maxLength: 15
+          description: Value of the transaction in the given currency. Negative values indicate incoming money.
+          examples:
+          - '25.23'
+        currencyCode:
+          type: string
+          maxLength: 16
+          examples:
+          - USD
+        occurredAt:
+          type: string
+          format: date-time
+          description: The time the transaction occurred. Formatted as an ISO 8601 date time.
+          examples:
+          - '2022-06-15 18:27:51Z'
+        categoryCode:
+          type: string
+          maxLength: 32
+          description: Category code for the given categoryType
+          examples:
+          - '5812'
+        categoryType:
+          type: string
+          maxLength: 32
+          minLength: 1
+          nullable: false
+          enum:
+          - MCC
+          default: MCC
+          examples:
+          - MCC
+          description: The category system that categoryCode is a part of. Optional; if omitted it defaults to `MCC`. Do not send `null` or an empty string — when the field is present it must be a valid, non-empty value (`MCC`).
+        location:
+          $ref: '#/components/schemas/CommonRequestLocation'
+        billingProfile:
           type: string
           enum:
-          - pending
-          - running
-          - completed
-          - failed
-          description: Current status of the batch job
-    IndustryCategoryLevel:
-      description: A node in a tree representing a hierarchical category system
+          - standard
+          - resell
+          description: An optional billing profile for this transaction. When set to "resell", the `organizationId` field is required. For more information, see [Supporting multiple data sources and clients](https://docs.spade.com/reference/integrate-with-spades-api#supporting-multiple-data-sources-and-clients)
+          examples:
+          - standard
+        customAttributes:
+          $ref: '#/components/schemas/CustomAttributesRequestField'
+    CustomAttributesResponseField:
+      type: object
+      description: A dictionary containing the custom attributes that were included in the enrichment request (if any).
+      additionalProperties:
+        type: string
+      examples:
+      - custom_attribute_1: value_1
+        custom_attribute_2: value_2
+    CustomAttributesRequestField:
+      type: object
+      maxProperties: 30
+      description: 'A dictionary containing custom attributes that you would like to be returned in the response.
+
+        Please ensure this object does not contain any PII.
+
+        Restrictions include: `customAttributes` must be an object, up 30 custom attributes are allowed, each key must be a string <= 40 characters in length, and each value must be a string <= 250 characters in length.
+
+        '
+      additionalProperties:
+        type: string
+        maxLength: 250
+      examples:
+      - custom_attribute_1: value_1
+        custom_attribute_2: value_2
+    ThirdParty:
       type: object
       properties:
         id:
           type: string
-          maxLength: 15
+          format: uuid
           examples:
-          - 011-000-000-000
+          - ac48cef2-0d7f-4159-865e-e92b152262bc
         name:
           type: string
           maxLength: 64
           examples:
-          - Retail
-        icon:
+          - Paypal
+        type:
+          type: string
+          enum:
+          - bnpl
+          - delivery_service
+          - marketplace
+          - payment_processor
+          - platform
+          examples:
+          - payment_processor
+        logo:
           type:
           - string
           - 'null'
           maxLength: 128
           format: url
           examples:
-          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
-          description: Category icon.
-  parameters:
-    SynchronousBatchParam:
-      name: synchronous
-      in: query
-      required: false
-      description: 'When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.
+          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
+          description: Third party logo.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.paypal.com/
+          description: Third party website.
+    MobileAppInfo:
+      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
 
         '
-      schema:
-        type: boolean
-        default: false
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: A unique identifier for this mobile app.
+        name:
+          type:
+          - string
+          maxLength: 512
+          examples:
+          - Roblox
+          description: The name of the mobile app.
+        url:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://play.google.com/store/apps/details?id=com.roblox.client
+          description: The URL of the mobile app in the app store.
+        logo:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
+          description: The URL of the mobile app's logo.
+        developerName:
+          type:
+          - string
+          maxLength: 256
+          examples:
+          - Roblox Corporation
+          description: The name of the developer of the mobile app.
+        developerId:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: The ID of the developer of the mobile app.
+        category:
+          type:
+          - string
+          enum:
+          - Auto and Transportation
+          - Creative and Design
+          - Education and Parenting
+          - Entertainment and Media
+          - Finance and Business
+          - Games
+          - Health and Lifestyle
+          - Shopping and Marketplaces
+          - Social and Communication
+          - Travel and Events
+          - Utility and Tools
+          examples:
+          - Auto and Transportation
+          description: The category of the mobile app.
+        hasGamblingOrRewards:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has gambling or cash rewards.
+        hasSimulatedGambling:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has simulated gambling.
+        ageRating:
+          type:
+          - string
+          enum:
+          - Children
+          - Teen
+          - Adult
+          - Unknown
+          examples:
+          - Teen
+          description: The age rating of the mobile app.
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
     BadRequest:
       description: Invalid input
       content:
@@ -1578,17 +1556,6 @@ components:
                   type: string
                   examples:
                   - This field is required.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
     BatchJobNotFound:
       description: Batch job not found
       content:
@@ -1600,6 +1567,28 @@ components:
                 type: string
                 examples:
                 - Batch job not found.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
   callbacks:
     batchStatusCallback:
       '{$request.body#/callbackUrl}':
@@ -1629,6 +1618,17 @@ components:
               description: Your server returns this code if it accepts the callback
             '500':
               description: Your server encountered an unexpected error
+  parameters:
+    SynchronousBatchParam:
+      name: synchronous
+      in: query
+      required: false
+      description: 'When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.
+
+        '
+      schema:
+        type: boolean
+        default: false
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

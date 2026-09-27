@@ -52,13 +52,14 @@ created: '2026-07-17'
 modified: '2026-08-14'
 tags:
 - Company
-- Financial-Services
+- Financial Services
 - Transaction Enrichment
 - Merchant Intelligence
 - Payments
 - Data Enrichment
 - Fraud and Risk
 - Fintech
+- A2A
 tags_raw:
 - Company
 - Financial Services
@@ -68,6 +69,8 @@ tags_raw:
 - Data Enrichment
 - Fraud and Risk
 - Fintech
+- Financial-Services
+- A2A
 apis:
 - aid: spade:spade-card-enrichment-api
   name: Spade Card Enrichment API
@@ -237,3 +240,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 9
   pass: local-v1
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://docs.spade.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3"
+  control: 404

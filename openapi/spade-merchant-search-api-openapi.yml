@@ -107,7 +107,77 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+    TooManyRequests:
+      description: Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
   schemas:
+    CorporationSearchResult:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The merchant's name
+          examples:
+          - Starbucks
+        logo:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: URL of the merchant's logo, or null if unavailable
+          examples:
+          - https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png
+        website:
+          type:
+          - string
+          - 'null'
+          description: The merchant's website, or null if unavailable
+          examples:
+          - starbucks.com
     MerchantAsCounterparty:
       allOf:
       - $ref: '#/components/schemas/Merchant'
@@ -133,47 +203,30 @@ components:
             description: An array of Spade categories that show up in transactions at this merchant
             items:
               $ref: '#/components/schemas/MerchantCategory'
-    ThirdParty:
+    CounterpartyAlternate:
       type: object
       properties:
         id:
-          type: string
+          type:
+          - string
           format: uuid
           examples:
-          - ac48cef2-0d7f-4159-865e-e92b152262bc
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Paypal
-        type:
-          type: string
-          enum:
-          - bnpl
-          - delivery_service
-          - marketplace
-          - payment_processor
-          - platform
-          examples:
-          - payment_processor
-        logo:
+          - 49fd51a1-5a19-3e5d-8d28-eb056ecf8939
+          description: A unique identifier for this alternate.
+        similarity:
           type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
+          - number
           examples:
-          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
-          description: Third party logo.
-        website:
-          type:
-          - string
-          - 'null'
-          maxLength: 256
-          format: url
-          examples:
-          - https://www.paypal.com/
-          description: Third party website.
+          - 85.2
+          description: This ID's likeness to the counterparty.
+    CorporationSearchResponse:
+      type: object
+      properties:
+        corporations:
+          type: array
+          description: An array of merchants matching the search query, ordered by relevance. Contains up to five results.
+          items:
+            $ref: '#/components/schemas/CorporationSearchResult'
     MerchantAsThirdParty:
       type: object
       properties:
@@ -216,6 +269,57 @@ components:
           examples:
           - https://pay.amazon.com
           description: The third party's website
+    MerchantSearchResponse:
+      type: object
+      properties:
+        counterparties:
+          type: array
+          description: An array of counterparties matching the search query, ordered from most to least similar. Can contain up to five counterparties.
+          items:
+            $ref: '#/components/schemas/MerchantAsCounterparty'
+        thirdParties:
+          type: array
+          description: An array of third parties matching the search query, ordered from most to least similar. Can contain up to five third parties.
+          items:
+            $ref: '#/components/schemas/MerchantAsThirdParty'
+    MerchantMCC:
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          examples:
+          - '5942'
+          description: The merchant category code
+        description:
+          type:
+          - string
+          examples:
+          - Book Stores
+          description: A human-readable description of this MCC
+    IndustryCategoryLevel:
+      description: A node in a tree representing a hierarchical category system
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 15
+          examples:
+          - 011-000-000-000
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Retail
+        icon:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: Category icon.
     Merchant:
       type: object
       properties:
@@ -258,7 +362,48 @@ components:
           examples:
           - https://www.amazon.com
           description: The merchant's website
-    CounterpartyAlternate:
+    ThirdParty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples:
+          - ac48cef2-0d7f-4159-865e-e92b152262bc
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Paypal
+        type:
+          type: string
+          enum:
+          - bnpl
+          - delivery_service
+          - marketplace
+          - payment_processor
+          - platform
+          examples:
+          - payment_processor
+        logo:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
+          description: Third party logo.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.paypal.com/
+          description: Third party website.
+    MerchantAffiliate:
       type: object
       properties:
         id:
@@ -267,13 +412,29 @@ components:
           format: uuid
           examples:
           - 49fd51a1-5a19-3e5d-8d28-eb056ecf8939
-          description: A unique identifier for this alternate.
-        similarity:
+          description: A unique identifier for this affiliate. This identifier will show up in enrichments as `counterparty[i].id` or `thirdParties[i].id`, depending on the the role the affiliate is playing in a given transaction.
+        name:
           type:
-          - number
+          - string
           examples:
-          - 85.2
-          description: This ID's likeness to the counterparty.
+          - Amazon Pay
+          description: The affiliate's name
+        logo:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png
+          description: The affiliate's logo
+        website:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://pay.amazon.com
+          description: The affiliate's website
     MerchantCategory:
       type: object
       properties:
@@ -311,167 +472,6 @@ components:
             - id: 011-010-000-000
               name: Online Marketplace
               icon: https://static.v2.spadeapi.com/categories/b4b0d249b40249acb7445027d4574fc5/light.png
-    CorporationSearchResult:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The merchant's name
-          examples:
-          - Starbucks
-        logo:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: URL of the merchant's logo, or null if unavailable
-          examples:
-          - https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png
-        website:
-          type:
-          - string
-          - 'null'
-          description: The merchant's website, or null if unavailable
-          examples:
-          - starbucks.com
-    MerchantMCC:
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          examples:
-          - '5942'
-          description: The merchant category code
-        description:
-          type:
-          - string
-          examples:
-          - Book Stores
-          description: A human-readable description of this MCC
-    MerchantAffiliate:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 49fd51a1-5a19-3e5d-8d28-eb056ecf8939
-          description: A unique identifier for this affiliate. This identifier will show up in enrichments as `counterparty[i].id` or `thirdParties[i].id`, depending on the the role the affiliate is playing in a given transaction.
-        name:
-          type:
-          - string
-          examples:
-          - Amazon Pay
-          description: The affiliate's name
-        logo:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png
-          description: The affiliate's logo
-        website:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://pay.amazon.com
-          description: The affiliate's website
-    CorporationSearchResponse:
-      type: object
-      properties:
-        corporations:
-          type: array
-          description: An array of merchants matching the search query, ordered by relevance. Contains up to five results.
-          items:
-            $ref: '#/components/schemas/CorporationSearchResult'
-    MerchantSearchResponse:
-      type: object
-      properties:
-        counterparties:
-          type: array
-          description: An array of counterparties matching the search query, ordered from most to least similar. Can contain up to five counterparties.
-          items:
-            $ref: '#/components/schemas/MerchantAsCounterparty'
-        thirdParties:
-          type: array
-          description: An array of third parties matching the search query, ordered from most to least similar. Can contain up to five third parties.
-          items:
-            $ref: '#/components/schemas/MerchantAsThirdParty'
-    IndustryCategoryLevel:
-      description: A node in a tree representing a hierarchical category system
-      type: object
-      properties:
-        id:
-          type: string
-          maxLength: 15
-          examples:
-          - 011-000-000-000
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Retail
-        icon:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
-          description: Category icon.
-  responses:
-    TooManyRequests:
-      description: Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
-    BadRequest:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              invalidField:
-                type: array
-                items:
-                  type: string
-                  examples:
-                  - This field is required.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
