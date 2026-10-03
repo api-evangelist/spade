@@ -737,7 +737,109 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
   schemas:
+    CategoryActionTriggerStatusResponse:
+      type: object
+      description: Response containing the status of a category action trigger registration.
+      properties:
+        status:
+          type: string
+          description: 'The current status of the action trigger registration. Category trigger registrations are processed synchronously, so the status is always one of:
+
+            - `succeeded`: Registration complete, triggers are now active
+
+            - `failed`: Registration failed, check your request and retry
+
+            '
+          enum:
+          - succeeded
+          - failed
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
+          examples:
+          - 1
+        categoryTriggers:
+          type: array
+          description: The list of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The trigger ID as provided during registration.
+                examples:
+                - travel-reward-1
+              categoryId:
+                type: string
+                description: The category ID associated with this trigger, as provided during registration.
+                examples:
+                - 020-001-000-000
+              action:
+                type: object
+                description: The action data associated with this trigger, as provided during registration.
+                additionalProperties: true
+                examples:
+                - type: REWARD
+                  rewardPercent: 3
+        totalCount:
+          type: integer
+          description: The total number of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
+          examples:
+          - 10
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
     CategoryTriggerItem:
       type: object
       description: A category trigger to register for action matching.
@@ -793,21 +895,6 @@ components:
           - type: BLOCK
             reason: Gambling not permitted
           - type: ALLOW_ONLY
-    ActionTriggerPatchResponse:
-      type: object
-      description: Response for the remove PATCH operation.
-      properties:
-        status:
-          type: string
-          enum:
-          - succeeded
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this operation.
-          examples:
-          - 5
     CategoryActionTriggerPatchRequest:
       type: object
       description: 'Request body for incremental category action trigger operations.
@@ -886,93 +973,6 @@ components:
           maxItems: 300
           items:
             $ref: '#/components/schemas/CategoryTriggerItem'
-    CategoryActionTriggerStatusResponse:
-      type: object
-      description: Response containing the status of a category action trigger registration.
-      properties:
-        status:
-          type: string
-          description: 'The current status of the action trigger registration. Category trigger registrations are processed synchronously, so the status is always one of:
-
-            - `succeeded`: Registration complete, triggers are now active
-
-            - `failed`: Registration failed, check your request and retry
-
-            '
-          enum:
-          - succeeded
-          - failed
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this registration. Increments with each PUT, PATCH, or DELETE request to this scope.
-          examples:
-          - 1
-        categoryTriggers:
-          type: array
-          description: The list of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The trigger ID as provided during registration.
-                examples:
-                - travel-reward-1
-              categoryId:
-                type: string
-                description: The category ID associated with this trigger, as provided during registration.
-                examples:
-                - 020-001-000-000
-              action:
-                type: object
-                description: The action data associated with this trigger, as provided during registration.
-                additionalProperties: true
-                examples:
-                - type: REWARD
-                  rewardPercent: 3
-        totalCount:
-          type: integer
-          description: The total number of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
-          examples:
-          - 10
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
-    BadRequest:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              invalidField:
-                type: array
-                items:
-                  type: string
-                  examples:
-                  - This field is required.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

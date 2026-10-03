@@ -705,7 +705,58 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
   schemas:
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
     MerchantTriggerItem:
       type: object
       description: A merchant trigger to register for action matching.
@@ -827,6 +878,31 @@ components:
             type: string
           examples:
           - storeId: store-789
+    MerchantActionTriggerRegistrationRequest:
+      type: object
+      description: Request body for registering merchant action triggers.
+      required:
+      - merchantTriggers
+      properties:
+        merchantTriggers:
+          type: array
+          description: 'List of merchant triggers to register for action matching. Each trigger must have a unique `id`.
+
+
+            **Field requirements:**
+
+            - `id`, `merchantName`, and `action` are always required
+
+            - If location fields (address, city) are NOT provided, `website` is required
+
+
+            **Limits:** User-scope and card-scope registrations are limited to 100 triggers. Account-scope and program-scope registrations with more than 100 triggers will be processed asynchronously as a batch job.
+
+            '
+          minItems: 1
+          maxItems: 100000
+          items:
+            $ref: '#/components/schemas/MerchantTriggerItem'
     ActionTriggerStatusResponse:
       type: object
       description: Response containing the status of an action trigger registration.
@@ -879,46 +955,6 @@ components:
           description: The total number of active merchant triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
           examples:
           - 50000
-    MerchantActionTriggerRegistrationRequest:
-      type: object
-      description: Request body for registering merchant action triggers.
-      required:
-      - merchantTriggers
-      properties:
-        merchantTriggers:
-          type: array
-          description: 'List of merchant triggers to register for action matching. Each trigger must have a unique `id`.
-
-
-            **Field requirements:**
-
-            - `id`, `merchantName`, and `action` are always required
-
-            - If location fields (address, city) are NOT provided, `website` is required
-
-
-            **Limits:** User-scope and card-scope registrations are limited to 100 triggers. Account-scope and program-scope registrations with more than 100 triggers will be processed asynchronously as a batch job.
-
-            '
-          minItems: 1
-          maxItems: 100000
-          items:
-            $ref: '#/components/schemas/MerchantTriggerItem'
-    ActionTriggerPatchResponse:
-      type: object
-      description: Response for the remove PATCH operation.
-      properties:
-        status:
-          type: string
-          enum:
-          - succeeded
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this operation.
-          examples:
-          - 5
     MerchantActionTriggerPatchRequest:
       type: object
       description: 'Request body for incremental merchant action trigger operations.
@@ -976,42 +1012,6 @@ components:
           examples:
           - - merchant_123
             - merchant_456
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
-    BadRequest:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              invalidField:
-                type: array
-                items:
-                  type: string
-                  examples:
-                  - This field is required.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
