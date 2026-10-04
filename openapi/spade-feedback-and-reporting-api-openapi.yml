@@ -278,203 +278,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    BadRequest:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              invalidField:
-                type: array
-                items:
-                  type: string
-                  examples:
-                  - This field is required.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
   schemas:
-    ReportApiRequest:
-      type: object
-      description: Schema for reporting an enriched transaction.
-      required:
-      - errorDescription
-      - enrichmentId
-      properties:
-        enrichmentId:
-          type: string
-          format: uuid
-          description: Enrichment id represented as a string UUID.
-        errorDescription:
-          type: string
-          description: Description of incorrect details in enrichment.
-          maxLength: 1024
-          examples:
-          - Enrichment has an incorrect location. Wrong postal code.
-        incorrectLocation:
-          type: boolean
-          description: Bool indicating if the enrichment has a wrong location.
-          examples:
-          - true
-        incorrectLocationDescription:
-          type: string
-          description: Description of incorrect location details in enrichment.
-          maxLength: 1024
-          examples:
-          - The location's city is incorrect.
-        incorrectCategory:
-          type: boolean
-          description: Bool indicating if the enrichment has a wrong Category.
-          examples:
-          - false
-        incorrectCategoryDescription:
-          type: string
-          description: Description of incorrect category details in enrichment.
-          maxLength: 1024
-          examples:
-          - The category returned is incorrect.
-        incorrectChannel:
-          type: boolean
-          description: Bool indicating if the enrichment has a wrong Channel.
-          examples:
-          - false
-        incorrectChannelDescription:
-          type: string
-          description: Description of incorrect channel details in enrichment.
-          maxLength: 1024
-          examples:
-          - The spending channel should have been physical.
-        incorrectCounterparty:
-          type: boolean
-          description: Bool indicating if the enrichment has a wrong Counterparty.
-          examples:
-          - false
-        incorrectCounterpartyDescription:
-          type: string
-          description: Description of incorrect counterparty details in enrichment.
-          maxLength: 1024
-          examples:
-          - The counterparty is incorrect.
-    ResponseLocation:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          examples:
-          - fdf79470-3deb-4638-956a-6859e473b9d8
-          description: A unique identifier for this location.
-        address:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - 1234 W 5th Ave Suite 100
-          description: Street number, name, and any secondary address information.
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - 1234 W 5th Ave
-          description: Street number and name.
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          maxLength: 32
-          examples:
-          - Suite 100
-          description: Secondary address information.
-        city:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - New York
-        region:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - NY
-          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
-        country:
-          type:
-          - string
-          - 'null'
-          maxLength: 3
-          examples:
-          - USA
-          description: Three letter country code.
-        postalCode:
-          type:
-          - string
-          - 'null'
-          maxLength: 12
-          examples:
-          - '10001'
-          description: Location postal code or zip code.
-        latitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 45
-          description: Location latitude.
-        longitude:
-          type:
-          - number
-          - 'null'
-          examples:
-          - 120
-          description: Location longitude.
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-          maxLength: 24
-          examples:
-          - '+18664862360'
-          description: Location phone number.
-        matchScore:
-          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
-
-            This is a premium Spade field available depending on your product package.
-
-            '
-          type:
-          - number
-          - 'null'
-          examples:
-          - 93.5
     EnrichmentFeedbackResponse:
       type: object
       description: Response for reporting any kind of enrichment feedback.
@@ -483,296 +287,6 @@ components:
           type: string
           examples:
           - Chargeback successfully reported.
-    MobileAppInfo:
-      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
-
-        '
-      type:
-      - object
-      - 'null'
-      properties:
-        id:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: A unique identifier for this mobile app.
-        name:
-          type:
-          - string
-          maxLength: 512
-          examples:
-          - Roblox
-          description: The name of the mobile app.
-        url:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://play.google.com/store/apps/details?id=com.roblox.client
-          description: The URL of the mobile app in the app store.
-        logo:
-          type:
-          - string
-          - 'null'
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
-          description: The URL of the mobile app's logo.
-        developerName:
-          type:
-          - string
-          maxLength: 256
-          examples:
-          - Roblox Corporation
-          description: The name of the developer of the mobile app.
-        developerId:
-          type:
-          - string
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: The ID of the developer of the mobile app.
-        category:
-          type:
-          - string
-          enum:
-          - Auto and Transportation
-          - Creative and Design
-          - Education and Parenting
-          - Entertainment and Media
-          - Finance and Business
-          - Games
-          - Health and Lifestyle
-          - Shopping and Marketplaces
-          - Social and Communication
-          - Travel and Events
-          - Utility and Tools
-          examples:
-          - Auto and Transportation
-          description: The category of the mobile app.
-        hasGamblingOrRewards:
-          type: boolean
-          examples:
-          - false
-          description: Whether the mobile app has gambling or cash rewards.
-        hasSimulatedGambling:
-          type: boolean
-          examples:
-          - false
-          description: Whether the mobile app has simulated gambling.
-        ageRating:
-          type:
-          - string
-          enum:
-          - Children
-          - Teen
-          - Adult
-          - Unknown
-          examples:
-          - Teen
-          description: The age rating of the mobile app.
-    ThirdParty:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          examples:
-          - ac48cef2-0d7f-4159-865e-e92b152262bc
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Paypal
-        type:
-          type: string
-          enum:
-          - bnpl
-          - delivery_service
-          - marketplace
-          - payment_processor
-          - platform
-          examples:
-          - payment_processor
-        logo:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
-          description: Third party logo.
-        website:
-          type:
-          - string
-          - 'null'
-          maxLength: 256
-          format: url
-          examples:
-          - https://www.paypal.com/
-          description: Third party website.
-    CardEnrichmentResponse:
-      allOf:
-      - type: object
-        properties:
-          transactionInfo:
-            properties:
-              transferInfo:
-                examples:
-                - null
-              isAccountVerification:
-                examples:
-                - null
-              isPeerToPeer:
-                examples:
-                - null
-              isDigitalWallet:
-                examples:
-                - null
-      - $ref: '#/components/schemas/EnrichmentResponse'
-    CommonFraud:
-      type: object
-      properties:
-        isFraud:
-          type: boolean
-          description: A boolean indicating if this transaction was suspected to involve fraud.
-          examples:
-          - false
-        fraudType:
-          type: string
-          description: 'The type of fraud suspected to have occurred. This field can only be provided if `isFraud` is true.
-
-            '
-          enum:
-          - card_not_present
-          - card_testing
-          - chargeback_fraud
-          - counterfeit_card
-          - merchant_fraud
-          - other
-          - phishing
-          - stolen_card
-          - unknown
-          - none
-        fraudNotes:
-          type: string
-          description: 'Any additional details related to fraud suspected to have occurred on the associated transaction. This field can only be provided if `isFraud` is true.
-
-            '
-          maxLength: 512
-          examples:
-          - Merchant is believed to commonly be used for card testing.
-    ReportApiResponse:
-      type: object
-      description: Response for reporting an enriched transaction.
-      properties:
-        details:
-          type: string
-          examples:
-          - Enrichment Successfully Reported.
-    Counterparty:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          examples:
-          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
-          description: A unique identifier for this counterparty, regardless of specific location.
-        name:
-          type:
-          - string
-          - 'null'
-          maxLength: 64
-          examples:
-          - Amazon
-          description: Counterparty name.
-        legalName:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          examples:
-          - Amazon Inc.
-          description: Counterparty legal name.
-        industry:
-          description: Array with increasingly specific category information.
-          type: array
-          items:
-            $ref: '#/components/schemas/IndustryCategoryLevel'
-        matchScore:
-          description: 'The matchScore predicts how well a transaction matches a Counterparty in our records. If no Counterparty was found, the matchScore is set to null. Otherwise, scores range between 50.00 and 100.00. We filter out results below this range to make sure that only high quality matches are returned. Generally, the higher the matchScore is the better the match between a transaction and a Counterparty. When multiple Counterparties match a transaction, matches are returned in decreasing order of matchScore. This is a premium Spade field available depending on your product package.
-
-            '
-          type:
-          - number
-          - 'null'
-          examples:
-          - 93.5
-        location:
-          type: array
-          description: 'An array of locations matched to the transaction (and associated with this counterparty). Can currently contain only one location.
-
-            '
-          items:
-            $ref: '#/components/schemas/ResponseLocation'
-        logo:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/logos/de33f8973bc934c5b368a5b27155db02/light.png
-          description: Counterparty logo.
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-          maxLength: 24
-          examples:
-          - '+18664862360'
-          description: Counterparty phone number.
-        website:
-          type:
-          - string
-          - 'null'
-          maxLength: 256
-          format: url
-          examples:
-          - https://www.amazon.com
-          description: Counterparty website.
-        possibleCounterpartyAlternate:
-          type:
-          - object
-          - 'null'
-          properties:
-            id:
-              type: string
-              format: uuid
-              examples:
-              - 49fd51a1-5a19-3e5d-8d28-eb056ecf8939
-              description: 'The ID of the alternate counterparty.
-
-                '
-            similarity:
-              type: number
-              examples:
-              - 80
-              description: 'The similarity score indicates how closely this alternate counterparty matches the main counterparty. The score is a value between 0.0 and 100.0, where 100.0 is an exact match.
-
-                '
-          description: 'The possible alternate counterparty object represents a counterparty that may be matched to this transaction in other enrichment requests.
-
-            Premium Spade Field available depending on your product package.
-
-            '
     TriggeredActionResponse:
       type: object
       description: A triggered action returned in the enrichment response.
@@ -862,29 +376,14 @@ components:
           description: The name of the Spade category that matched this trigger. Only present when `type` is `category_trigger`.
           examples:
           - Travel
-    IndustryCategoryLevel:
-      description: A node in a tree representing a hierarchical category system
+    ReportApiResponse:
       type: object
+      description: Response for reporting an enriched transaction.
       properties:
-        id:
+        details:
           type: string
-          maxLength: 15
           examples:
-          - 011-000-000-000
-        name:
-          type: string
-          maxLength: 64
-          examples:
-          - Retail
-        icon:
-          type:
-          - string
-          - 'null'
-          maxLength: 128
-          format: url
-          examples:
-          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
-          description: Category icon.
+          - Enrichment Successfully Reported.
     EnrichmentResponse:
       type: object
       properties:
@@ -1254,6 +753,410 @@ components:
                 rewardPercent: 5
               scope: account
               source: counterparty
+    CardEnrichmentResponse:
+      allOf:
+      - type: object
+        properties:
+          transactionInfo:
+            properties:
+              transferInfo:
+                examples:
+                - null
+              isAccountVerification:
+                examples:
+                - null
+              isPeerToPeer:
+                examples:
+                - null
+              isDigitalWallet:
+                examples:
+                - null
+      - $ref: '#/components/schemas/EnrichmentResponse'
+    CommonFraud:
+      type: object
+      properties:
+        isFraud:
+          type: boolean
+          description: A boolean indicating if this transaction was suspected to involve fraud.
+          examples:
+          - false
+        fraudType:
+          type: string
+          description: 'The type of fraud suspected to have occurred. This field can only be provided if `isFraud` is true.
+
+            '
+          enum:
+          - card_not_present
+          - card_testing
+          - chargeback_fraud
+          - counterfeit_card
+          - merchant_fraud
+          - other
+          - phishing
+          - stolen_card
+          - unknown
+          - none
+        fraudNotes:
+          type: string
+          description: 'Any additional details related to fraud suspected to have occurred on the associated transaction. This field can only be provided if `isFraud` is true.
+
+            '
+          maxLength: 512
+          examples:
+          - Merchant is believed to commonly be used for card testing.
+    Counterparty:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: A unique identifier for this counterparty, regardless of specific location.
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - Amazon
+          description: Counterparty name.
+        legalName:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          examples:
+          - Amazon Inc.
+          description: Counterparty legal name.
+        industry:
+          description: Array with increasingly specific category information.
+          type: array
+          items:
+            $ref: '#/components/schemas/IndustryCategoryLevel'
+        matchScore:
+          description: 'The matchScore predicts how well a transaction matches a Counterparty in our records. If no Counterparty was found, the matchScore is set to null. Otherwise, scores range between 50.00 and 100.00. We filter out results below this range to make sure that only high quality matches are returned. Generally, the higher the matchScore is the better the match between a transaction and a Counterparty. When multiple Counterparties match a transaction, matches are returned in decreasing order of matchScore. This is a premium Spade field available depending on your product package.
+
+            '
+          type:
+          - number
+          - 'null'
+          examples:
+          - 93.5
+        location:
+          type: array
+          description: 'An array of locations matched to the transaction (and associated with this counterparty). Can currently contain only one location.
+
+            '
+          items:
+            $ref: '#/components/schemas/ResponseLocation'
+        logo:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/de33f8973bc934c5b368a5b27155db02/light.png
+          description: Counterparty logo.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          maxLength: 24
+          examples:
+          - '+18664862360'
+          description: Counterparty phone number.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.amazon.com
+          description: Counterparty website.
+        possibleCounterpartyAlternate:
+          type:
+          - object
+          - 'null'
+          properties:
+            id:
+              type: string
+              format: uuid
+              examples:
+              - 49fd51a1-5a19-3e5d-8d28-eb056ecf8939
+              description: 'The ID of the alternate counterparty.
+
+                '
+            similarity:
+              type: number
+              examples:
+              - 80
+              description: 'The similarity score indicates how closely this alternate counterparty matches the main counterparty. The score is a value between 0.0 and 100.0, where 100.0 is an exact match.
+
+                '
+          description: 'The possible alternate counterparty object represents a counterparty that may be matched to this transaction in other enrichment requests.
+
+            Premium Spade Field available depending on your product package.
+
+            '
+    MobileAppInfo:
+      description: 'The mobile app information for the transaction. This object is only non-null if the transaction was matched to a mobile app.
+
+        '
+      type:
+      - object
+      - 'null'
+      properties:
+        id:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: A unique identifier for this mobile app.
+        name:
+          type:
+          - string
+          maxLength: 512
+          examples:
+          - Roblox
+          description: The name of the mobile app.
+        url:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://play.google.com/store/apps/details?id=com.roblox.client
+          description: The URL of the mobile app in the app store.
+        logo:
+          type:
+          - string
+          - 'null'
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/58c03a73629c46b8aa4c1e15cb4f0d0b/light.png
+          description: The URL of the mobile app's logo.
+        developerName:
+          type:
+          - string
+          maxLength: 256
+          examples:
+          - Roblox Corporation
+          description: The name of the developer of the mobile app.
+        developerId:
+          type:
+          - string
+          format: uuid
+          examples:
+          - 704bbd58-fb12-4bdb-9aae-2786704ea92a
+          description: The ID of the developer of the mobile app.
+        category:
+          type:
+          - string
+          enum:
+          - Auto and Transportation
+          - Creative and Design
+          - Education and Parenting
+          - Entertainment and Media
+          - Finance and Business
+          - Games
+          - Health and Lifestyle
+          - Shopping and Marketplaces
+          - Social and Communication
+          - Travel and Events
+          - Utility and Tools
+          examples:
+          - Auto and Transportation
+          description: The category of the mobile app.
+        hasGamblingOrRewards:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has gambling or cash rewards.
+        hasSimulatedGambling:
+          type: boolean
+          examples:
+          - false
+          description: Whether the mobile app has simulated gambling.
+        ageRating:
+          type:
+          - string
+          enum:
+          - Children
+          - Teen
+          - Adult
+          - Unknown
+          examples:
+          - Teen
+          description: The age rating of the mobile app.
+    ResponseLocation:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          examples:
+          - fdf79470-3deb-4638-956a-6859e473b9d8
+          description: A unique identifier for this location.
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave Suite 100
+          description: Street number, name, and any secondary address information.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - 1234 W 5th Ave
+          description: Street number and name.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          maxLength: 32
+          examples:
+          - Suite 100
+          description: Secondary address information.
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - New York
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          examples:
+          - NY
+          description: Region code. Typically a two-letter code for US states, but may vary for international regions.
+        country:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          examples:
+          - USA
+          description: Three letter country code.
+        postalCode:
+          type:
+          - string
+          - 'null'
+          maxLength: 12
+          examples:
+          - '10001'
+          description: Location postal code or zip code.
+        latitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 45
+          description: Location latitude.
+        longitude:
+          type:
+          - number
+          - 'null'
+          examples:
+          - 120
+          description: Location longitude.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          maxLength: 24
+          examples:
+          - '+18664862360'
+          description: Location phone number.
+        matchScore:
+          description: 'The matchScore predicts how well a transaction matches a Location in our records. If no Location was found, the matchScore is set to null. Scores range between 0.00 and 100.0. Generally, a higher matchScore indicates a better match between a transaction and a Location.
+
+            This is a premium Spade field available depending on your product package.
+
+            '
+          type:
+          - number
+          - 'null'
+          examples:
+          - 93.5
+    ThirdParty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples:
+          - ac48cef2-0d7f-4159-865e-e92b152262bc
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Paypal
+        type:
+          type: string
+          enum:
+          - bnpl
+          - delivery_service
+          - marketplace
+          - payment_processor
+          - platform
+          examples:
+          - payment_processor
+        logo:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/logos/9063bc0f0a3f4b1fbf644f9862e17002/light.png
+          description: Third party logo.
+        website:
+          type:
+          - string
+          - 'null'
+          maxLength: 256
+          format: url
+          examples:
+          - https://www.paypal.com/
+          description: Third party website.
+    IndustryCategoryLevel:
+      description: A node in a tree representing a hierarchical category system
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 15
+          examples:
+          - 011-000-000-000
+        name:
+          type: string
+          maxLength: 64
+          examples:
+          - Retail
+        icon:
+          type:
+          - string
+          - 'null'
+          maxLength: 128
+          format: url
+          examples:
+          - https://static.v2.spadeapi.com/categories/ee4ee39fd5474d31ac42f9e606b9040a/light.png
+          description: Category icon.
     CustomAttributesResponseField:
       type: object
       description: A dictionary containing the custom attributes that were included in the enrichment request (if any).
@@ -1262,6 +1165,103 @@ components:
       examples:
       - custom_attribute_1: value_1
         custom_attribute_2: value_2
+    ReportApiRequest:
+      type: object
+      description: Schema for reporting an enriched transaction.
+      required:
+      - errorDescription
+      - enrichmentId
+      properties:
+        enrichmentId:
+          type: string
+          format: uuid
+          description: Enrichment id represented as a string UUID.
+        errorDescription:
+          type: string
+          description: Description of incorrect details in enrichment.
+          maxLength: 1024
+          examples:
+          - Enrichment has an incorrect location. Wrong postal code.
+        incorrectLocation:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong location.
+          examples:
+          - true
+        incorrectLocationDescription:
+          type: string
+          description: Description of incorrect location details in enrichment.
+          maxLength: 1024
+          examples:
+          - The location's city is incorrect.
+        incorrectCategory:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong Category.
+          examples:
+          - false
+        incorrectCategoryDescription:
+          type: string
+          description: Description of incorrect category details in enrichment.
+          maxLength: 1024
+          examples:
+          - The category returned is incorrect.
+        incorrectChannel:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong Channel.
+          examples:
+          - false
+        incorrectChannelDescription:
+          type: string
+          description: Description of incorrect channel details in enrichment.
+          maxLength: 1024
+          examples:
+          - The spending channel should have been physical.
+        incorrectCounterparty:
+          type: boolean
+          description: Bool indicating if the enrichment has a wrong Counterparty.
+          examples:
+          - false
+        incorrectCounterpartyDescription:
+          type: string
+          description: Description of incorrect counterparty details in enrichment.
+          maxLength: 1024
+          examples:
+          - The counterparty is incorrect.
+  responses:
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

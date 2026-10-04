@@ -737,43 +737,22 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    BadRequest:
-      description: Invalid input
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              invalidField:
-                type: array
-                items:
-                  type: string
-                  examples:
-                  - This field is required.
-    InternalServerError:
-      description: Unexpected Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Internal server error.
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              details:
-                type: string
-                examples:
-                - Incorrect authentication credentials.
   schemas:
+    ActionTriggerPatchResponse:
+      type: object
+      description: Response for the remove PATCH operation.
+      properties:
+        status:
+          type: string
+          enum:
+          - succeeded
+          examples:
+          - succeeded
+        version:
+          type: integer
+          description: The version number of this operation.
+          examples:
+          - 5
     CategoryActionTriggerStatusResponse:
       type: object
       description: Response containing the status of a category action trigger registration.
@@ -825,76 +804,6 @@ components:
           description: The total number of active category triggers registered for this scope. Present on GET responses; omitted on PUT and PATCH responses.
           examples:
           - 10
-    ActionTriggerPatchResponse:
-      type: object
-      description: Response for the remove PATCH operation.
-      properties:
-        status:
-          type: string
-          enum:
-          - succeeded
-          examples:
-          - succeeded
-        version:
-          type: integer
-          description: The version number of this operation.
-          examples:
-          - 5
-    CategoryTriggerItem:
-      type: object
-      description: A category trigger to register for action matching.
-      required:
-      - id
-      - categoryId
-      - action
-      properties:
-        id:
-          type: string
-          description: Your identifier for this trigger, unique within the scope you are registering against. This ID will be returned in the `actions` field of enrichment responses when this trigger matches a transaction.
-          maxLength: 512
-          examples:
-          - travel-reward-1
-        categoryId:
-          type: string
-          description: The Spade category ID to match against. Category IDs use the format `xxx-xxx-xxx-xxx` where each `x` is a digit — use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs.
-          maxLength: 15
-          pattern: ^\d{3}-\d{3}-\d{3}-\d{3}$
-          examples:
-          - 020-001-000-000
-        action:
-          type: object
-          description: 'A custom JSON object that will be returned in the enrichment response when this trigger matches. Use this to store any data relevant to your use case (e.g., reward amounts, offer IDs, campaign metadata).
-
-
-            The optional `type` field has reserved values with special behavior:
-
-            - `BLOCK`: Adds `authRecommendation: "BLOCK"` to the action in the enrichment response. Use this to flag transactions that should be declined.
-
-            - `ALLOW_ONLY`: Adds `authRecommendation: "ALLOW"` when the transaction matches a registered category. If the transaction does **not** match any `ALLOW_ONLY` trigger, the action is returned with `authRecommendation: "BLOCK"` (inverse semantics). Use this to create allowlists where only registered categories are permitted.
-
-            - `REWARD`: No special behavior. Passed through as-is.
-
-            - Any other value: Treated as a custom type and passed through as-is.
-
-            '
-          properties:
-            type:
-              type: string
-              description: 'Optional action type. Reserved values `BLOCK` and `ALLOW_ONLY` have special authorization semantics (see above). All other values are passed through without modification.
-
-                '
-              examples:
-              - REWARD
-              - BLOCK
-              - ALLOW_ONLY
-          additionalProperties: true
-          examples:
-          - type: REWARD
-            rewardPercent: 3
-            offerId: travel-3x-promo
-          - type: BLOCK
-            reason: Gambling not permitted
-          - type: ALLOW_ONLY
     CategoryActionTriggerPatchRequest:
       type: object
       description: 'Request body for incremental category action trigger operations.
@@ -973,6 +882,97 @@ components:
           maxItems: 300
           items:
             $ref: '#/components/schemas/CategoryTriggerItem'
+    CategoryTriggerItem:
+      type: object
+      description: A category trigger to register for action matching.
+      required:
+      - id
+      - categoryId
+      - action
+      properties:
+        id:
+          type: string
+          description: Your identifier for this trigger, unique within the scope you are registering against. This ID will be returned in the `actions` field of enrichment responses when this trigger matches a transaction.
+          maxLength: 512
+          examples:
+          - travel-reward-1
+        categoryId:
+          type: string
+          description: The Spade category ID to match against. Category IDs use the format `xxx-xxx-xxx-xxx` where each `x` is a digit — use [`GET /categories`](https://docs.spade.com/api-reference/category-personalization/get-all-default-and-custom-integration-level-categories) to discover valid IDs.
+          maxLength: 15
+          pattern: ^\d{3}-\d{3}-\d{3}-\d{3}$
+          examples:
+          - 020-001-000-000
+        action:
+          type: object
+          description: 'A custom JSON object that will be returned in the enrichment response when this trigger matches. Use this to store any data relevant to your use case (e.g., reward amounts, offer IDs, campaign metadata).
+
+
+            The optional `type` field has reserved values with special behavior:
+
+            - `BLOCK`: Adds `authRecommendation: "BLOCK"` to the action in the enrichment response. Use this to flag transactions that should be declined.
+
+            - `ALLOW_ONLY`: Adds `authRecommendation: "ALLOW"` when the transaction matches a registered category. If the transaction does **not** match any `ALLOW_ONLY` trigger, the action is returned with `authRecommendation: "BLOCK"` (inverse semantics). Use this to create allowlists where only registered categories are permitted.
+
+            - `REWARD`: No special behavior. Passed through as-is.
+
+            - Any other value: Treated as a custom type and passed through as-is.
+
+            '
+          properties:
+            type:
+              type: string
+              description: 'Optional action type. Reserved values `BLOCK` and `ALLOW_ONLY` have special authorization semantics (see above). All other values are passed through without modification.
+
+                '
+              examples:
+              - REWARD
+              - BLOCK
+              - ALLOW_ONLY
+          additionalProperties: true
+          examples:
+          - type: REWARD
+            rewardPercent: 3
+            offerId: travel-3x-promo
+          - type: BLOCK
+            reason: Gambling not permitted
+          - type: ALLOW_ONLY
+  responses:
+    InternalServerError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Internal server error.
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              invalidField:
+                type: array
+                items:
+                  type: string
+                  examples:
+                  - This field is required.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: string
+                examples:
+                - Incorrect authentication credentials.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
