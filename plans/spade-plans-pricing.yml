@@ -69,3 +69,27 @@ how_to_buy:
     production API keys are issued by a Spade representative; the batch rate-limit ceiling is also
     directed to sales@spade.com. No console, dashboard or signup host resolves
     (app.spade.com and dashboard.spade.com do not resolve at all).
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models: []
+  units: []
+  plans:
+  - name: Essentials
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Advanced
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
