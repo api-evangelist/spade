@@ -158,6 +158,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/spade/overview
 - type: Website
   url: https://www.spade.com/
 - type: Overlay
