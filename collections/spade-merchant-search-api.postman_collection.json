@@ -1,305 +1,598 @@
 {
+  "info": {
+    "_postman_id": "ef247512-bbc5-471b-9f98-bfec87873214",
+    "name": "Spade Merchant Search API",
+    "description": "Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to .",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-21T20:56:27.000Z",
+    "updatedAt": "2026-10-21T20:56:27.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-ef247512-bbc5-471b-9f98-bfec87873214"
+  },
   "item": [
     {
-      "id": "1d76cf7c-8ab5-4d95-a4d4-86f67e3e4a7a",
-      "name": "Merchant Search",
-      "description": {
-        "content": "Search for Spade merchants",
-        "type": "text/plain"
-      },
+      "name": "merchants",
       "item": [
         {
-          "id": "8fdd3a8d-e695-4c32-9714-550dac055add",
-          "name": "Search for merchants",
+          "name": "Get detailed merchant information (beta)",
+          "id": "b9f050a5-b52d-4631-9f7b-f50fac2d2fb6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
           "request": {
-            "name": "Search for merchants",
-            "description": {
-              "content": "<Info>This endpoint is in beta. To request access, contact [sales@spade.com](mailto:sales@spade.com).</Info>\n\nSearch for merchants in Spade's merchant database by name.\n\nDesigned for powering autocomplete experiences, this endpoint returns up to five matching merchants with their name, logo, and website.\n\nTo learn more, read the [Merchant Search Guide](https://docs.spade.com/reference/merchant-search-guide).",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "corporations"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": false,
-                  "key": "name",
-                  "value": "<string>",
-                  "description": "(Required) The name of the merchant you want to find"
-                }
-              ],
-              "variable": []
-            },
+            "method": "GET",
             "header": [
               {
                 "key": "Accept",
                 "value": "application/json"
               }
             ],
-            "method": "GET",
-            "auth": null
+            "url": {
+              "raw": "{{baseUrl}}/merchants?name=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "merchants"
+              ],
+              "query": [
+                {
+                  "description": "(Required) The name of the merchant you want to find",
+                  "key": "name",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "Search for merchants in Spade's merchant database.\n\nThese merchants show up as counterparties and/or third parties in enrichment responses. Whether a merchant shows up as a counterparty or a third party within a given enrichment is based on the role it is playing in the transaction.\n\nNote that merchant `ids` are relatively stable; however, they may change over time due to real-world changes (e.g. mergers and acquisitions) as well as general improvements to our merchant database which can cause a small percentage of these `ids` to shift over time.\n\nThis endpoint currently supports only a subset of Spade's merchants (mostly larger, frequently transacted merchants), with more merchants being added over time.\n\nTo learn more about merchant search, please read the Merchant Search Guide."
           },
           "response": [
             {
-              "id": "530f5195-5694-465f-9950-6bd46eb5e955",
+              "id": "cf4e699c-4aba-47cf-837c-a980e62f97b6",
               "name": "Successful operation",
               "originalRequest": {
-                "url": {
-                  "path": [
-                    "corporations"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": []
-                },
+                "method": "GET",
                 "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
                   }
                 ],
-                "method": "GET",
-                "body": {}
+                "url": {
+                  "raw": "{{baseUrl}}/merchants?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "merchants"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
               },
               "status": "OK",
               "code": 200,
+              "_postman_previewlanguage": "json",
               "header": [
                 {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"corporations\": [\n    {\n      \"name\": \"Starbucks\",\n      \"logo\": \"https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png\",\n      \"website\": \"starbucks.com\"\n    },\n    {\n      \"name\": \"Starbucks\",\n      \"logo\": \"https://static.v2.spadeapi.com/logos/49fd51a15a193e5d8d28eb056ecf8939/light.png\",\n      \"website\": \"starbucks.com\"\n    }\n  ]\n}",
               "cookie": [],
-              "_postman_previewlanguage": "json"
+              "responseTime": null,
+              "body": "{\n  \"counterparties\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"similarity\": \"<number>\",\n      \"logo\": \"<string,null>\",\n      \"website\": \"<string,null>\",\n      \"affiliates\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"logo\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"logo\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        }\n      ],\n      \"alternates\": [\n        {\n          \"id\": \"<string>\",\n          \"similarity\": \"<number>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"similarity\": \"<number>\"\n        }\n      ],\n      \"expectedMerchantCategoryCodes\": [\n        {\n          \"code\": \"<string>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"code\": \"<string>\",\n          \"description\": \"<string>\"\n        }\n      ],\n      \"expectedSpadeCategories\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\",\n          \"fullCategoryHierarchy\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ]\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\",\n          \"fullCategoryHierarchy\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"similarity\": \"<number>\",\n      \"logo\": \"<string,null>\",\n      \"website\": \"<string,null>\",\n      \"affiliates\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"logo\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"logo\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        }\n      ],\n      \"alternates\": [\n        {\n          \"id\": \"<string>\",\n          \"similarity\": \"<number>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"similarity\": \"<number>\"\n        }\n      ],\n      \"expectedMerchantCategoryCodes\": [\n        {\n          \"code\": \"<string>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"code\": \"<string>\",\n          \"description\": \"<string>\"\n        }\n      ],\n      \"expectedSpadeCategories\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\",\n          \"fullCategoryHierarchy\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ]\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\",\n          \"fullCategoryHierarchy\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ]\n        }\n      ]\n    }\n  ],\n  \"thirdParties\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"type\": \"platform\",\n      \"similarity\": \"<number>\",\n      \"logo\": \"<string,null>\",\n      \"website\": \"<string,null>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"type\": \"payment_processor\",\n      \"similarity\": \"<number>\",\n      \"logo\": \"<string,null>\",\n      \"website\": \"<string,null>\"\n    }\n  ]\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-cf4e699c-4aba-47cf-837c-a980e62f97b6"
             },
             {
-              "id": "5a414d14-8c9a-405f-99f8-27e0ac50a832",
+              "id": "00a2364b-998b-42eb-8484-af691ae177e3",
               "name": "Invalid input",
               "originalRequest": {
-                "url": {
-                  "path": [
-                    "corporations"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": []
-                },
+                "method": "GET",
                 "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
                   }
                 ],
-                "method": "GET",
-                "body": {}
+                "url": {
+                  "raw": "{{baseUrl}}/merchants?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "merchants"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
               },
               "status": "Bad Request",
               "code": 400,
+              "_postman_previewlanguage": "json",
               "header": [
                 {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
               "cookie": [],
-              "_postman_previewlanguage": "json"
+              "responseTime": null,
+              "body": "{\n  \"invalidField\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-00a2364b-998b-42eb-8484-af691ae177e3"
             },
             {
-              "id": "51e3e773-064b-4bd8-b72f-6b1034807064",
+              "id": "60c421db-a210-4143-80bb-b4dc265875e8",
               "name": "Unauthorized",
               "originalRequest": {
-                "url": {
-                  "path": [
-                    "corporations"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": []
-                },
+                "method": "GET",
                 "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
                   }
                 ],
-                "method": "GET",
-                "body": {}
+                "url": {
+                  "raw": "{{baseUrl}}/merchants?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "merchants"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
               },
               "status": "Forbidden",
               "code": 403,
+              "_postman_previewlanguage": "json",
               "header": [
                 {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
               "cookie": [],
-              "_postman_previewlanguage": "json"
+              "responseTime": null,
+              "body": "{\n  \"details\": \"<string>\"\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-60c421db-a210-4143-80bb-b4dc265875e8"
             },
             {
-              "id": "bff7e5de-8d77-4ce5-be90-a6522d422e47",
+              "id": "4574461f-d45a-4bdf-8315-c6b942de5a27",
               "name": "Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.",
               "originalRequest": {
-                "url": {
-                  "path": [
-                    "corporations"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": []
-                },
+                "method": "GET",
                 "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
                   }
                 ],
-                "method": "GET",
-                "body": {}
+                "url": {
+                  "raw": "{{baseUrl}}/merchants?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "merchants"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
               },
               "status": "Too Many Requests",
               "code": 429,
+              "_postman_previewlanguage": "json",
               "header": [
                 {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"details\": \"Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.\"\n}",
               "cookie": [],
-              "_postman_previewlanguage": "json"
+              "responseTime": null,
+              "body": "{\n  \"details\": \"<string>\"\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-4574461f-d45a-4bdf-8315-c6b942de5a27"
             },
             {
-              "id": "343dee08-9579-47ad-b9bc-a9ff6b177246",
+              "id": "b5327b6f-e541-4bb8-953e-e1560439f045",
               "name": "Unexpected Error",
               "originalRequest": {
-                "url": {
-                  "path": [
-                    "corporations"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "<string>"
-                    }
-                  ],
-                  "variable": []
-                },
+                "method": "GET",
                 "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
                   }
                 ],
-                "method": "GET",
-                "body": {}
+                "url": {
+                  "raw": "{{baseUrl}}/merchants?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "merchants"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
+              "_postman_previewlanguage": "json",
               "header": [
                 {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"details\": \"Internal server error.\"\n}",
               "cookie": [],
-              "_postman_previewlanguage": "json"
+              "responseTime": null,
+              "body": "{\n  \"details\": \"<string>\"\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-b5327b6f-e541-4bb8-953e-e1560439f045"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "createdAt": "2026-10-21T20:56:27.000Z",
+          "updatedAt": "2026-10-21T20:56:27.000Z",
+          "uid": "35240-b9f050a5-b52d-4631-9f7b-f50fac2d2fb6"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
+      "id": "9378df59-c9f8-48c4-820c-6e02732c5023",
+      "createdAt": "2026-10-21T20:56:27.000Z",
+      "updatedAt": "2026-10-21T20:56:27.000Z",
+      "uid": "35240-9378df59-c9f8-48c4-820c-6e02732c5023"
+    },
     {
-      "type": "string",
-      "value": "https://east.sandbox.spade.com",
-      "key": "baseUrl"
+      "name": "corporations",
+      "item": [
+        {
+          "name": "Search for merchants",
+          "id": "8d5a7e10-3f6e-41cf-9745-cb5d71f76940",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/corporations?name=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "corporations"
+              ],
+              "query": [
+                {
+                  "description": "(Required) The name of the merchant you want to find",
+                  "key": "name",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "This endpoint is in beta. To request access, contact sales@spade.com.\n\nSearch for merchants in Spade's merchant database by name.\n\nDesigned for powering autocomplete experiences, this endpoint returns up to five matching merchants with their name, logo, and website.\n\nTo learn more, read the Merchant Search Guide."
+          },
+          "response": [
+            {
+              "id": "a199e2ff-740d-462c-9c02-b7fb44b48513",
+              "name": "Successful operation",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/corporations?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "corporations"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"corporations\": [\n    {\n      \"name\": \"<string>\",\n      \"logo\": \"<string,null-uri>\",\n      \"website\": \"<string,null>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"logo\": \"<string,null-uri>\",\n      \"website\": \"<string,null>\"\n    }\n  ]\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-a199e2ff-740d-462c-9c02-b7fb44b48513"
+            },
+            {
+              "id": "221060ea-f89a-4cfe-9438-e7b1a1f3a2fc",
+              "name": "Invalid input",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/corporations?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "corporations"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"invalidField\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-221060ea-f89a-4cfe-9438-e7b1a1f3a2fc"
+            },
+            {
+              "id": "59ed4fe2-7d2a-4fb3-aa4a-c41a5c6d3b67",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/corporations?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "corporations"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"details\": \"<string>\"\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-59ed4fe2-7d2a-4fb3-aa4a-c41a5c6d3b67"
+            },
+            {
+              "id": "e5e0d029-9ce9-4c1d-a5cb-82b3c2284102",
+              "name": "Too many requests. Currently, requests are limited to 1000 every 5 minutes per IP address.",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/corporations?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "corporations"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"details\": \"<string>\"\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-e5e0d029-9ce9-4c1d-a5cb-82b3c2284102"
+            },
+            {
+              "id": "dd6e1db7-b115-4e1c-925c-39e5d7bc9ca2",
+              "name": "Unexpected Error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: apikey",
+                    "key": "X-Api-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/corporations?name=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "corporations"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) The name of the merchant you want to find",
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"details\": \"<string>\"\n}",
+              "createdAt": "2026-10-21T20:56:28.000Z",
+              "updatedAt": "2026-10-21T20:56:28.000Z",
+              "uid": "35240-dd6e1db7-b115-4e1c-925c-39e5d7bc9ca2"
+            }
+          ],
+          "createdAt": "2026-10-21T20:56:27.000Z",
+          "updatedAt": "2026-10-21T20:56:27.000Z",
+          "uid": "35240-8d5a7e10-3f6e-41cf-9745-cb5d71f76940"
+        }
+      ],
+      "id": "b46286b3-968e-41a4-b1f6-6aed90f4046a",
+      "createdAt": "2026-10-21T20:56:27.000Z",
+      "updatedAt": "2026-10-21T20:56:27.000Z",
+      "uid": "35240-b46286b3-968e-41a4-b1f6-6aed90f4046a"
     }
   ],
   "auth": {
@@ -307,25 +600,25 @@
     "apikey": [
       {
         "key": "key",
-        "value": "X-Api-Key"
+        "value": "X-Api-Key",
+        "type": "string"
       },
       {
         "key": "value",
-        "value": "{{apiKey}}"
+        "value": "{{apiKey}}",
+        "type": "string"
       },
       {
         "key": "in",
-        "value": "header"
+        "value": "header",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "a9083061-b9be-4b98-b0c6-db85c671d614",
-    "name": "Spade Card Enrichment Merchant Search API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://east.sandbox.spade.com"
     }
-  }
+  ]
 }

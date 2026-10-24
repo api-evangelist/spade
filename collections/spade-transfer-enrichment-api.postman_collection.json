@@ -1,1330 +1,1387 @@
 {
+  "info": {
+    "_postman_id": "b8383f49-fa58-499f-a61a-678655fd6f2c",
+    "name": "Spade Transfer Enrichment API",
+    "description": "Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to .",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-21T20:56:33.000Z",
+    "updatedAt": "2026-10-21T20:56:34.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-b8383f49-fa58-499f-a61a-678655fd6f2c"
+  },
   "item": [
     {
-      "id": "b38dea5f-ece2-4b3b-b97f-4fe0a6773a23",
-      "name": "Transfer Enrichment",
-      "description": {
-        "content": "Enrich transfers",
-        "type": "text/plain"
-      },
+      "name": "transactions",
       "item": [
         {
-          "id": "3c5141b4-574e-45e9-8dfc-672b5c4caf7e",
-          "name": "Enrich a batch of transfers",
-          "request": {
-            "name": "Enrich a batch of transfers",
-            "description": {
-              "content": "Submit a batch of transfers for enrichment.\nThis endpoint will return a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results`\nendpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n\nNote that we impose a rate limit on the number of batch requests made in a rolling 12 hour window. Please reach out to\nsales@spade.com with any questions.\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "batches",
-                "transactions",
-                "transfers",
-                "enrich"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": false,
-                  "key": "synchronous",
-                  "value": "false",
-                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n"
-                }
-              ],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": null,
-            "body": {
-              "mode": "raw",
-              "raw": "<object>",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
+          "name": "transfers",
+          "item": [
             {
-              "id": "5c786b14-596f-46f0-8bb4-3ceadac85774",
-              "name": "Successful operation",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
+              "name": "enrich",
+              "item": [
+                {
+                  "name": "Enrich a transfer transaction",
+                  "id": "ee46b517-8b78-4506-810b-29a3e5879c20",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"transactionType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"accountId\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"transactionTypeDescription\": \"<string>\",\n  \"alternateDescription\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"ullamco__34\": \"<string>\",\n    \"laborecb8\": \"<string>\",\n    \"dolorc1\": \"<string>\",\n    \"ex_28\": \"<string>\",\n    \"inc\": \"<string>\",\n    \"magna8\": \"<string>\",\n    \"pariatura\": \"<string>\",\n    \"Excepteure1\": \"<string>\",\n    \"suntf52\": \"<string>\",\n    \"laboris_0\": \"<string>\",\n    \"non__\": \"<string>\",\n    \"minim_17\": \"<string>\",\n    \"et_5\": \"<string>\",\n    \"in_5c7\": \"<string>\",\n    \"Duis8\": \"<string>\",\n    \"ex_c38\": \"<string>\",\n    \"tempor8e5\": \"<string>\",\n    \"magna_f17\": \"<string>\",\n    \"proident77\": \"<string>\",\n    \"voluptate_54\": \"<string>\"\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/transactions/transfers/enrich",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "transfers",
+                        "enrich"
+                      ]
+                    },
+                    "description": "Enrich a transfer transaction such as an ACH withdrawal, ACH deposit, or wire transfer.\n\nWhen using this endpoint, take care to ensure you are using unaltered and correct data in each field.\n\nNote that transfers enrichment is currently private, please reach out to sales@spade.com to request access."
+                  },
+                  "response": [
                     {
-                      "key": "synchronous",
-                      "value": "false"
-                    }
-                  ],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
+                      "id": "af94be83-327b-463c-9e5a-12c9a6755bc3",
+                      "name": "Successful operation",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"transactionType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"accountId\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"transactionTypeDescription\": \"<string>\",\n  \"alternateDescription\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"ullamco__34\": \"<string>\",\n    \"laborecb8\": \"<string>\",\n    \"dolorc1\": \"<string>\",\n    \"ex_28\": \"<string>\",\n    \"inc\": \"<string>\",\n    \"magna8\": \"<string>\",\n    \"pariatura\": \"<string>\",\n    \"Excepteure1\": \"<string>\",\n    \"suntf52\": \"<string>\",\n    \"laboris_0\": \"<string>\",\n    \"non__\": \"<string>\",\n    \"minim_17\": \"<string>\",\n    \"et_5\": \"<string>\",\n    \"in_5c7\": \"<string>\",\n    \"Duis8\": \"<string>\",\n    \"ex_c38\": \"<string>\",\n    \"tempor8e5\": \"<string>\",\n    \"magna_f17\": \"<string>\",\n    \"proident77\": \"<string>\",\n    \"voluptate_54\": \"<string>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/transactions/transfers/enrich",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "transactions",
+                            "transfers",
+                            "enrich"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"transactionInfo\": {\n    \"type\": \"reimbursement\",\n    \"subType\": \"withdrawal\",\n    \"spendingInfo\": {\n      \"channel\": {\n        \"value\": \"digital\"\n      }\n    },\n    \"thirdParties\": [\n      {\n        \"id\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"type\": \"platform\",\n        \"logo\": \"<string,null>\",\n        \"website\": \"<string,null>\"\n      },\n      {\n        \"id\": \"<uuid>\",\n        \"name\": \"<string>\",\n        \"type\": \"payment_processor\",\n        \"logo\": \"<string,null>\",\n        \"website\": \"<string,null>\"\n      }\n    ],\n    \"recurrenceInfo\": {\n      \"intervalType\": \"quarterly\",\n      \"intervalDays\": \"<integer,null>\",\n      \"nextPaymentExpected\": \"<string,null-date>\",\n      \"recentRecurrences\": \"<array,null>\"\n    },\n    \"display\": null,\n    \"transferInfo\": {\n      \"direction\": \"outgoing\",\n      \"transferMethod\": \"unknown\",\n      \"transferType\": \"internal\",\n      \"isAdjustmentOrRefund\": \"<boolean>\"\n    },\n    \"atmInfo\": null,\n    \"isAccountVerification\": \"<boolean,null>\",\n    \"isPeerToPeer\": \"<boolean,null>\",\n    \"isDigitalWallet\": \"<boolean,null>\",\n    \"transactionId\": \"<string>\",\n    \"riskInsights\": {\n      \"irregularWebPresenceDetected\": \"<boolean,null>\",\n      \"negativeOnlineSentiment\": \"<boolean,null>\",\n      \"highRiskEntity\": \"<boolean,null>\",\n      \"riskyIndustry\": \"<boolean,null>\",\n      \"cardAcceptanceHistory\": \"very_limited\"\n    }\n  },\n  \"counterparty\": [\n    {\n      \"location\": [\n        {\n          \"id\": \"<string,null-uuid>\",\n          \"address\": \"<string,null>\",\n          \"addressLine1\": \"<string,null>\",\n          \"addressLine2\": \"<string,null>\",\n          \"city\": \"<string,null>\",\n          \"region\": \"<string,null>\",\n          \"country\": \"<string,null>\",\n          \"postalCode\": \"<string,null>\",\n          \"latitude\": \"<number,null>\",\n          \"longitude\": \"<number,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"matchScore\": \"<number,null>\"\n        },\n        {\n          \"id\": \"<string,null-uuid>\",\n          \"address\": \"<string,null>\",\n          \"addressLine1\": \"<string,null>\",\n          \"addressLine2\": \"<string,null>\",\n          \"city\": \"<string,null>\",\n          \"region\": \"<string,null>\",\n          \"country\": \"<string,null>\",\n          \"postalCode\": \"<string,null>\",\n          \"latitude\": \"<number,null>\",\n          \"longitude\": \"<number,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"matchScore\": \"<number,null>\"\n        }\n      ],\n      \"possibleCounterpartyAlternate\": null,\n      \"id\": \"<string,null-uuid>\",\n      \"name\": \"<string,null>\",\n      \"legalName\": \"<string,null>\",\n      \"industry\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\"\n        }\n      ],\n      \"matchScore\": \"<number,null>\",\n      \"logo\": \"<string,null>\",\n      \"phoneNumber\": \"<string,null>\",\n      \"website\": \"<string,null>\"\n    },\n    {\n      \"location\": [\n        {\n          \"id\": \"<string,null-uuid>\",\n          \"address\": \"<string,null>\",\n          \"addressLine1\": \"<string,null>\",\n          \"addressLine2\": \"<string,null>\",\n          \"city\": \"<string,null>\",\n          \"region\": \"<string,null>\",\n          \"country\": \"<string,null>\",\n          \"postalCode\": \"<string,null>\",\n          \"latitude\": \"<number,null>\",\n          \"longitude\": \"<number,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"matchScore\": \"<number,null>\"\n        },\n        {\n          \"id\": \"<string,null-uuid>\",\n          \"address\": \"<string,null>\",\n          \"addressLine1\": \"<string,null>\",\n          \"addressLine2\": \"<string,null>\",\n          \"city\": \"<string,null>\",\n          \"region\": \"<string,null>\",\n          \"country\": \"<string,null>\",\n          \"postalCode\": \"<string,null>\",\n          \"latitude\": \"<number,null>\",\n          \"longitude\": \"<number,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"matchScore\": \"<number,null>\"\n        }\n      ],\n      \"possibleCounterpartyAlternate\": {\n        \"id\": \"<uuid>\",\n        \"similarity\": \"<number>\"\n      },\n      \"id\": \"<string,null-uuid>\",\n      \"name\": \"<string,null>\",\n      \"legalName\": \"<string,null>\",\n      \"industry\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"icon\": \"<string,null>\"\n        }\n      ],\n      \"matchScore\": \"<number,null>\",\n      \"logo\": \"<string,null>\",\n      \"phoneNumber\": \"<string,null>\",\n      \"website\": \"<string,null>\"\n    }\n  ],\n  \"enrichmentId\": \"<uuid>\",\n  \"mobileAppInfo\": {\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"url\": \"<string,null>\",\n    \"logo\": \"<string,null>\",\n    \"developerName\": \"<string>\",\n    \"developerId\": \"<string>\",\n    \"category\": \"Education and Parenting\",\n    \"hasGamblingOrRewards\": \"<boolean>\",\n    \"hasSimulatedGambling\": \"<boolean>\",\n    \"ageRating\": \"Teen\"\n  },\n  \"customAttributes\": {\n    \"pariatur1\": \"<string>\",\n    \"laborum_a\": \"<string>\",\n    \"aliquip27\": \"<string>\"\n  },\n  \"actions\": \"<array,null>\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-af94be83-327b-463c-9e5a-12c9a6755bc3"
                     },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "<object>",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"batchId\": \"f5053bc9-2a12-6224-fab9-097e48de09bd\",\n  \"status\": \"running\",\n  \"batchSize\": 1,\n  \"submittedAt\": \"2024-11-21T20:07:20.213660Z\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "fd86d74c-024e-4729-84ac-7f6c43ea7cdb",
-              "name": "Invalid input",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
                     {
-                      "key": "synchronous",
-                      "value": "false"
-                    }
-                  ],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
+                      "id": "a6ac58e0-639e-4bea-90f3-706c49d8ebd6",
+                      "name": "Invalid input",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"transactionType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"accountId\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"transactionTypeDescription\": \"<string>\",\n  \"alternateDescription\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"ullamco__34\": \"<string>\",\n    \"laborecb8\": \"<string>\",\n    \"dolorc1\": \"<string>\",\n    \"ex_28\": \"<string>\",\n    \"inc\": \"<string>\",\n    \"magna8\": \"<string>\",\n    \"pariatura\": \"<string>\",\n    \"Excepteure1\": \"<string>\",\n    \"suntf52\": \"<string>\",\n    \"laboris_0\": \"<string>\",\n    \"non__\": \"<string>\",\n    \"minim_17\": \"<string>\",\n    \"et_5\": \"<string>\",\n    \"in_5c7\": \"<string>\",\n    \"Duis8\": \"<string>\",\n    \"ex_c38\": \"<string>\",\n    \"tempor8e5\": \"<string>\",\n    \"magna_f17\": \"<string>\",\n    \"proident77\": \"<string>\",\n    \"voluptate_54\": \"<string>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/transactions/transfers/enrich",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "transactions",
+                            "transfers",
+                            "enrich"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"invalidField\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-a6ac58e0-639e-4bea-90f3-706c49d8ebd6"
                     },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "<object>",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "0a031689-f3ba-4cc0-a53e-8f67a008af7c",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
                     {
-                      "key": "synchronous",
-                      "value": "false"
-                    }
-                  ],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
+                      "id": "04d3484d-ce50-4837-bd14-04b12f47fc02",
+                      "name": "Unauthorized",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"transactionType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"accountId\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"transactionTypeDescription\": \"<string>\",\n  \"alternateDescription\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"ullamco__34\": \"<string>\",\n    \"laborecb8\": \"<string>\",\n    \"dolorc1\": \"<string>\",\n    \"ex_28\": \"<string>\",\n    \"inc\": \"<string>\",\n    \"magna8\": \"<string>\",\n    \"pariatura\": \"<string>\",\n    \"Excepteure1\": \"<string>\",\n    \"suntf52\": \"<string>\",\n    \"laboris_0\": \"<string>\",\n    \"non__\": \"<string>\",\n    \"minim_17\": \"<string>\",\n    \"et_5\": \"<string>\",\n    \"in_5c7\": \"<string>\",\n    \"Duis8\": \"<string>\",\n    \"ex_c38\": \"<string>\",\n    \"tempor8e5\": \"<string>\",\n    \"magna_f17\": \"<string>\",\n    \"proident77\": \"<string>\",\n    \"voluptate_54\": \"<string>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/transactions/transfers/enrich",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "transactions",
+                            "transfers",
+                            "enrich"
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"details\": \"<string>\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-04d3484d-ce50-4837-bd14-04b12f47fc02"
                     },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "<object>",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "d85eb7fe-70ce-4f8d-b742-749a22cee9af",
-              "name": "Unexpected Error",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [
                     {
-                      "key": "synchronous",
-                      "value": "false"
+                      "id": "ed21caeb-9054-4048-88c2-b38fc9b0bb68",
+                      "name": "Unexpected Error",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"transactionType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"accountId\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"transactionTypeDescription\": \"<string>\",\n  \"alternateDescription\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"ullamco__34\": \"<string>\",\n    \"laborecb8\": \"<string>\",\n    \"dolorc1\": \"<string>\",\n    \"ex_28\": \"<string>\",\n    \"inc\": \"<string>\",\n    \"magna8\": \"<string>\",\n    \"pariatura\": \"<string>\",\n    \"Excepteure1\": \"<string>\",\n    \"suntf52\": \"<string>\",\n    \"laboris_0\": \"<string>\",\n    \"non__\": \"<string>\",\n    \"minim_17\": \"<string>\",\n    \"et_5\": \"<string>\",\n    \"in_5c7\": \"<string>\",\n    \"Duis8\": \"<string>\",\n    \"ex_c38\": \"<string>\",\n    \"tempor8e5\": \"<string>\",\n    \"magna_f17\": \"<string>\",\n    \"proident77\": \"<string>\",\n    \"voluptate_54\": \"<string>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/transactions/transfers/enrich",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "transactions",
+                            "transfers",
+                            "enrich"
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"details\": \"<string>\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-ed21caeb-9054-4048-88c2-b38fc9b0bb68"
                     }
                   ],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "<object>",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-ee46b517-8b78-4506-810b-29a3e5879c20"
                 }
               ],
-              "body": "{\n  \"details\": \"Internal server error.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "3051ded4-1fff-441e-b9c0-bc8a64ec94dd",
-          "name": "Get metadata for the batch transfer enrichment endpoint",
-          "request": {
-            "name": "Get metadata for the batch transfer enrichment endpoint",
-            "description": {
-              "content": "Returns metadata about this endpoint, including the current `synchronousMax` — the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically.\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "batches",
-                "transactions",
-                "transfers",
-                "enrich"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "OPTIONS",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "85350937-1adb-45c6-ad76-7bec28a2a5a9",
-              "name": "Successful operation",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "OPTIONS",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"name\": \"Post\",\n  \"description\": \"Enrich a list of universal transactions\",\n  \"renders\": [\n    \"application/json\"\n  ],\n  \"parses\": [\n    \"application/json\"\n  ],\n  \"synchronousMax\": 100\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "id": "c6a5c8ba-9cf4-457b-8519-9a8bec8c8ca2",
+              "createdAt": "2026-10-21T20:56:34.000Z",
+              "updatedAt": "2026-10-21T20:56:34.000Z",
+              "uid": "35240-c6a5c8ba-9cf4-457b-8519-9a8bec8c8ca2"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "a6d26772-78e9-49f5-8170-cc262038e711",
-          "name": "Enrich a transfer transaction",
-          "request": {
-            "name": "Enrich a transfer transaction",
-            "description": {
-              "content": "Enrich a transfer transaction such as an ACH withdrawal, ACH deposit, or wire transfer.\n\nWhen using this endpoint, take care to ensure you are using unaltered and correct data in each field.\n\nNote that transfers enrichment is currently private, please reach out to sales@spade.com to request access.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "transactions",
-                "transfers",
-                "enrich"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": null,
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"userId\": \"<string>\",\n  \"amount\": \"<number,string>\",\n  \"currencyCode\": \"<string>\",\n  \"occurredAt\": \"<dateTime>\",\n  \"transactionType\": \"<string>\",\n  \"description\": \"<string>\",\n  \"organizationId\": \"<string>\",\n  \"accountId\": \"<string>\",\n  \"transactionId\": \"<string>\",\n  \"transactionTypeDescription\": \"<string>\",\n  \"alternateDescription\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"billingProfile\": \"<string>\",\n  \"customAttributes\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\",\n    \"key_2\": \"<string>\",\n    \"key_3\": \"<string>\",\n    \"key_4\": \"<string>\",\n    \"key_5\": \"<string>\",\n    \"key_6\": \"<string>\",\n    \"key_7\": \"<string>\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
-            {
-              "id": "42ee4d65-c275-4b5e-95e2-12f8a2e4c8e9",
-              "name": "Successful operation",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"283.78\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"transactionType\": \"ACH_DEPOSIT\",\n  \"description\": \"AMAZON CORP SYF PAYMNT\",\n  \"organizationId\": \"organization_id_123\",\n  \"accountId\": \"account_id_123456789\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"transactionTypeDescription\": \"ACH Withdrawal\",\n  \"alternateDescription\": \"AMAZON CORP\",\n  \"memo\": \"100 PUBLIC SQUARE CLEVELAND OH\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "30988407-694a-417f-ab2b-d9e9accbce33",
-              "name": "Invalid input",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"283.78\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"transactionType\": \"ACH_DEPOSIT\",\n  \"description\": \"AMAZON CORP SYF PAYMNT\",\n  \"organizationId\": \"organization_id_123\",\n  \"accountId\": \"account_id_123456789\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"transactionTypeDescription\": \"ACH Withdrawal\",\n  \"alternateDescription\": \"AMAZON CORP\",\n  \"memo\": \"100 PUBLIC SQUARE CLEVELAND OH\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "0cc4a97f-2fcc-4a85-8c2a-4b057a4e06c2",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"283.78\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"transactionType\": \"ACH_DEPOSIT\",\n  \"description\": \"AMAZON CORP SYF PAYMNT\",\n  \"organizationId\": \"organization_id_123\",\n  \"accountId\": \"account_id_123456789\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"transactionTypeDescription\": \"ACH Withdrawal\",\n  \"alternateDescription\": \"AMAZON CORP\",\n  \"memo\": \"100 PUBLIC SQUARE CLEVELAND OH\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "0373b8a0-832b-4a68-a98d-f5cc789431ab",
-              "name": "Unexpected Error",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "transactions",
-                    "transfers",
-                    "enrich"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"userId\": \"user_id_123456789\",\n  \"amount\": \"283.78\",\n  \"currencyCode\": \"USD\",\n  \"occurredAt\": \"2022-06-15 18:27:51Z\",\n  \"transactionType\": \"ACH_DEPOSIT\",\n  \"description\": \"AMAZON CORP SYF PAYMNT\",\n  \"organizationId\": \"organization_id_123\",\n  \"accountId\": \"account_id_123456789\",\n  \"transactionId\": \"transaction_id_123456789\",\n  \"transactionTypeDescription\": \"ACH Withdrawal\",\n  \"alternateDescription\": \"AMAZON CORP\",\n  \"memo\": \"100 PUBLIC SQUARE CLEVELAND OH\",\n  \"direction\": \"CREDIT\",\n  \"billingProfile\": \"standard\",\n  \"customAttributes\": {\n    \"custom_attribute_1\": \"value_1\",\n    \"custom_attribute_2\": \"value_2\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Internal server error.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "9d2b63a8-93df-450c-b7e3-4711ff6aac90",
-          "name": "Get the results of a batch transfer enrichment job",
-          "request": {
-            "name": "Get the results of a batch transfer enrichment job",
-            "description": {
-              "content": "Get the results of a batch transfer enrichment job.\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "batches",
-                ":transferEnrichmentBatchId",
-                "results"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<uuid>",
-                  "key": "transferEnrichmentBatchId",
-                  "description": "(Required) ID of the batch transfer enrichment job"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "609171ae-36a7-4edc-aaa1-ce9c0c4a83ca",
-              "name": "Successful operation",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId",
-                    "results"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"results\": [\n    {\n      \"statusCode\": 200,\n      \"errors\": {\n        \"userId\": [\n          \"This field is required.\"\n        ]\n      }\n    },\n    {\n      \"statusCode\": 200,\n      \"errors\": {\n        \"userId\": [\n          \"This field is required.\"\n        ]\n      }\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "3996c4ff-5273-489d-89a6-bc5845473377",
-              "name": "Batch job is not yet complete. Results aren't currently available.",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId",
-                    "results"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Accepted",
-              "code": 202,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"batchId\": \"d8c4360d-e996-1ee2-f84f-62d6059499bf\",\n  \"status\": \"failed\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "480b8953-39a6-4a21-8019-488078e8d349",
-              "name": "Invalid input",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId",
-                    "results"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "617bcf74-9358-4c8a-b132-45fe097f109a",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId",
-                    "results"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "946c29b3-12bd-4245-acdb-2f22f0f7f4d3",
-              "name": "Batch job not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId",
-                    "results"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Batch job not found.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "8ad75a4e-3d6b-4c00-9cff-9d8e88045230",
-              "name": "Unexpected Error",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId",
-                    "results"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Internal server error.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "d15e8d5e-5654-436e-b0a3-6a73f4d50084",
-          "name": "Get the status of a batch transfer enrichment job",
-          "request": {
-            "name": "Get the status of a batch transfer enrichment job",
-            "description": {
-              "content": "Get the status of a batch transfer enrichment job.\n",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "batches",
-                ":transferEnrichmentBatchId"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<uuid>",
-                  "key": "transferEnrichmentBatchId",
-                  "description": "(Required) ID of the batch transfer enrichment job"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "d296cdf0-e82f-4ece-9822-760a2ef6be06",
-              "name": "Successful operation",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"batchId\": \"d8c4360d-e996-1ee2-f84f-62d6059499bf\",\n  \"status\": \"failed\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "9f8f152f-392f-4d01-aa63-5ef7f3ef22be",
-              "name": "Invalid input",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"invalidField\": [\n    \"This field is required.\",\n    \"This field is required.\"\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "a8272bc6-bdc2-487b-b67c-7244fc4137d4",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Forbidden",
-              "code": 403,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Incorrect authentication credentials.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "346976fa-176c-4ff4-81e8-827d373733bc",
-              "name": "Batch job not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Batch job not found.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "80e7c94b-c98f-436e-99c8-84f77f97e01f",
-              "name": "Unexpected Error",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "batches",
-                    ":transferEnrichmentBatchId"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<uuid>",
-                      "key": "transferEnrichmentBatchId",
-                      "description": "(Required) ID of the batch transfer enrichment job"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: apikey",
-                      "type": "text/plain"
-                    },
-                    "key": "X-Api-Key",
-                    "value": "<API Key>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Internal Server Error",
-              "code": 500,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"details\": \"Internal server error.\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "3ccf3a93-e5e9-4c90-8fac-1cc8db5ebdf4",
+          "createdAt": "2026-10-21T20:56:34.000Z",
+          "updatedAt": "2026-10-21T20:56:34.000Z",
+          "uid": "35240-3ccf3a93-e5e9-4c90-8fac-1cc8db5ebdf4"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
+      "id": "2b61c29f-b3de-4e6f-bae1-3984ad1d02f7",
+      "createdAt": "2026-10-21T20:56:34.000Z",
+      "updatedAt": "2026-10-21T20:56:34.000Z",
+      "uid": "35240-2b61c29f-b3de-4e6f-bae1-3984ad1d02f7"
+    },
     {
-      "type": "string",
-      "value": "https://east.sandbox.spade.com",
-      "key": "baseUrl"
+      "name": "batches",
+      "item": [
+        {
+          "name": "transactions",
+          "item": [
+            {
+              "name": "transfers",
+              "item": [
+                {
+                  "name": "enrich",
+                  "item": [
+                    {
+                      "name": "Get metadata for the batch transfer enrichment endpoint",
+                      "id": "e79ce7fe-1c04-4bc1-9e29-df15b6e671d8",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "OPTIONS",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/transactions/transfers/enrich",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            "transactions",
+                            "transfers",
+                            "enrich"
+                          ]
+                        },
+                        "description": "Returns metadata about this endpoint, including the current `synchronousMax` \u2014 the cap on items per request when `?synchronous=true`. Can be used to fetch the current cap dynamically."
+                      },
+                      "response": [
+                        {
+                          "id": "2000b7b1-d2a4-4e0a-a19e-cc5458bd0c10",
+                          "name": "Successful operation",
+                          "originalRequest": {
+                            "method": "OPTIONS",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: apikey",
+                                "key": "X-Api-Key",
+                                "value": "<API Key>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/batches/transactions/transfers/enrich",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "batches",
+                                "transactions",
+                                "transfers",
+                                "enrich"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"renders\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"parses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"synchronousMax\": \"<integer>\"\n}",
+                          "createdAt": "2026-10-21T20:56:34.000Z",
+                          "updatedAt": "2026-10-21T20:56:34.000Z",
+                          "uid": "35240-2000b7b1-d2a4-4e0a-a19e-cc5458bd0c10"
+                        }
+                      ],
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-e79ce7fe-1c04-4bc1-9e29-df15b6e671d8"
+                    },
+                    {
+                      "name": "Enrich a batch of transfers",
+                      "id": "32009cbb-a001-472d-9841-f7cfc27a69f1",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"ut_02\": \"<string>\",\n        \"cupidatat88d\": \"<string>\",\n        \"fugiatd4\": \"<string>\",\n        \"pariatur_8ff\": \"<string>\",\n        \"aliqua_9\": \"<string>\",\n        \"commodo2\": \"<string>\",\n        \"exercitation3\": \"<string>\",\n        \"anim8\": \"<string>\",\n        \"incididunta58\": \"<string>\",\n        \"do3\": \"<string>\",\n        \"voluptate__3e\": \"<string>\",\n        \"et_6\": \"<string>\"\n      }\n    },\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"site\": \"<string>\",\n        \"laborum_6_\": \"<string>\",\n        \"et5\": \"<string>\",\n        \"laborum_b6d\": \"<string>\",\n        \"commodoc7\": \"<string>\",\n        \"ullamco_5\": \"<string>\",\n        \"eiusmod68\": \"<string>\",\n        \"consectetur_4b\": \"<string>\",\n        \"pariatur_af\": \"<string>\",\n        \"anim45c\": \"<string>\",\n        \"deserunt_bc2\": \"<string>\",\n        \"sinte64\": \"<string>\",\n        \"dolor06\": \"<string>\",\n        \"sit_8\": \"<string>\",\n        \"etd1\": \"<string>\",\n        \"sit2\": \"<string>\",\n        \"labore0e\": \"<string>\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/transactions/transfers/enrich?synchronous=false",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            "transactions",
+                            "transfers",
+                            "enrich"
+                          ],
+                          "query": [
+                            {
+                              "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n",
+                              "key": "synchronous",
+                              "value": "false"
+                            }
+                          ]
+                        },
+                        "description": "Submit a batch of transfers for enrichment.\nThis endpoint will return a `batchId` which can be used in the `/batches/{batchId}` and `/batches/{batchId}/results`\nendpoints to check the status of the batch job and retrieve the results.\n\nYou can pass `?synchronous=true` to enrich smaller sets of transactions synchronously. See the Microbatch enrichment guide for details.\n\nNote that we impose a rate limit on the number of batch requests made in a rolling 12 hour window. Please reach out to\nsales@spade.com with any questions."
+                      },
+                      "response": [
+                        {
+                          "id": "b06ecdbc-a63a-4345-8236-f07e3056499b",
+                          "name": "Successful operation",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: apikey",
+                                "key": "X-Api-Key",
+                                "value": "<API Key>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"ut_02\": \"<string>\",\n        \"cupidatat88d\": \"<string>\",\n        \"fugiatd4\": \"<string>\",\n        \"pariatur_8ff\": \"<string>\",\n        \"aliqua_9\": \"<string>\",\n        \"commodo2\": \"<string>\",\n        \"exercitation3\": \"<string>\",\n        \"anim8\": \"<string>\",\n        \"incididunta58\": \"<string>\",\n        \"do3\": \"<string>\",\n        \"voluptate__3e\": \"<string>\",\n        \"et_6\": \"<string>\"\n      }\n    },\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"site\": \"<string>\",\n        \"laborum_6_\": \"<string>\",\n        \"et5\": \"<string>\",\n        \"laborum_b6d\": \"<string>\",\n        \"commodoc7\": \"<string>\",\n        \"ullamco_5\": \"<string>\",\n        \"eiusmod68\": \"<string>\",\n        \"consectetur_4b\": \"<string>\",\n        \"pariatur_af\": \"<string>\",\n        \"anim45c\": \"<string>\",\n        \"deserunt_bc2\": \"<string>\",\n        \"sinte64\": \"<string>\",\n        \"dolor06\": \"<string>\",\n        \"sit_8\": \"<string>\",\n        \"etd1\": \"<string>\",\n        \"sit2\": \"<string>\",\n        \"labore0e\": \"<string>\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/batches/transactions/transfers/enrich?synchronous=false",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "batches",
+                                "transactions",
+                                "transfers",
+                                "enrich"
+                              ],
+                              "query": [
+                                {
+                                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n",
+                                  "key": "synchronous",
+                                  "value": "false"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"batchId\": \"<uuid>\",\n  \"status\": \"completed\",\n  \"batchSize\": \"<integer>\",\n  \"submittedAt\": \"<dateTime>\"\n}",
+                          "createdAt": "2026-10-21T20:56:34.000Z",
+                          "updatedAt": "2026-10-21T20:56:34.000Z",
+                          "uid": "35240-b06ecdbc-a63a-4345-8236-f07e3056499b"
+                        },
+                        {
+                          "id": "be4b0fcb-9fd8-45d9-840d-de28a552646a",
+                          "name": "Invalid input",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: apikey",
+                                "key": "X-Api-Key",
+                                "value": "<API Key>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"ut_02\": \"<string>\",\n        \"cupidatat88d\": \"<string>\",\n        \"fugiatd4\": \"<string>\",\n        \"pariatur_8ff\": \"<string>\",\n        \"aliqua_9\": \"<string>\",\n        \"commodo2\": \"<string>\",\n        \"exercitation3\": \"<string>\",\n        \"anim8\": \"<string>\",\n        \"incididunta58\": \"<string>\",\n        \"do3\": \"<string>\",\n        \"voluptate__3e\": \"<string>\",\n        \"et_6\": \"<string>\"\n      }\n    },\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"site\": \"<string>\",\n        \"laborum_6_\": \"<string>\",\n        \"et5\": \"<string>\",\n        \"laborum_b6d\": \"<string>\",\n        \"commodoc7\": \"<string>\",\n        \"ullamco_5\": \"<string>\",\n        \"eiusmod68\": \"<string>\",\n        \"consectetur_4b\": \"<string>\",\n        \"pariatur_af\": \"<string>\",\n        \"anim45c\": \"<string>\",\n        \"deserunt_bc2\": \"<string>\",\n        \"sinte64\": \"<string>\",\n        \"dolor06\": \"<string>\",\n        \"sit_8\": \"<string>\",\n        \"etd1\": \"<string>\",\n        \"sit2\": \"<string>\",\n        \"labore0e\": \"<string>\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/batches/transactions/transfers/enrich?synchronous=false",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "batches",
+                                "transactions",
+                                "transfers",
+                                "enrich"
+                              ],
+                              "query": [
+                                {
+                                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n",
+                                  "key": "synchronous",
+                                  "value": "false"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Bad Request",
+                          "code": 400,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"invalidField\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                          "createdAt": "2026-10-21T20:56:34.000Z",
+                          "updatedAt": "2026-10-21T20:56:34.000Z",
+                          "uid": "35240-be4b0fcb-9fd8-45d9-840d-de28a552646a"
+                        },
+                        {
+                          "id": "e464a73c-229a-4902-9935-1453de67caaa",
+                          "name": "Unauthorized",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: apikey",
+                                "key": "X-Api-Key",
+                                "value": "<API Key>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"ut_02\": \"<string>\",\n        \"cupidatat88d\": \"<string>\",\n        \"fugiatd4\": \"<string>\",\n        \"pariatur_8ff\": \"<string>\",\n        \"aliqua_9\": \"<string>\",\n        \"commodo2\": \"<string>\",\n        \"exercitation3\": \"<string>\",\n        \"anim8\": \"<string>\",\n        \"incididunta58\": \"<string>\",\n        \"do3\": \"<string>\",\n        \"voluptate__3e\": \"<string>\",\n        \"et_6\": \"<string>\"\n      }\n    },\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"site\": \"<string>\",\n        \"laborum_6_\": \"<string>\",\n        \"et5\": \"<string>\",\n        \"laborum_b6d\": \"<string>\",\n        \"commodoc7\": \"<string>\",\n        \"ullamco_5\": \"<string>\",\n        \"eiusmod68\": \"<string>\",\n        \"consectetur_4b\": \"<string>\",\n        \"pariatur_af\": \"<string>\",\n        \"anim45c\": \"<string>\",\n        \"deserunt_bc2\": \"<string>\",\n        \"sinte64\": \"<string>\",\n        \"dolor06\": \"<string>\",\n        \"sit_8\": \"<string>\",\n        \"etd1\": \"<string>\",\n        \"sit2\": \"<string>\",\n        \"labore0e\": \"<string>\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/batches/transactions/transfers/enrich?synchronous=false",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "batches",
+                                "transactions",
+                                "transfers",
+                                "enrich"
+                              ],
+                              "query": [
+                                {
+                                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n",
+                                  "key": "synchronous",
+                                  "value": "false"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Forbidden",
+                          "code": 403,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"details\": \"<string>\"\n}",
+                          "createdAt": "2026-10-21T20:56:34.000Z",
+                          "updatedAt": "2026-10-21T20:56:34.000Z",
+                          "uid": "35240-e464a73c-229a-4902-9935-1453de67caaa"
+                        },
+                        {
+                          "id": "4b36c36c-45e8-46de-9d8c-38f9a2883015",
+                          "name": "Unexpected Error",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: apikey",
+                                "key": "X-Api-Key",
+                                "value": "<API Key>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"transactions\": [\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"ut_02\": \"<string>\",\n        \"cupidatat88d\": \"<string>\",\n        \"fugiatd4\": \"<string>\",\n        \"pariatur_8ff\": \"<string>\",\n        \"aliqua_9\": \"<string>\",\n        \"commodo2\": \"<string>\",\n        \"exercitation3\": \"<string>\",\n        \"anim8\": \"<string>\",\n        \"incididunta58\": \"<string>\",\n        \"do3\": \"<string>\",\n        \"voluptate__3e\": \"<string>\",\n        \"et_6\": \"<string>\"\n      }\n    },\n    {\n      \"amount\": \"<number,string>\",\n      \"currencyCode\": \"<string>\",\n      \"description\": \"<string>\",\n      \"occurredAt\": \"<dateTime>\",\n      \"transactionId\": \"<string>\",\n      \"transactionType\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"organizationId\": \"<string>\",\n      \"accountId\": \"<string>\",\n      \"transactionTypeDescription\": \"<string>\",\n      \"alternateDescription\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"direction\": \"DEBIT\",\n      \"billingProfile\": \"standard\",\n      \"customAttributes\": {\n        \"site\": \"<string>\",\n        \"laborum_6_\": \"<string>\",\n        \"et5\": \"<string>\",\n        \"laborum_b6d\": \"<string>\",\n        \"commodoc7\": \"<string>\",\n        \"ullamco_5\": \"<string>\",\n        \"eiusmod68\": \"<string>\",\n        \"consectetur_4b\": \"<string>\",\n        \"pariatur_af\": \"<string>\",\n        \"anim45c\": \"<string>\",\n        \"deserunt_bc2\": \"<string>\",\n        \"sinte64\": \"<string>\",\n        \"dolor06\": \"<string>\",\n        \"sit_8\": \"<string>\",\n        \"etd1\": \"<string>\",\n        \"sit2\": \"<string>\",\n        \"labore0e\": \"<string>\"\n      }\n    }\n  ],\n  \"callbackUrl\": \"<string>\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/batches/transactions/transfers/enrich?synchronous=false",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "batches",
+                                "transactions",
+                                "transfers",
+                                "enrich"
+                              ],
+                              "query": [
+                                {
+                                  "description": "When `true`, returns enriched results inline in the response instead of a `batchId`. Microbatches are capped to ensure timely processing. See the [Microbatch enrichment guide](https://docs.spade.com/reference/microbatch-enrichment-guide) for details.\n",
+                                  "key": "synchronous",
+                                  "value": "false"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Internal Server Error",
+                          "code": 500,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"details\": \"<string>\"\n}",
+                          "createdAt": "2026-10-21T20:56:34.000Z",
+                          "updatedAt": "2026-10-21T20:56:34.000Z",
+                          "uid": "35240-4b36c36c-45e8-46de-9d8c-38f9a2883015"
+                        }
+                      ],
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-32009cbb-a001-472d-9841-f7cfc27a69f1"
+                    }
+                  ],
+                  "id": "38b004f7-2927-4e50-9f7c-ae00307193c8",
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-38b004f7-2927-4e50-9f7c-ae00307193c8"
+                }
+              ],
+              "id": "e93807a8-e3a9-4cfb-8781-07876676640d",
+              "createdAt": "2026-10-21T20:56:34.000Z",
+              "updatedAt": "2026-10-21T20:56:34.000Z",
+              "uid": "35240-e93807a8-e3a9-4cfb-8781-07876676640d"
+            }
+          ],
+          "id": "e2b8f382-450c-4418-8c7b-f163f0ffa50c",
+          "createdAt": "2026-10-21T20:56:34.000Z",
+          "updatedAt": "2026-10-21T20:56:34.000Z",
+          "uid": "35240-e2b8f382-450c-4418-8c7b-f163f0ffa50c"
+        },
+        {
+          "name": "{transferEnrichmentBatchId}",
+          "item": [
+            {
+              "name": "results",
+              "item": [
+                {
+                  "name": "Get the results of a batch transfer enrichment job",
+                  "id": "ce86b81d-f856-43d0-92e1-7b104d80331e",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "batches",
+                        ":transferEnrichmentBatchId",
+                        "results"
+                      ],
+                      "variable": [
+                        {
+                          "id": "b70178a2-75d8-42f0-9705-00cef3d11346",
+                          "key": "transferEnrichmentBatchId",
+                          "value": "<uuid>",
+                          "description": "(Required) ID of the batch transfer enrichment job"
+                        }
+                      ]
+                    },
+                    "description": "Get the results of a batch transfer enrichment job."
+                  },
+                  "response": [
+                    {
+                      "id": "879aab27-4d33-4f40-a7eb-999507ede400",
+                      "name": "Successful operation",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            ":transferEnrichmentBatchId",
+                            "results"
+                          ],
+                          "variable": [
+                            {
+                              "key": "transferEnrichmentBatchId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"results\": [\n    {\n      \"transactionInfo\": {\n        \"type\": \"income\",\n        \"subType\": \"payment\",\n        \"spendingInfo\": {\n          \"channel\": {\n            \"value\": \"physical\"\n          }\n        },\n        \"thirdParties\": [\n          {\n            \"id\": \"<uuid>\",\n            \"name\": \"<string>\",\n            \"type\": \"payment_processor\",\n            \"logo\": \"<string,null>\",\n            \"website\": \"<string,null>\"\n          },\n          {\n            \"id\": \"<uuid>\",\n            \"name\": \"<string>\",\n            \"type\": \"bnpl\",\n            \"logo\": \"<string,null>\",\n            \"website\": \"<string,null>\"\n          }\n        ],\n        \"recurrenceInfo\": {\n          \"intervalType\": \"semi_monthly\",\n          \"intervalDays\": \"<integer,null>\",\n          \"nextPaymentExpected\": \"<string,null-date>\",\n          \"recentRecurrences\": \"<array,null>\"\n        },\n        \"display\": null,\n        \"transferInfo\": null,\n        \"atmInfo\": null,\n        \"isAccountVerification\": \"<boolean,null>\",\n        \"isPeerToPeer\": \"<boolean,null>\",\n        \"isDigitalWallet\": \"<boolean,null>\",\n        \"transactionId\": \"<string>\",\n        \"riskInsights\": null\n      },\n      \"counterparty\": [\n        {\n          \"location\": [\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            },\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            }\n          ],\n          \"possibleCounterpartyAlternate\": {\n            \"id\": \"<uuid>\",\n            \"similarity\": \"<number>\"\n          },\n          \"id\": \"<string,null-uuid>\",\n          \"name\": \"<string,null>\",\n          \"legalName\": \"<string,null>\",\n          \"industry\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ],\n          \"matchScore\": \"<number,null>\",\n          \"logo\": \"<string,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        },\n        {\n          \"location\": [\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            },\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            }\n          ],\n          \"possibleCounterpartyAlternate\": null,\n          \"id\": \"<string,null-uuid>\",\n          \"name\": \"<string,null>\",\n          \"legalName\": \"<string,null>\",\n          \"industry\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ],\n          \"matchScore\": \"<number,null>\",\n          \"logo\": \"<string,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        }\n      ],\n      \"enrichmentId\": \"<uuid>\",\n      \"mobileAppInfo\": {\n        \"id\": \"<string>\",\n        \"name\": \"<string>\",\n        \"url\": \"<string,null>\",\n        \"logo\": \"<string,null>\",\n        \"developerName\": \"<string>\",\n        \"developerId\": \"<string>\",\n        \"category\": \"Education and Parenting\",\n        \"hasGamblingOrRewards\": \"<boolean>\",\n        \"hasSimulatedGambling\": \"<boolean>\",\n        \"ageRating\": \"Children\"\n      },\n      \"customAttributes\": {\n        \"commodoa_\": \"<string>\",\n        \"labore_0ea\": \"<string>\"\n      },\n      \"actions\": \"<array,null>\",\n      \"statusCode\": \"<integer>\",\n      \"errors\": {}\n    },\n    {\n      \"transactionInfo\": {\n        \"type\": \"reimbursement\",\n        \"subType\": \"deposit\",\n        \"spendingInfo\": {\n          \"channel\": {\n            \"value\": \"digital\"\n          }\n        },\n        \"thirdParties\": [\n          {\n            \"id\": \"<uuid>\",\n            \"name\": \"<string>\",\n            \"type\": \"platform\",\n            \"logo\": \"<string,null>\",\n            \"website\": \"<string,null>\"\n          },\n          {\n            \"id\": \"<uuid>\",\n            \"name\": \"<string>\",\n            \"type\": \"bnpl\",\n            \"logo\": \"<string,null>\",\n            \"website\": \"<string,null>\"\n          }\n        ],\n        \"recurrenceInfo\": null,\n        \"display\": {\n          \"name\": \"<string>\",\n          \"categoryName\": \"<string,null>\",\n          \"graphic\": \"<string,null>\",\n          \"graphicSource\": \"third_party\"\n        },\n        \"transferInfo\": null,\n        \"atmInfo\": {\n          \"sponsorName\": \"<string>\",\n          \"ownerName\": \"<string>\"\n        },\n        \"isAccountVerification\": \"<boolean,null>\",\n        \"isPeerToPeer\": \"<boolean,null>\",\n        \"isDigitalWallet\": \"<boolean,null>\",\n        \"transactionId\": \"<string>\",\n        \"riskInsights\": null\n      },\n      \"counterparty\": [\n        {\n          \"location\": [\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            },\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            }\n          ],\n          \"possibleCounterpartyAlternate\": null,\n          \"id\": \"<string,null-uuid>\",\n          \"name\": \"<string,null>\",\n          \"legalName\": \"<string,null>\",\n          \"industry\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ],\n          \"matchScore\": \"<number,null>\",\n          \"logo\": \"<string,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        },\n        {\n          \"location\": [\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            },\n            {\n              \"id\": \"<string,null-uuid>\",\n              \"address\": \"<string,null>\",\n              \"addressLine1\": \"<string,null>\",\n              \"addressLine2\": \"<string,null>\",\n              \"city\": \"<string,null>\",\n              \"region\": \"<string,null>\",\n              \"country\": \"<string,null>\",\n              \"postalCode\": \"<string,null>\",\n              \"latitude\": \"<number,null>\",\n              \"longitude\": \"<number,null>\",\n              \"phoneNumber\": \"<string,null>\",\n              \"matchScore\": \"<number,null>\"\n            }\n          ],\n          \"possibleCounterpartyAlternate\": null,\n          \"id\": \"<string,null-uuid>\",\n          \"name\": \"<string,null>\",\n          \"legalName\": \"<string,null>\",\n          \"industry\": [\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            },\n            {\n              \"id\": \"<string>\",\n              \"name\": \"<string>\",\n              \"icon\": \"<string,null>\"\n            }\n          ],\n          \"matchScore\": \"<number,null>\",\n          \"logo\": \"<string,null>\",\n          \"phoneNumber\": \"<string,null>\",\n          \"website\": \"<string,null>\"\n        }\n      ],\n      \"enrichmentId\": \"<uuid>\",\n      \"mobileAppInfo\": null,\n      \"customAttributes\": {\n        \"dolor9\": \"<string>\"\n      },\n      \"actions\": \"<array,null>\",\n      \"statusCode\": \"<integer>\",\n      \"errors\": {}\n    }\n  ]\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-879aab27-4d33-4f40-a7eb-999507ede400"
+                    },
+                    {
+                      "id": "891445b0-2d15-447e-95f8-e95ba0d2dbae",
+                      "name": "Batch job is not yet complete. Results aren't currently available.",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            ":transferEnrichmentBatchId",
+                            "results"
+                          ],
+                          "variable": [
+                            {
+                              "key": "transferEnrichmentBatchId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Accepted",
+                      "code": 202,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"batchId\": \"<uuid>\",\n  \"status\": \"completed\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-891445b0-2d15-447e-95f8-e95ba0d2dbae"
+                    },
+                    {
+                      "id": "7733138b-22cb-43ae-832f-9c8b96f1ee92",
+                      "name": "Invalid input",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            ":transferEnrichmentBatchId",
+                            "results"
+                          ],
+                          "variable": [
+                            {
+                              "key": "transferEnrichmentBatchId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"invalidField\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-7733138b-22cb-43ae-832f-9c8b96f1ee92"
+                    },
+                    {
+                      "id": "e8b72b7b-20d2-44a7-9d20-a47df3c4fb51",
+                      "name": "Unauthorized",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            ":transferEnrichmentBatchId",
+                            "results"
+                          ],
+                          "variable": [
+                            {
+                              "key": "transferEnrichmentBatchId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"details\": \"<string>\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-e8b72b7b-20d2-44a7-9d20-a47df3c4fb51"
+                    },
+                    {
+                      "id": "7ac32de2-fd94-4e29-a7d8-93ea4462b2c0",
+                      "name": "Batch job not found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            ":transferEnrichmentBatchId",
+                            "results"
+                          ],
+                          "variable": [
+                            {
+                              "key": "transferEnrichmentBatchId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"details\": \"<string>\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-7ac32de2-fd94-4e29-a7d8-93ea4462b2c0"
+                    },
+                    {
+                      "id": "4daece0f-bae7-4d97-a03b-162b6a9cc614",
+                      "name": "Unexpected Error",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: apikey",
+                            "key": "X-Api-Key",
+                            "value": "<API Key>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId/results",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "batches",
+                            ":transferEnrichmentBatchId",
+                            "results"
+                          ],
+                          "variable": [
+                            {
+                              "key": "transferEnrichmentBatchId"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Internal Server Error",
+                      "code": 500,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"details\": \"<string>\"\n}",
+                      "createdAt": "2026-10-21T20:56:34.000Z",
+                      "updatedAt": "2026-10-21T20:56:34.000Z",
+                      "uid": "35240-4daece0f-bae7-4d97-a03b-162b6a9cc614"
+                    }
+                  ],
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-ce86b81d-f856-43d0-92e1-7b104d80331e"
+                }
+              ],
+              "id": "32145ac9-ac28-4763-900a-3270c7577ad1",
+              "createdAt": "2026-10-21T20:56:34.000Z",
+              "updatedAt": "2026-10-21T20:56:34.000Z",
+              "uid": "35240-32145ac9-ac28-4763-900a-3270c7577ad1"
+            },
+            {
+              "name": "Get the status of a batch transfer enrichment job",
+              "id": "529a381d-c472-400d-8896-0f89a4b23518",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batches",
+                    ":transferEnrichmentBatchId"
+                  ],
+                  "variable": [
+                    {
+                      "id": "f55da3df-0223-42af-a4b0-2ad5d50e18a9",
+                      "key": "transferEnrichmentBatchId",
+                      "value": "<uuid>",
+                      "description": "(Required) ID of the batch transfer enrichment job"
+                    }
+                  ]
+                },
+                "description": "Get the status of a batch transfer enrichment job."
+              },
+              "response": [
+                {
+                  "id": "60503820-6e04-42ed-8af6-99f425ca04b6",
+                  "name": "Successful operation",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: apikey",
+                        "key": "X-Api-Key",
+                        "value": "<API Key>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "batches",
+                        ":transferEnrichmentBatchId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "transferEnrichmentBatchId"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"batchId\": \"<uuid>\",\n  \"status\": \"completed\"\n}",
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-60503820-6e04-42ed-8af6-99f425ca04b6"
+                },
+                {
+                  "id": "4312e6a8-1c85-4143-a4b3-5996ccea2f55",
+                  "name": "Invalid input",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: apikey",
+                        "key": "X-Api-Key",
+                        "value": "<API Key>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "batches",
+                        ":transferEnrichmentBatchId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "transferEnrichmentBatchId"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"invalidField\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-4312e6a8-1c85-4143-a4b3-5996ccea2f55"
+                },
+                {
+                  "id": "16c8172f-8d82-4d2c-9a83-072b958a00c7",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: apikey",
+                        "key": "X-Api-Key",
+                        "value": "<API Key>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "batches",
+                        ":transferEnrichmentBatchId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "transferEnrichmentBatchId"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"details\": \"<string>\"\n}",
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-16c8172f-8d82-4d2c-9a83-072b958a00c7"
+                },
+                {
+                  "id": "3034485e-329e-4ed9-ae1d-4897c5a1dfa1",
+                  "name": "Batch job not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: apikey",
+                        "key": "X-Api-Key",
+                        "value": "<API Key>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "batches",
+                        ":transferEnrichmentBatchId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "transferEnrichmentBatchId"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"details\": \"<string>\"\n}",
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-3034485e-329e-4ed9-ae1d-4897c5a1dfa1"
+                },
+                {
+                  "id": "b9d48fe5-2668-411c-b0c4-78abcf721127",
+                  "name": "Unexpected Error",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: apikey",
+                        "key": "X-Api-Key",
+                        "value": "<API Key>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/batches/:transferEnrichmentBatchId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "batches",
+                        ":transferEnrichmentBatchId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "transferEnrichmentBatchId"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"details\": \"<string>\"\n}",
+                  "createdAt": "2026-10-21T20:56:34.000Z",
+                  "updatedAt": "2026-10-21T20:56:34.000Z",
+                  "uid": "35240-b9d48fe5-2668-411c-b0c4-78abcf721127"
+                }
+              ],
+              "createdAt": "2026-10-21T20:56:34.000Z",
+              "updatedAt": "2026-10-21T20:56:34.000Z",
+              "uid": "35240-529a381d-c472-400d-8896-0f89a4b23518"
+            }
+          ],
+          "id": "8e423dfb-da73-427c-8961-2f15f22034c5",
+          "createdAt": "2026-10-21T20:56:34.000Z",
+          "updatedAt": "2026-10-21T20:56:34.000Z",
+          "uid": "35240-8e423dfb-da73-427c-8961-2f15f22034c5"
+        }
+      ],
+      "id": "9bf8f765-b943-402b-b837-7b8d6f0ec50b",
+      "createdAt": "2026-10-21T20:56:34.000Z",
+      "updatedAt": "2026-10-21T20:56:34.000Z",
+      "uid": "35240-9bf8f765-b943-402b-b837-7b8d6f0ec50b"
     }
   ],
   "auth": {
@@ -1332,25 +1389,25 @@
     "apikey": [
       {
         "key": "key",
-        "value": "X-Api-Key"
+        "value": "X-Api-Key",
+        "type": "string"
       },
       {
         "key": "value",
-        "value": "{{apiKey}}"
+        "value": "{{apiKey}}",
+        "type": "string"
       },
       {
         "key": "in",
-        "value": "header"
+        "value": "header",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "49fe536f-8316-4bb9-b08b-550b69d9fb0f",
-    "name": "Spade Card Enrichment Transfer Enrichment API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "Documentation for Spade's card transaction enrichment API and related endpoints. We offer sandbox and production environments on both the east coast and west coast to enable ultra low latency enrichment for realtime applications. Each environment requires different API keys. To inquire about API keys, please contact your Spade representative or reach out to <hello@spade.com>.",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://east.sandbox.spade.com"
     }
-  }
+  ]
 }
